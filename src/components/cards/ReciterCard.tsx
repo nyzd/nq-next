@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import { Button, Card, CardProps, Text } from "@yakad/ui";
 import Image from "next/image";
-import Symbol from "@yakad/symbols";
+import { Symbol } from "@yakad/symbols";
 
 interface ReciterCardProps extends Omit<CardProps, "children"> {
     imagesrc: string;

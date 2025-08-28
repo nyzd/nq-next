@@ -2,7 +2,7 @@
 
 import { forwardRef } from "react";
 import { Button, ButtonProps, ThemeColor } from "@yakad/ui";
-import Symbol from "@yakad/symbols";
+import { Symbol } from "@yakad/symbols";
 import { useStorage } from "@/contexts/storageContext";
 
 const order: ThemeColor[] = ["blue", "green", "red", "yellow", "purple"];

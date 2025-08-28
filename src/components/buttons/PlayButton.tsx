@@ -2,7 +2,7 @@
 
 import { forwardRef } from "react";
 import { Button, ButtonProps } from "@yakad/ui";
-import Symbol from "@yakad/symbols";
+import { Symbol } from "@yakad/symbols";
 import { useStorage } from "@/contexts/storageContext";
 
 export const PlayButton = forwardRef<HTMLButtonElement, ButtonProps>(

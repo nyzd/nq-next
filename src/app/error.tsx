@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { Button, H1, P, Screen } from "@yakad/ui";
 import ThemeWrapper from "./ThemeWrapper";
 import { GoBackButton } from "@/components";
-import Symbol from "@yakad/symbols";
+import { Symbol } from "@yakad/symbols";
 
 type ErrorProps = {
     error: Error & { digest?: string };

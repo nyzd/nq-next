@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button, Footer, FooterProps } from "@yakad/ui";
-import Symbol from "@yakad/symbols";
+import { Symbol } from "@yakad/symbols";
 import { PlayButton, PlayOptionsPopup } from "@/components";
 
 const FooterWrapper = ({

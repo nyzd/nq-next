@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Footer, FooterProps } from "@yakad/ui";
-import Symbol, { IconCode } from "@yakad/symbols";
+import { IconCode, Symbol } from "@yakad/symbols";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 

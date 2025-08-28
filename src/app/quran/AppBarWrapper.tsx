@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AppBar, AppBarProps, Button, H1, Spacer } from "@yakad/ui";
-import Symbol from "@yakad/symbols";
+import { Symbol } from "@yakad/symbols";
 import { GoBackButton, MushafOptionsPopup } from "@/components";
 
 const AppBarWrapper = ({

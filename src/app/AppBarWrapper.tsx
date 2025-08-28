@@ -15,7 +15,7 @@ import {
     AppBarProps,
     NavigationProps,
 } from "@yakad/ui";
-import Symbol from "@yakad/symbols";
+import { Symbol } from "@yakad/symbols";
 import LogoIcon from "@/assets/svg/natiqLogoIcon";
 
 interface NavListItem {

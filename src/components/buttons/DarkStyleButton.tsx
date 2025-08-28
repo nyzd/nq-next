@@ -2,7 +2,7 @@
 
 import { forwardRef } from "react";
 import { Button, ButtonProps, DarkStyle } from "@yakad/ui";
-import Symbol, { IconCode } from "@yakad/symbols";
+import { IconCode, Symbol } from "@yakad/symbols";
 import { useStorage } from "@/contexts/storageContext";
 
 const order: DarkStyle[] = ["system", "light", "dark"];

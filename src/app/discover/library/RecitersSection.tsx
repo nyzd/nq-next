@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button, Container, H4 } from "@yakad/ui";
 import { XScrollContainer } from "@yakad/x";
-import Symbol from "@yakad/symbols";
+import { Symbol } from "@yakad/symbols";
 import { ReciterCard } from "@/components";
 
 const RecitersSection = () => (

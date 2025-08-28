@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import Link from "next/link";
 import { Button, Card, CardProps, Row, Text } from "@yakad/ui";
-import Symbol from "@yakad/symbols";
+import { Symbol } from "@yakad/symbols";
 import { PlayButton } from "@/components";
 import { useStorage } from "@/contexts/storageContext";
 

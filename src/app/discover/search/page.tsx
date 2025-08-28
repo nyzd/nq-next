@@ -12,7 +12,7 @@ import {
     Button,
     H1,
 } from "@yakad/ui";
-import Symbol from "@yakad/symbols";
+import { Symbol } from "@yakad/symbols";
 
 import { RelatedSurahs, SearchResult } from "./utils";
 import { connection } from "../../../connection";
