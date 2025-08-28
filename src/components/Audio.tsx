@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useStorage } from "@/contexts/storageContext";
 
-const Audio = (
+export const Audio = (
     restProps: Omit<React.HTMLAttributes<HTMLAudioElement>, "style">
 ) => {
     const { storage, setStorage } = useStorage();
@@ -50,5 +50,3 @@ const Audio = (
         />
     );
 };
-
-export default Audio;

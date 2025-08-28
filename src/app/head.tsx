@@ -1,6 +1,8 @@
 function Head() {
     return (
         <>
+            <title>Natiq</title>
+            <meta name="description" content="Natiq main app" />
             <meta charSet="utf-8" />
             <meta
                 name="viewport"
