@@ -8,7 +8,10 @@ interface TranslationCardProps extends Omit<CardProps, "children"> {
 }
 
 export const TranslationCard = forwardRef<HTMLDivElement, TranslationCardProps>(
-    ({ translatorname, langCode, style, ...restProps }, ref) => {
+    function TranslateionCard(
+        { translatorname, langCode, style, ...restProps },
+        ref
+    ) {
         return (
             <Card
                 ref={ref}
@@ -27,4 +30,3 @@ export const TranslationCard = forwardRef<HTMLDivElement, TranslationCardProps>(
         );
     }
 );
-TranslationCard.displayName = "TranslationCard";

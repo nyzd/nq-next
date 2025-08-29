@@ -4,7 +4,7 @@ import { Xpopup, XpopupProps } from "@yakad/x";
 import { useStorage } from "@/contexts/storageContext";
 
 export const PlayOptionsPopup = forwardRef<HTMLDivElement, XpopupProps>(
-    ({ ...restProps }, ref) => {
+    function PlayOptionsPopup({ ...restProps }, ref) {
         const { storage, setStorage } = useStorage();
         const handleSelectChange = (
             e: React.ChangeEvent<HTMLSelectElement>
@@ -180,4 +180,3 @@ export const PlayOptionsPopup = forwardRef<HTMLDivElement, XpopupProps>(
         );
     }
 );
-PlayOptionsPopup.displayName = "PlayOptionsPopup";

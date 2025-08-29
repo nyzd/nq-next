@@ -6,7 +6,7 @@ import { PlayButton } from "@/components";
 import { useStorage } from "@/contexts/storageContext";
 
 export const PlayBox = forwardRef<HTMLDivElement, Omit<CardProps, "children">>(
-    ({ ...restProps }, ref) => {
+    function PlayBox({ ...restProps }, ref) {
         const { storage, setStorage } = useStorage();
 
         const closePlayer = () => {
@@ -55,4 +55,3 @@ export const PlayBox = forwardRef<HTMLDivElement, Omit<CardProps, "children">>(
         );
     }
 );
-PlayBox.displayName = "PlayBox";

@@ -10,7 +10,7 @@ interface RandomSurahButtonProps extends ButtonProps {
 export const RandomSurahButton = forwardRef<
     HTMLButtonElement,
     RandomSurahButtonProps
->(({ surahList, children, ...restProps }, ref) => {
+>(function RandomSurahButton({ surahList, children, ...restProps }, ref) {
     const surahLength = surahList.length;
 
     const randomNumber = Math.floor(Math.random() * surahLength);
@@ -26,4 +26,3 @@ export const RandomSurahButton = forwardRef<
         </Link>
     );
 });
-RandomSurahButton.displayName = "RandomSurahButton";

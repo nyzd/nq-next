@@ -11,7 +11,10 @@ interface FindBarProps extends CardProps {
     hizb: number;
 }
 export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
-    ({ surahnumber, ayahnumber, pagenumber, juz, hizb, ...restProps }, ref) => {
+    function FindBar(
+        { surahnumber, ayahnumber, pagenumber, juz, hizb, ...restProps },
+        ref
+    ) {
         const [top, setTop] = useState(2);
         const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -63,4 +66,3 @@ export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
         );
     }
 );
-FindBar.displayName = "FindBar";

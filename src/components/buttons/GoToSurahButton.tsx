@@ -11,14 +11,15 @@ interface RandomSurahButtonProps extends ButtonProps {
 export const GoToSurahButton = forwardRef<
     HTMLButtonElement,
     RandomSurahButtonProps
->(({ surahList, surahNumber, ...restProps }, ref) => (
-    <Link
-        href={`/quran?surah_uuid=${surahList[surahNumber - 1].uuid}`}
-        passHref
-    >
-        <Button ref={ref} {...restProps}>
-            {surahList[surahNumber - 1].names[0].name}
-        </Button>
-    </Link>
-));
-GoToSurahButton.displayName = "GoToSurahButton";
+>(function GoToSurahButton({ surahList, surahNumber, ...restProps }, ref) {
+    return (
+        <Link
+            href={`/quran?surah_uuid=${surahList[surahNumber - 1].uuid}`}
+            passHref
+        >
+            <Button ref={ref} {...restProps}>
+                {surahList[surahNumber - 1].names[0].name}
+            </Button>
+        </Link>
+    );
+});

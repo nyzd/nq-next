@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
-import { Button, Card, CardProps, Text } from "@yakad/ui";
 import Image from "next/image";
+import { Button, Card, CardProps, Text } from "@yakad/ui";
 import { Symbol } from "@yakad/symbols";
 
 interface ReciterCardProps extends Omit<CardProps, "children"> {
@@ -9,7 +9,7 @@ interface ReciterCardProps extends Omit<CardProps, "children"> {
 }
 
 export const ReciterCard = forwardRef<HTMLDivElement, ReciterCardProps>(
-    ({ imagesrc, recitername, style, ...restProps }, ref) => {
+    function ReciterCard({ imagesrc, recitername, style, ...restProps }, ref) {
         return (
             <Card
                 ref={ref}
@@ -46,4 +46,3 @@ export const ReciterCard = forwardRef<HTMLDivElement, ReciterCardProps>(
         );
     }
 );
-ReciterCard.displayName = "ReciterCard";

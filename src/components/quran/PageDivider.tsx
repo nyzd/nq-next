@@ -5,7 +5,7 @@ interface PageDividerProps extends RowProps {
     pagenumber: number;
 }
 export const PageDivider = forwardRef<HTMLDivElement, PageDividerProps>(
-    ({ pagenumber, ...restProps }, ref) => {
+    function PageDivider({ pagenumber, ...restProps }, ref) {
         return (
             <Row
                 ref={ref}
@@ -24,4 +24,3 @@ export const PageDivider = forwardRef<HTMLDivElement, PageDividerProps>(
         );
     }
 );
-PageDivider.displayName = "PageDivider";

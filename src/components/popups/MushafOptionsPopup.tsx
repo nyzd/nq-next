@@ -5,7 +5,7 @@ import { DarkStyleButton, ColorButton } from "@/components";
 import { useStorage } from "@/contexts/storageContext";
 
 export const MushafOptionsPopup = forwardRef<HTMLDivElement, XpopupProps>(
-    ({ ...restProps }, ref) => {
+    function MushafOptionsPopup({ ...restProps }, ref) {
         const { storage, setStorage } = useStorage();
         const handleSelectChange = (
             e: React.ChangeEvent<HTMLSelectElement>
@@ -73,4 +73,3 @@ export const MushafOptionsPopup = forwardRef<HTMLDivElement, XpopupProps>(
         );
     }
 );
-MushafOptionsPopup.displayName = "MushafOptionsPopup";

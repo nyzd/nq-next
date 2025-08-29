@@ -10,7 +10,7 @@ interface SurahCardProps extends Omit<CardProps, "children"> {
 }
 
 export const SurahCard = forwardRef<HTMLDivElement, SurahCardProps>(
-    (
+    function SurahCard(
         {
             arabicname,
             englishname,
@@ -21,7 +21,7 @@ export const SurahCard = forwardRef<HTMLDivElement, SurahCardProps>(
             ...restProps
         },
         ref
-    ) => {
+    ) {
         return (
             <Card
                 ref={ref}
@@ -42,4 +42,3 @@ export const SurahCard = forwardRef<HTMLDivElement, SurahCardProps>(
         );
     }
 );
-SurahCard.displayName = "SurahCard";
