@@ -1,4 +1,4 @@
-function Head() {
+export default function Head() {
     return (
         <>
             <title>Natiq</title>
@@ -15,5 +15,3 @@ function Head() {
         </>
     );
 }
-
-export default Head;

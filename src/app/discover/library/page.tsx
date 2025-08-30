@@ -2,7 +2,7 @@ import { Container, H1 } from "@yakad/ui";
 import RecitersSection from "./RecitersSection";
 import TranslationsSection from "./TranslationsSection";
 
-const Page = () => {
+export default function Page() {
     return (
         <>
             <Container size="md">
@@ -12,6 +12,4 @@ const Page = () => {
             <TranslationsSection />
         </>
     );
-};
-
-export default Page;
+}

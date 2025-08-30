@@ -1,6 +1,6 @@
 import { Spacer, Button, Footer, FooterProps } from "@yakad/ui";
 
-const FooterWrapper = ({ ...restProps }: FooterProps) => {
+export default function FooterWrapper({ ...restProps }: FooterProps) {
     return (
         <Footer {...restProps}>
             <a target="blank" href="https://blog.natiq.net/privacy-policy">
@@ -21,6 +21,4 @@ const FooterWrapper = ({ ...restProps }: FooterProps) => {
             </a>
         </Footer>
     );
-};
-
-export default FooterWrapper;
+}

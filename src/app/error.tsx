@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import { Button, H1, P, Screen } from "@yakad/ui";
-import ThemeWrapper from "./ThemeWrapper";
 import { GoBackButton } from "@/components";
 import { Symbol } from "@yakad/symbols";
 
@@ -11,7 +10,7 @@ type ErrorProps = {
     reset: () => void;
 };
 
-function Error({ error, reset }: ErrorProps) {
+export default function Error({ error, reset }: ErrorProps) {
     useEffect(() => {
         console.error("Global error caught:", error);
     }, [error]);
@@ -32,5 +31,3 @@ function Error({ error, reset }: ErrorProps) {
         </Screen>
     );
 }
-
-export default Error;

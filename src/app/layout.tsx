@@ -4,7 +4,7 @@ import { Audio } from "@/components";
 
 export const runtime = "edge";
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+export default function Layout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en">
             <body>
@@ -15,6 +15,4 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             </body>
         </html>
     );
-};
-
-export default Layout;
+}

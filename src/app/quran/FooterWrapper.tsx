@@ -5,10 +5,10 @@ import { Button, Footer, FooterProps } from "@yakad/ui";
 import { Symbol } from "@yakad/symbols";
 import { PlayButton, PlayOptionsPopup } from "@/components";
 
-const FooterWrapper = ({
+export default function FooterWrapper({
     style,
     ...restProps
-}: Omit<FooterProps, "children">) => {
+}: Omit<FooterProps, "children">) {
     const [isPlayOptionsPopupVisible, setIsPlayOptionsPopupVisible] =
         useState<boolean>(false);
 
@@ -55,6 +55,4 @@ const FooterWrapper = ({
             )}
         </>
     );
-};
-
-export default FooterWrapper;
+}

@@ -5,7 +5,7 @@ import { useStorage } from "@/contexts/storageContext";
 import { PlayBox } from "@/components";
 import FooterWrapper from "./FooterWrapper";
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+export default function Layout({ children }: { children: React.ReactNode }) {
     const { storage } = useStorage();
 
     return (
@@ -25,6 +25,4 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <FooterWrapper />
         </Screen>
     );
-};
-
-export default Layout;
+}

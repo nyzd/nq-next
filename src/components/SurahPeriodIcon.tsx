@@ -10,7 +10,7 @@ interface SurahPeriodIconProps extends Omit<SvgIconProps, "children"> {
     period: "makki" | "madani";
 }
 
-export const PlayBox = forwardRef<HTMLDivElement, SurahPeriodIconProps>(
+export const SurahPeriodIcon = forwardRef<HTMLDivElement, SurahPeriodIconProps>(
     function SurahPeriodIcon(
         { title, variant = "outlined", period, style },
         ref
