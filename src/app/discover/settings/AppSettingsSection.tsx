@@ -6,7 +6,7 @@ import { useStorage } from "@/contexts/storageContext";
 
 const acceptedLangCodes: LangCodeType[] = ["en", "ar", "fa", "tr"];
 
-const AppSettingsSection = () => {
+export default function AppSettingsSection() {
     const { storage, setStorage } = useStorage();
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -69,6 +69,4 @@ const AppSettingsSection = () => {
             </Select>
         </>
     );
-};
-
-export default AppSettingsSection;
+}

@@ -15,7 +15,7 @@ import {
     AppBarProps,
     NavigationProps,
 } from "@yakad/ui";
-import Symbol from "@yakad/symbols";
+import { Symbol } from "@yakad/symbols";
 import LogoIcon from "@/assets/svg/natiqLogoIcon";
 
 interface NavListItem {
@@ -32,7 +32,8 @@ const navListItems: NavListItem[] = [
         name: "Blog",
     },
 ];
-const AppBarWrapper = ({ ...restProps }: AppBarProps) => {
+
+export default function AppBarWrapper({ ...restProps }: AppBarProps) {
     const [navOpen, setNavOpen] = useState<boolean>(false);
 
     return (
@@ -85,9 +86,9 @@ const AppBarWrapper = ({ ...restProps }: AppBarProps) => {
             </ClickOutsideListener>
         </>
     );
-};
+}
 
-const NavigationWrapper = ({ ...restProps }: NavigationProps) => {
+function NavigationWrapper({ ...restProps }: NavigationProps) {
     return (
         <Navigation {...restProps}>
             <List direction="column" style={{ padding: "0 2rem" }}>
@@ -108,6 +109,4 @@ const NavigationWrapper = ({ ...restProps }: NavigationProps) => {
             </List>
         </Navigation>
     );
-};
-
-export default AppBarWrapper;
+}

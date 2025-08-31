@@ -1,18 +1,12 @@
 import Link from "next/link";
 import { Button, Row } from "@yakad/ui";
 import { XgetStart, XgetStartProps } from "@yakad/x";
-import Symbol from "@yakad/symbols";
+import { Symbol } from "@yakad/symbols";
 import LogoIcon from "@/assets/svg/natiqLogoIcon";
 
-const XgetStartWrapper = ({ ...restProps }: XgetStartProps) => (
-    <XgetStart {...restProps} logo={<LogoIcon />}>
-        <IntroGetStartBox />
-    </XgetStart>
-);
-
-const IntroGetStartBox = () => {
+export default function XgetStartWrapper({ ...restProps }: XgetStartProps) {
     return (
-        <>
+        <XgetStart {...restProps} logo={<LogoIcon />}>
             <h1
                 style={{
                     fontFamily: "Hafs",
@@ -57,8 +51,6 @@ const IntroGetStartBox = () => {
                     Privacy Policy
                 </a>
             </span>
-        </>
+        </XgetStart>
     );
-};
-
-export default XgetStartWrapper;
+}

@@ -3,9 +3,9 @@
 import { useEffect, useRef } from "react";
 import { useStorage } from "@/contexts/storageContext";
 
-const Audio = (
+export function Audio(
     restProps: Omit<React.HTMLAttributes<HTMLAudioElement>, "style">
-) => {
+) {
     const { storage, setStorage } = useStorage();
     const isPlaying = storage.options.playing;
     const playBackRate = storage.options.playBackRate;
@@ -49,6 +49,4 @@ const Audio = (
             onEnded={handleEnded}
         />
     );
-};
-
-export default Audio;
+}

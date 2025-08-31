@@ -4,7 +4,7 @@ import RecomendedSection from "./RecommendedSection";
 import RandomSection from "./RandomSection";
 import ListsSection from "./ListsSection";
 
-const Page = () => {
+export default function Page() {
     return (
         <>
             <Container size="md">
@@ -16,6 +16,4 @@ const Page = () => {
             <ListsSection />
         </>
     );
-};
-
-export default Page;
+}

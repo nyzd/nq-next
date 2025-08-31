@@ -2,15 +2,15 @@
 
 import { useState } from "react";
 import { AppBar, AppBarProps, Button, H1, Spacer } from "@yakad/ui";
-import Symbol from "@yakad/symbols";
+import { Symbol } from "@yakad/symbols";
 import { GoBackButton, MushafOptionsPopup } from "@/components";
 
-const AppBarWrapper = ({
+export default function AppBarWrapper({
     position = "scroll",
     size = "md",
     blur = true,
     ...restProps
-}: Omit<AppBarProps, "children">) => {
+}: Omit<AppBarProps, "children">) {
     const [isMushafOptionsPopupVisible, setIsMushafOptionsPopupVisible] =
         useState<boolean>(false);
 
@@ -42,6 +42,4 @@ const AppBarWrapper = ({
             )}
         </>
     );
-};
-
-export default AppBarWrapper;
+}

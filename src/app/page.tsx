@@ -6,16 +6,16 @@ import AppBarWrapper from "./AppBarWrapper";
 import XgetStartWrapper from "./XgetStartWrapper";
 import FooterWrapper from "./FooterWrapper";
 
-const Page = () => (
-    <Screen>
-        <AppBarWrapper />
-        <Main>
-            <Xbackground variant="dotted">
-                <XgetStartWrapper />
-            </Xbackground>
-        </Main>
-        <FooterWrapper />
-    </Screen>
-);
-
-export default Page;
+export default function Page() {
+    return (
+        <Screen>
+            <AppBarWrapper />
+            <Main>
+                <Xbackground variant="dotted">
+                    <XgetStartWrapper />
+                </Xbackground>
+            </Main>
+            <FooterWrapper />
+        </Screen>
+    );
+}

@@ -2,7 +2,7 @@
 
 import { forwardRef } from "react";
 import { Button, ButtonProps, DarkStyle } from "@yakad/ui";
-import Symbol, { IconCode } from "@yakad/symbols";
+import { IconCode, Symbol } from "@yakad/symbols";
 import { useStorage } from "@/contexts/storageContext";
 
 const order: DarkStyle[] = ["system", "light", "dark"];
@@ -29,7 +29,10 @@ const optionsMap: Record<
 };
 
 export const DarkStyleButton = forwardRef<HTMLButtonElement, ButtonProps>(
-    ({ title, icon, onClick, children, ...restProps }, ref) => {
+    function DarkStyleButton(
+        { title, icon, onClick, children, ...restProps },
+        ref
+    ) {
         const { storage, setStorage } = useStorage();
 
         const currentOption: DarkStyle =
@@ -65,4 +68,3 @@ export const DarkStyleButton = forwardRef<HTMLButtonElement, ButtonProps>(
         );
     }
 );
-DarkStyleButton.displayName = "DarkStyleButton";

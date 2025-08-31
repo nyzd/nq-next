@@ -17,7 +17,6 @@ import {
     FindBar,
     FindPopup,
     MorePopup,
-    PageDivider,
     SurahPeriodIcon,
 } from "@/components";
 import FooterWrapper from "./FooterWrapper";
@@ -26,7 +25,7 @@ import { getAyahs } from "@/actions/getAyahs";
 import { AyahsListResponseData } from "@ntq/sdk";
 import { useRouter } from "next/navigation";
 
-const Page = () => {
+export default function Page () {
     const router = useRouter();
     const [isFindPopupVisible, setIsFindPopupVisible] =
         useState<boolean>(false);
@@ -44,7 +43,7 @@ const Page = () => {
         if (!loaderRef.current || !hasMore) return;
 
         const observer = new IntersectionObserver(
-            (entries) => {
+            (entries) {
                 console.log(entries);
                 if (entries[0].isIntersecting) {
                     setOffset(offset);
@@ -58,12 +57,12 @@ const Page = () => {
         return () => observer.disconnect();
     }, [hasMore]);
 
-    const fetchItems = useCallback(async () => {
+    const fetchItems = useCallback(async () {
         getAyahs(offset, limit).then((res) => setAyahs(res));
         setHasMore(true);
     }, [limit]);
 
-    useEffect(() => {
+    useEffect(() {
         fetchItems();
     }, [fetchItems]);
 
@@ -130,7 +129,7 @@ const Page = () => {
                 <FindPopup
                     heading="Find"
                     onclosebuttonclick={() => setIsFindPopupVisible(false)}
-                    onButtonClicked={(a) => {
+                    onButtonClicked={(a) {
                         router.push(`#ayah-${ayahs[a].uuid}`);
                         setIsFindPopupVisible(false);
                     }}
@@ -146,5 +145,3 @@ const Page = () => {
         </Screen>
     );
 };
-
-export default Page;

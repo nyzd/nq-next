@@ -2,7 +2,7 @@ import { Container, H1 } from "@yakad/ui";
 import { ResetButton } from "@/components";
 import AppSettingsSection from "./AppSettingsSection";
 
-const Page = () => {
+export default function Page() {
     return (
         <>
             <Container size="md">
@@ -14,6 +14,4 @@ const Page = () => {
             </Container>
         </>
     );
-};
-
-export default Page;
+}

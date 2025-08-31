@@ -2,11 +2,11 @@
 
 import { forwardRef } from "react";
 import { Button, ButtonProps } from "@yakad/ui";
-import Symbol from "@yakad/symbols";
+import { Symbol } from "@yakad/symbols";
 import { useStorage } from "@/contexts/storageContext";
 
 export const PlayButton = forwardRef<HTMLButtonElement, ButtonProps>(
-    ({ title, icon, onClick, ...restProps }, ref) => {
+    function PlayButton({ title, icon, onClick, ...restProps }, ref) {
         const { storage, setStorage } = useStorage();
 
         const togglePlay = () => {
@@ -42,4 +42,3 @@ export const PlayButton = forwardRef<HTMLButtonElement, ButtonProps>(
         );
     }
 );
-PlayButton.displayName = "PlayButton";

@@ -6,7 +6,7 @@ import { Button, ButtonProps } from "@yakad/ui";
 import { useStorage } from "@/contexts/storageContext";
 
 export const LastReadingButton = forwardRef<HTMLButtonElement, ButtonProps>(
-    ({ disabled, children, ...restProps }, ref) => {
+    function LastReadingButton({ disabled, children, ...restProps }, ref) {
         const { storage } = useStorage();
 
         return (
@@ -27,4 +27,3 @@ export const LastReadingButton = forwardRef<HTMLButtonElement, ButtonProps>(
         );
     }
 );
-LastReadingButton.displayName = "LastReadingButton";

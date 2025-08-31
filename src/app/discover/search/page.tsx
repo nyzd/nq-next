@@ -12,12 +12,11 @@ import {
     Button,
     H1,
 } from "@yakad/ui";
-import Symbol from "@yakad/symbols";
-
+import { Symbol } from "@yakad/symbols";
 import { RelatedSurahs, SearchResult } from "./utils";
 import { connection } from "../../../connection";
 
-const Page = () => {
+export default function Page() {
     const [surahList, setSurahList] = useState<SurahsListResponseData>([]);
     const [filteredSurahList, setFilteredSurahList] =
         useState<SurahsListResponseData>([]);
@@ -86,6 +85,4 @@ const Page = () => {
             )}
         </>
     );
-};
-
-export default Page;
+}

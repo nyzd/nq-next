@@ -22,6 +22,8 @@ const RelatedSurahs = (props: { surahList: SurahsListResponseData }) => (
     </Row>
 );
 
+////////////////////////////////////////////// change file name to sections
+
 const SearchResult = (props: { surahList: SurahsListResponseData }) => (
     <div
         style={{

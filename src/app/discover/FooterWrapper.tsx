@@ -1,8 +1,8 @@
 "use client";
 
-import { Button, Footer, FooterProps } from "@yakad/ui";
-import Symbol, { IconCode } from "@yakad/symbols";
 import Link from "next/link";
+import { Button, Footer, FooterProps } from "@yakad/ui";
+import { IconCode, Symbol } from "@yakad/symbols";
 import { usePathname } from "next/navigation";
 
 interface FooterLink {
@@ -17,10 +17,10 @@ const footerLinks: FooterLink[] = [
     { title: "Settings", url: "settings", icon: "settings" },
 ];
 
-const FooterWrapper = ({
+export default function FooterWrapper({
     style,
     ...restProps
-}: Omit<FooterProps, "children">) => {
+}: Omit<FooterProps, "children">) {
     const pathname = usePathname();
     const currentPage = pathname.split("/")[2]; // 'search', 'home', or 'library'
 
@@ -45,6 +45,4 @@ const FooterWrapper = ({
             ))}
         </Footer>
     );
-};
-
-export default FooterWrapper;
+}
