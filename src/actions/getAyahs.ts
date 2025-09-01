@@ -1,12 +1,17 @@
-"use server";
+'use server';
 
-import { ayahController } from "@/connection";
-import { AyahsListResponseData } from "@ntq/sdk";
+import { Ayah, ayahsList } from "@ntq/sdk";
 
-export const getAyahs = async (offset: number, limit: number): Promise<AyahsListResponseData> => {
+export async function getAyahs(mushaf: string, limit: number, offset: number = 0): Promise<Ayah[]> {
+    const response = await ayahsList({
+        params: {
+            mushaf: mushaf,
+        },
+        query: {
+            limit: limit,
+            offset: offset
+        }
+    });
 
-    // TODO:‌update
-    const response = await ayahController.list({ params: { limit: limit } as any });
-
-    return response.data
+    return response.data ?? [];
 }

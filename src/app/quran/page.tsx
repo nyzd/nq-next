@@ -17,13 +17,21 @@ import {
     FindBar,
     FindPopup,
     MorePopup,
+    PageDivider,
     SurahPeriodIcon,
 } from "@/components";
 import FooterWrapper from "./FooterWrapper";
 import AppBarWrapper from "./AppBarWrapper";
-import { getAyahs } from "@/actions/getAyahs";
-import { AyahsListResponseData } from "@ntq/sdk";
 import { useRouter } from "next/navigation";
+import { AyahBreakersResponse, Ayah as AyahType } from "@ntq/sdk";
+import { getTakhtits, getTakhtitsAyahsBreakers } from "@/actions/getTakhtits";
+import { getAyahs } from "@/actions/getAyahs";
+
+const LIMIT = 30;
+
+interface AyahTypeWithSurahNumber extends AyahType {
+    surahNumber: number;
+}
 
 export default function Page () {
     const router = useRouter();
@@ -32,22 +40,44 @@ export default function Page () {
     const [isMorePopupVisible, setIsMorePopupVisible] =
         useState<boolean>(false);
 
-    const [currentSurah, setCurrentSurah] = useState(null);
+    const [ayahs, setAyahs] = useState<AyahTypeWithSurahNumber[]>([]);
     const [offset, setOffset] = useState(1);
-    const [limit, setLimit] = useState(20);
+    const [limit, setLimit] = useState(LIMIT);
     const [hasMore, setHasMore] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
+    const [takhtitsAyahsBreakersMap, setTakhtitsAyahsBreakersMap] = useState<Map<string, number>>(new Map());
     const loaderRef = useRef(null);
-    const [ayahs, setAyahs] = useState<AyahsListResponseData>([]);
+
+    // Fetch takhtits data once on component mount
+    useEffect(() => {
+        const fetchTakhtits = async () => {
+            try {
+                const firstTakhtit = await getTakhtits();
+                const firstTakhtitUuid = firstTakhtit[1].uuid;
+
+                const res = await getTakhtitsAyahsBreakers(firstTakhtitUuid);
+                const map = new Map();
+                res.forEach((ayah) => {
+                    const key = `${ayah.surah}-${ayah.ayah}`;
+                    map.set(key, ayah.page);
+                });
+                setTakhtitsAyahsBreakersMap(map);
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        fetchTakhtits();
+    }, []);
 
     useEffect(() => {
-        if (!loaderRef.current || !hasMore) return;
+        if (!loaderRef.current || !hasMore || isLoading) return;
 
         const observer = new IntersectionObserver(
-            (entries) {
-                console.log(entries);
+            (entries) => {
                 if (entries[0].isIntersecting) {
-                    setOffset(offset);
-                    setLimit((prev) => prev + 5);
+                    setOffset(prev => prev + LIMIT);
+                    setLimit(prev => prev + LIMIT);
                 }
             },
             { threshold: 1 }
@@ -55,16 +85,49 @@ export default function Page () {
 
         observer.observe(loaderRef.current);
         return () => observer.disconnect();
-    }, [hasMore]);
+    }, [hasMore, isLoading]);
 
-    const fetchItems = useCallback(async () {
-        getAyahs(offset, limit).then((res) => setAyahs(res));
-        setHasMore(true);
-    }, [limit]);
+    const fetchItems = useCallback(async () => {
+        if (isLoading) return;
+        
+        setIsLoading(true);
+        try {
+            const ayahs = await getAyahs("hafs", limit, offset);
+            let currentSurahNumber = 1;
 
-    useEffect(() {
+            const finalAyahs: AyahTypeWithSurahNumber[] = [];
+            for (const ayah of ayahs) {
+                if (ayah.number === 1) {
+                    currentSurahNumber = (ayah.surah as any).number;
+                }
+
+                finalAyahs.push({
+                    ...ayah,
+                    surahNumber: currentSurahNumber,
+                });
+            }
+
+            if (finalAyahs.length === 0) {
+                setHasMore(false);
+            } else {
+                setAyahs(prev => [...prev, ...finalAyahs]);
+            }
+        } catch (error) {
+            console.error("Error fetching ayahs:", error);
+            setHasMore(false);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [limit, offset, isLoading]);
+
+    useEffect(() => {
         fetchItems();
     }, [fetchItems]);
+
+    const getPageNumber = (ayahNumber: number, surahNumber: number) => {
+        const key = `${surahNumber}-${ayahNumber}`;
+        return takhtitsAyahsBreakersMap.get(key);
+    };
 
     return (
         <Screen>
@@ -80,48 +143,23 @@ export default function Page () {
                         onClick={() => setIsFindPopupVisible(true)}
                     />
 
-                    {ayahs?.map((ayah, index) => (
-                        <>
-                            {ayah.number == 1 && (
-                                <Container key={index} size="sm" align="center">
-                                    <Row>
-                                        <SurahPeriodIcon
-                                            variant="filled"
-                                            period="makki"
-                                        />
-                                        <H2
-                                            title="Surah name"
-                                            variant="heading6"
-                                        >
-                                            {ayah.surah.names[0].name}
-                                        </H2>
-                                        <Spacer />
-                                        <Text variant="heading6">
-                                            {ayah.surah.number_of_ayahs} Ayahs
-                                        </Text>
-                                    </Row>
-                                    <P variant="body1">
-                                        {ayah.bismillah &&
-                                        ayah.bismillah.is_ayah
-                                            ? ayah.text
-                                            : ayah.bismillah?.text ||
-                                              "bismillah"}
-                                    </P>
-                                </Container>
-                            )}
-
-                            {/* {ayah.number == 1 && <PageDivider pagenumber={page}/>} */}
+                    {takhtitsAyahsBreakersMap.size > 0 && ayahs.map((ayah, index) => (
+                        <div key={`${ayah.surahNumber}-${ayah.number}-${index}`}>
+                            {(() => {
+                                const pageNumber = getPageNumber(ayah.number, ayah.surahNumber);
+                                return pageNumber ? (
+                                    <PageDivider pagenumber={pageNumber} />
+                                ) : null;
+                            })()}
                             <Ayah
-                                key={index}
-                                text={ayah.text}
                                 number={ayah.number}
-                                id={`ayah-${ayah.uuid}`}
+                                text={ayah.text}
                             />
-                        </>
+                        </div>
                     ))}
 
                     {hasMore && <Loading ref={loaderRef} variant="dots" />}
-                    {!hasMore && <p>No more items</p>}
+                    {!hasMore && ayahs.length > 0 && <p>No more items</p>}
                 </Container>
             </Main>
             <FooterWrapper />
@@ -129,11 +167,13 @@ export default function Page () {
                 <FindPopup
                     heading="Find"
                     onclosebuttonclick={() => setIsFindPopupVisible(false)}
-                    onButtonClicked={(a) {
-                        router.push(`#ayah-${ayahs[a].uuid}`);
+                    onButtonClicked={(a) => {
+                        if (ayahs[a] && ayahs[a].uuid) {
+                            router.push(`#ayah-${ayahs[a].uuid}`);
+                        }
                         setIsFindPopupVisible(false);
                     }}
-                    ayahs_numbers={[1, 2, 3, 4, 5]}
+                    ayahs_numbers={ayahs.map((ayah) => ayah.number)}
                 />
             )}
             {isMorePopupVisible && (
