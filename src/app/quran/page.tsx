@@ -23,9 +23,10 @@ import {
 import FooterWrapper from "./FooterWrapper";
 import AppBarWrapper from "./AppBarWrapper";
 import { useRouter } from "next/navigation";
-import { AyahBreakersResponse, Ayah as AyahType } from "@ntq/sdk";
+import { AyahBreakersResponse, Ayah as AyahType, Surah, surahsList } from "@ntq/sdk";
 import { getTakhtits, getTakhtitsAyahsBreakers } from "@/actions/getTakhtits";
 import { getAyahs } from "@/actions/getAyahs";
+import { getSurahs } from "@/actions/getSurahs";
 
 const LIMIT = 30;
 
@@ -40,9 +41,9 @@ export default function Page () {
     const [isMorePopupVisible, setIsMorePopupVisible] =
         useState<boolean>(false);
 
+    const [surahs, setSurahs] = useState<Surah[]>([]);
     const [ayahs, setAyahs] = useState<AyahTypeWithSurahNumber[]>([]);
     const [offset, setOffset] = useState(1);
-    const [limit, setLimit] = useState(LIMIT);
     const [hasMore, setHasMore] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [takhtitsAyahsBreakersMap, setTakhtitsAyahsBreakersMap] = useState<Map<string, number>>(new Map());
@@ -68,6 +69,10 @@ export default function Page () {
         };
 
         fetchTakhtits();
+
+        getSurahs().then((surahs) => {
+            setSurahs(surahs);
+        });
     }, []);
 
     useEffect(() => {
@@ -77,7 +82,6 @@ export default function Page () {
             (entries) => {
                 if (entries[0].isIntersecting) {
                     setOffset(prev => prev + LIMIT);
-                    setLimit(prev => prev + LIMIT);
                 }
             },
             { threshold: 1 }
@@ -92,7 +96,7 @@ export default function Page () {
         
         setIsLoading(true);
         try {
-            const ayahs = await getAyahs("hafs", limit, offset);
+            const ayahs = await getAyahs("hafs", LIMIT, offset);
             let currentSurahNumber = 1;
 
             const finalAyahs: AyahTypeWithSurahNumber[] = [];
@@ -118,7 +122,7 @@ export default function Page () {
         } finally {
             setIsLoading(false);
         }
-    }, [limit, offset, isLoading]);
+    }, [offset]);
 
     useEffect(() => {
         fetchItems();
@@ -154,6 +158,7 @@ export default function Page () {
                             <Ayah
                                 number={ayah.number}
                                 text={ayah.text}
+                                id={`ayah-${ayah.uuid}`}
                             />
                         </div>
                     ))}
@@ -173,7 +178,7 @@ export default function Page () {
                         }
                         setIsFindPopupVisible(false);
                     }}
-                    ayahs_numbers={ayahs.map((ayah) => ayah.number)}
+                    surahs={surahs}
                 />
             )}
             {isMorePopupVisible && (
