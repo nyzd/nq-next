@@ -1,16 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, useMemo } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
     Container,
     Main,
-    Row,
     Screen,
-    Spacer,
-    H2,
-    P,
-    Text,
     Loading,
+    Row,
+    P,
+    H2,
+    Spacer,
 } from "@yakad/ui";
 import {
     Ayah,
@@ -18,6 +17,7 @@ import {
     FindPopup,
     MorePopup,
     PageDivider,
+    SurahCard,
     SurahPeriodIcon,
 } from "@/components";
 import FooterWrapper from "./FooterWrapper";
@@ -47,7 +47,6 @@ export default function Page () {
     const [hasMore, setHasMore] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [takhtitsAyahsBreakers, setTakhtitsAyahsBreakers] = useState<AyahBreakersResponse[]>([]);
-    const [takhtitsAyahsBreakersMap, setTakhtitsAyahsBreakersMap] = useState<Map<string, number>>(new Map());
     const [loadedAyahTexts, setLoadedAyahTexts] = useState<Map<string, AyahType>>(new Map());
     const [loadingAyahs, setLoadingAyahs] = useState<Set<string>>(new Set());
     const loadedAyahTextsRef = useRef<Map<string, AyahType>>(new Map());
@@ -64,12 +63,6 @@ export default function Page () {
 
                 const res = await getTakhtitsAyahsBreakers(firstTakhtitUuid);
                 setTakhtitsAyahsBreakers(res);
-                const map = new Map();
-                res.forEach((ayah) => {
-                    const key = `${ayah.surah}-${ayah.ayah}`;
-                    map.set(key, ayah.page);
-                });
-                setTakhtitsAyahsBreakersMap(map);
             } catch (err) {
                 console.error(err);
             }
@@ -164,57 +157,6 @@ export default function Page () {
         loadingAyahsRef.current = loadingAyahs;
     }, [loadingAyahs]);
 
-    const getPageNumber = (ayahNumber: number, surahNumber: number) => {
-        const key = `${surahNumber}-${ayahNumber}`;
-        return takhtitsAyahsBreakersMap.get(key);
-    };
-
-    const loadAyahText = useCallback(async (surahNumber: number, ayahNumber: number) => {
-        const key = `${surahNumber}-${ayahNumber}`;
-        
-        // Don't load if already loaded or currently loading
-        if (loadedAyahTextsRef.current.has(key) || loadingAyahsRef.current.has(key)) {
-            return;
-        }
-
-        // First check if the ayah is already available in the existing ayahs state
-        const existingAyah = ayahs.find(ayah => 
-            ayah.surahNumber === surahNumber && ayah.number === ayahNumber
-        );
-
-        if (existingAyah) {
-            // Use the existing ayah data
-            setLoadedAyahTexts(prev => new Map(prev).set(key, existingAyah));
-            return;
-        }
-
-        setLoadingAyahs(prev => new Set(prev).add(key));
-
-        try {
-            // Find the surah UUID from the surahs list
-            const surah = surahs.find(s => s.number === surahNumber);
-            if (!surah) {
-                console.error(`Surah ${surahNumber} not found`);
-                return;
-            }
-
-            // Get ayahs for this surah starting from the specific ayah number
-            const ayahs = await getAyahsBySurah("hafs", surah.uuid, 1, ayahNumber - 1);
-            
-            if (ayahs.length > 0) {
-                const ayah = ayahs[0];
-                setLoadedAyahTexts(prev => new Map(prev).set(key, ayah));
-            }
-        } catch (error) {
-            console.error(`Error loading ayah ${surahNumber}:${ayahNumber}:`, error);
-        } finally {
-            setLoadingAyahs(prev => {
-                const newSet = new Set(prev);
-                newSet.delete(key);
-                return newSet;
-            });
-        }
-    }, [ayahs, surahs]);
 
     const loadVisibleAyahs = useCallback(async (visibleKeys: string[]) => {
         // Filter out already loaded or currently loading ayahs
@@ -344,43 +286,70 @@ export default function Page () {
                         onClick={() => setIsFindPopupVisible(true)}
                     />
 
-                    {takhtitsAyahsBreakers.map(ayah => {
+                    {takhtitsAyahsBreakers.map((ayah, index) => {
                         const key = `${ayah.surah}-${ayah.ayah}`;
                         const loadedAyah = loadedAyahTexts.get(key);
                         const isLoading = loadingAyahs.has(key);
                         
+                        // Check if this is the first ayah or if the page number has changed
+                        const isNewPage = index === 0 || 
+                            (ayah.page && takhtitsAyahsBreakers[index - 1]?.page !== ayah.page);
+                        
                         return (
-                            <div 
-                                key={key}
-                                ref={(el) => {
-                                    if (el) {
-                                        takhtitRefs.current.set(key, el);
-                                    }
-                                }}
-                                data-takhtit-key={key}
-                                style={{ marginBottom: '1rem' }}
-                                id={`ayah-${ayah.uuid}`}
-                            >
-                                {isLoading ? (
-                                    <div style={{ padding: '1rem', textAlign: 'center' }}>
-                                        <Loading variant="dots" />
-                                    </div>
-                                ) : loadedAyah ? (
-                                    <Ayah
-                                        number={loadedAyah.number}
-                                        text={loadedAyah.text}
-                                        sajdah={loadedAyah.sajdah}
-                                    />
-                                ) : (
-                                    <div style={{ 
-                                        padding: '1rem', 
-                                        border: '1px dashed #ccc', 
-                                        textAlign: 'center',
-                                        color: '#666'
-                                    }}>
-                                        Takhtit - Surah {ayah.surah}, Ayah {ayah.ayah} (Page {ayah.page})
-                                    </div>
-                                )}
+                            <div key={key}>
+                                {isNewPage && ayah.page && <PageDivider pagenumber={ayah.page} />}
+                                <div 
+                                    ref={(el) => {
+                                        if (el) {
+                                            takhtitRefs.current.set(key, el);
+                                        }
+                                    }}
+                                    data-takhtit-key={key}
+                                    style={{ marginBottom: '1rem' }}
+                                    id={`ayah-${ayah.uuid}`}
+                                >
+                                    {isLoading ? (
+                                        <div style={{ padding: '1rem', textAlign: 'center' }}>
+                                            <Loading variant="dots" />
+                                        </div>
+                                    ) : loadedAyah ? (
+                                        <div>
+                                            {
+                                                loadedAyah.surah && (
+                                                    <Container size="sm" align="center">
+                                                        <Row>
+                                                            <SurahPeriodIcon variant="filled" period={(loadedAyah.surah as any).period || "Not Found!"} />
+                                                            <H2 title="Surah name" variant="heading6">
+                                                            {(loadedAyah.surah as any).names[0].name}
+                                                            </H2>
+                                                            <Spacer />
+                                                                <P variant="heading6">{(loadedAyah.surah as any).number_of_ayahs} Ayahs</P>
+                                                        </Row>
+                                                        <P variant="body1">{(loadedAyah.surah as any).bismillah.is_ayah ? loadedAyah.text : (loadedAyah.surah as any).bismillah.text}</P>
+                                                    </Container>
+                                                )
+                                            }
+                                            {
+                                                (!loadedAyah.surah || !((loadedAyah.surah as any).bismillah?.is_ayah)) && (
+                                                    <Ayah
+                                                        number={loadedAyah.number}
+                                                        text={loadedAyah.text}
+                                                        sajdah={loadedAyah.sajdah}
+                                                    />
+                                                )
+                                            }
+                                        </div>
+                                    ) : (
+                                        <div style={{ 
+                                            padding: '1rem', 
+                                            border: '1px dashed #ccc', 
+                                            textAlign: 'center',
+                                            color: '#666'
+                                        }}>
+                                            Takhtit - Surah {ayah.surah}, Ayah {ayah.ayah} (Page {ayah.page})
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         );
                     })}
