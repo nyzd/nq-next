@@ -17,6 +17,7 @@ import AppBarWrapper from "../../app/quran/AppBarWrapper";
 import { useRouter } from "next/navigation";
 import { Surah, AyahBreakersResponse } from "@ntq/sdk";
 import { getSurahs } from "@/actions/getSurahs";
+import { List, WindowScroller } from "react-virtualized";
 
 interface QuranPageClientProps {
     takhtitsAyahsBreakers: AyahBreakersResponse[];
