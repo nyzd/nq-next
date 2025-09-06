@@ -13,8 +13,10 @@ export * from "./popups/MushafOptionsPopup";
 export * from "./popups/PlayOptionsPopup";
 
 export * from "./quran/Ayah";
+export * from "./quran/AyahsClient";
 export * from "./quran/FindBar";
 export * from "./quran/PageDivider";
+export * from "./quran/QuranPageClient";
 
 export * from "./cards/ReciterCard";
 export * from "./cards/SurahCard";
