@@ -2,14 +2,13 @@
 
 import { forwardRef, useRef, useState } from "react";
 import classNames from "classnames";
-import { Sajdah } from "@ntq/sdk";
 import { Card, CardProps, P } from "@yakad/ui";
 import styles from "./Ayah.module.css";
 
 interface AyahProps extends CardProps {
     number: number;
     text: string;
-    sajdah?: Sajdah;
+    sajdah?: string;
     selected?: boolean;
     onHold?: () => void;
     onRightClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -111,7 +110,7 @@ export const Ayah = forwardRef<HTMLDivElement, AyahProps>(function Ayah(
     );
 });
 
-const SajdahIcon = ({ sajdah }: { sajdah?: Sajdah }) => {
+const SajdahIcon = ({ sajdah }: { sajdah?: string }) => {
     if (sajdah === "vajib")
         return (
             <span

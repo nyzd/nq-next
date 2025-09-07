@@ -6,21 +6,21 @@ import { Ayah, PageDivider, SurahPeriodIcon } from "@/components";
 import { AyahBreakersResponse, Ayah as AyahType, Surah } from "@ntq/sdk";
 import { getAyahsBySurah } from "@/actions/getAyahs";
 import { List, AutoSizer } from "react-virtualized";
+import { useStorage } from "@/contexts/storageContext";
 
 interface AyahsClientProps {
     takhtitsAyahsBreakers: AyahBreakersResponse[];
     surahs: Surah[];
 }
 
-interface AyahTypeWithSurahNumber extends AyahType {
-    surahNumber: number;
-}
 
 export function AyahsClient({ takhtitsAyahsBreakers, surahs }: AyahsClientProps) {
+    const { storage } = useStorage();
     const [loadedAyahTexts, setLoadedAyahTexts] = useState<Map<string, AyahType>>(new Map());
     const [loadingAyahs, setLoadingAyahs] = useState<Set<string>>(new Set());
     const loadedAyahTextsRef = useRef<Map<string, AyahType>>(new Map());
     const loadingAyahsRef = useRef<Set<string>>(new Set());
+    const listRef = useRef<List>(null);
 
     // Update refs when state changes
     useEffect(() => {
@@ -31,7 +31,29 @@ export function AyahsClient({ takhtitsAyahsBreakers, surahs }: AyahsClientProps)
         loadingAyahsRef.current = loadingAyahs;
     }, [loadingAyahs]);
 
+    // Listen for storage changes and scroll to selected ayah
+    useEffect(() => {
+        if (storage.selected.ayahUUID && listRef.current) {
+            // Find the index of the ayah with the selected UUID
+            const ayahIndex = takhtitsAyahsBreakers.findIndex(
+                ayah => ayah.uuid === storage.selected.ayahUUID
+            );
+            
+            if (ayahIndex !== -1) {
+                // Add a small delay to ensure the list is fully rendered
+                setTimeout(() => {
+                    listRef.current?.scrollToRow(ayahIndex);
+                }, 100);
+            }
+        }
+    }, [storage.selected.ayahUUID, takhtitsAyahsBreakers]);
+
     const loadVisibleAyahs = useCallback(async (visibleKeys: string[]) => {
+        // Don't load ayahs if surahs are not yet loaded
+        if (surahs.length === 0) {
+            return;
+        }
+
         // Filter out already loaded or currently loading ayahs
         const keysToLoad = visibleKeys.filter(key => 
             !loadedAyahTextsRef.current.has(key) && !loadingAyahsRef.current.has(key)
@@ -149,23 +171,33 @@ export function AyahsClient({ takhtitsAyahsBreakers, surahs }: AyahsClientProps)
                                 loadedAyah.surah && (
                                     <Container size="sm" align="center">
                                         <Row>
-                                            <SurahPeriodIcon variant="filled" period={(loadedAyah.surah as any).period || "Not Found!"} />
+                                            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                                            {/* @ts-ignore */}  
+                                            <SurahPeriodIcon variant="filled" period={loadedAyah.surah?.period || "Not Found!"} />
                                             <H2 title="Surah name" variant="heading6">
-                                            {(loadedAyah.surah as any).names[0].name}
+                                            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                                            {/* @ts-ignore */}
+                                            {loadedAyah.surah?.names[0]}
                                             </H2>
                                             <Spacer />
-                                                <P variant="heading6">{(loadedAyah.surah as any).number_of_ayahs} Ayahs</P>
+                                            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                                            {/* @ts-ignore */}
+                                                <P variant="heading6">{loadedAyah.surah?.number_of_ayahs} Ayahs</P>
                                         </Row>
-                                        <P variant="body1">{(loadedAyah.surah as any).bismillah.is_ayah ? loadedAyah.text : (loadedAyah.surah as any).bismillah.text}</P>
+                                        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                                        {/* @ts-ignore */}
+                                        <P variant="body1">{loadedAyah.surah?.bismillah?.is_ayah ? loadedAyah.text : loadedAyah.surah?.bismillah?.text}</P>
                                     </Container>
                                 )
                             }
                             {
-                                (!loadedAyah.surah || !((loadedAyah.surah as any).bismillah?.is_ayah)) && (
+                                /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
+                                /* @ts-ignore */
+                                (!loadedAyah.surah || !(loadedAyah.surah?.bismillah?.is_ayah)) && (
                                     <Ayah
                                         number={loadedAyah.number}
                                         text={loadedAyah.text}
-                                        sajdah={loadedAyah.sajdah}
+                                        sajdah={loadedAyah.sajdah || "none"}
                                     />
                                 )
                             }
@@ -176,7 +208,6 @@ export function AyahsClient({ takhtitsAyahsBreakers, surahs }: AyahsClientProps)
                             border: '1px dashed #ccc', 
                             textAlign: 'center',
                             color: '#666',
-                            backgroundColor: 'blue'
                         }}>
                             Takhtit - Surah {ayah.surah}, Ayah {ayah.ayah} (Page {ayah.page})
                         </div>
@@ -186,11 +217,27 @@ export function AyahsClient({ takhtitsAyahsBreakers, surahs }: AyahsClientProps)
         );
     }, [takhtitsAyahsBreakers, loadedAyahTexts, loadingAyahs]);
 
+    // Show loading state if surahs are not yet loaded
+    if (surahs.length === 0) {
+        return (
+            <div style={{ 
+                height: '100vh', 
+                width: '100%', 
+                display: 'flex', 
+                justifyContent: 'center', 
+                alignItems: 'center' 
+            }}>
+                <Loading variant="dots" />
+            </div>
+        );
+    }
+
     return (
         <div style={{ height: '100vh', width: '100%' }}>
             <AutoSizer>
                 {({ height, width }) => (
                     <List
+                        ref={listRef}
                         height={height}
                         width={width}
                         rowCount={takhtitsAyahsBreakers.length}

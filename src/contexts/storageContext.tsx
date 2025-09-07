@@ -82,7 +82,7 @@ const defaultStorage: Storage = {
     },
     selected: {
         mushafUUID: "hafs",
-        ayahUUID: "test",
+        ayahUUID: undefined,
         translationUUID: "UUID",
         translationByWordUUID: "UUID",
         recitationUUID: "UUID",
@@ -117,7 +117,7 @@ export const StorageProvider = ({ children }: { children: ReactNode }) => {
                         ...prev.options,
                         ...parsed.options,
                         playing: false, // force playing to false on load
-                        playBoxShow: storage.selected.ayahUUID !== undefined,
+                        playBoxShow: prev.selected.ayahUUID !== undefined,
                     },
                 }));
             } catch (error) {

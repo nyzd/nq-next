@@ -1,10 +1,10 @@
 import { forwardRef } from "react";
 import Link from "next/link";
-import { SurahsListResponseData } from "@ntq/sdk";
+import { SurahsListResponse } from "@ntq/sdk";
 import { Button, ButtonProps } from "@yakad/ui";
 
 interface RandomSurahButtonProps extends ButtonProps {
-    surahList: SurahsListResponseData;
+    surahList: SurahsListResponse;
 }
 
 export const RandomSurahButton = forwardRef<
