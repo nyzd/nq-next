@@ -1,5 +1,5 @@
 import { getTakhtits, getTakhtitsAyahsBreakers } from "@/actions/getTakhtits";
-import { QuranPageClient } from "@/components/quran/QuranPageClient";
+import { QuranPageWrapper } from "@/components/quran/QuranPageWrapper";
 
 export default async function Page() {
     try {
@@ -8,9 +8,9 @@ export default async function Page() {
         const firstTakhtitUuid = firstTakhtit[0].uuid;
         const takhtitsAyahsBreakers = await getTakhtitsAyahsBreakers(firstTakhtitUuid);
         
-        return <QuranPageClient takhtitsAyahsBreakers={takhtitsAyahsBreakers} />;
+        return <QuranPageWrapper takhtitsAyahsBreakers={takhtitsAyahsBreakers} />;
     } catch (error) {
         console.error("Error fetching takhtits:", error);
-        return <QuranPageClient takhtitsAyahsBreakers={[]} />;
+        return <QuranPageWrapper takhtitsAyahsBreakers={[]} />;
     }
 }
