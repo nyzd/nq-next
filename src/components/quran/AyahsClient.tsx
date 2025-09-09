@@ -177,12 +177,12 @@ export function AyahsClient({ takhtitsAyahsBreakers, surahs }: AyahsClientProps)
                                             <H2 title="Surah name" variant="heading6">
                                             {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                                             {/* @ts-ignore */}
-                                            {loadedAyah.surah?.names[0]}
+                                            {loadedAyah.surah?.names[0].name}
                                             </H2>
                                             <Spacer />
                                             {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                                             {/* @ts-ignore */}
-                                                <P variant="heading6">{loadedAyah.surah?.number_of_ayahs} Ayahs</P>
+                                            <P variant="heading6">{loadedAyah.surah?.number_of_ayahs} Ayahs</P>
                                         </Row>
                                         {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                                         {/* @ts-ignore */}
@@ -198,6 +198,7 @@ export function AyahsClient({ takhtitsAyahsBreakers, surahs }: AyahsClientProps)
                                         number={loadedAyah.number}
                                         text={loadedAyah.text}
                                         sajdah={loadedAyah.sajdah || "none"}
+                                        selected={ayah.uuid === storage.selected.ayahUUID}
                                     />
                                 )
                             }
