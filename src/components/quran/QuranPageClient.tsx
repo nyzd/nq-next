@@ -82,6 +82,7 @@ export function QuranPageClient({ takhtitsAyahsBreakers }: QuranPageClientProps)
                         setIsFindPopupVisible(false);
                     }}
                     surahs={surahs}
+                    takhtitsAyahsBreakers={takhtitsAyahsBreakers}
                 />
             )}
             {isMorePopupVisible && (
