@@ -8,13 +8,12 @@ import { getAyahsBySurah } from "@/actions/getAyahs";
 import { List, AutoSizer } from "react-virtualized";
 import { useStorage } from "@/contexts/storageContext";
 
-interface AyahsClientProps {
+interface AyahsProps {
     takhtitsAyahsBreakers: AyahBreakersResponse[];
     surahs: Surah[];
 }
 
-
-export function AyahsClient({ takhtitsAyahsBreakers, surahs }: AyahsClientProps) {
+export function Ayahs({ takhtitsAyahsBreakers, surahs }: AyahsProps) {
     const { storage } = useStorage();
     const [loadedAyahTexts, setLoadedAyahTexts] = useState<Map<string, AyahType>>(new Map());
     const [loadingAyahs, setLoadingAyahs] = useState<Set<string>>(new Set());

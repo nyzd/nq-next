@@ -1,5 +1,5 @@
 import { getTakhtits, getTakhtitsAyahsBreakers } from "@/actions/getTakhtits";
-import { QuranPageWrapper } from "@/components/quran/QuranPageWrapper";
+import { QuranPageWrapper } from "./QuranPageWrapper";
 
 export default async function Page() {
     try {
