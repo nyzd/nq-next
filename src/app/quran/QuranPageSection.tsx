@@ -10,25 +10,25 @@ import {
     FindBar,
     FindPopup,
     MorePopup,
-    AyahsClient,
 } from "@/components";
-import FooterWrapper from "../../app/quran/FooterWrapper";
-import AppBarWrapper from "../../app/quran/AppBarWrapper";
+import FooterWrapper from "./FooterWrapper";
+import AppBarWrapper from "./AppBarWrapper";
 import { Surah, AyahBreakersResponse } from "@ntq/sdk";
 import { getSurahs } from "@/actions/getSurahs";
 import { useStorage } from "@/contexts/storageContext";
+import { QuranPages } from "./QuranPages";
 
-interface QuranPageClientProps {
+interface QuranPageSectionProps {
     takhtitsAyahsBreakers: AyahBreakersResponse[];
 }
 
-export function QuranPageClient({ takhtitsAyahsBreakers }: QuranPageClientProps) {
+export function QuranPageSection({ takhtitsAyahsBreakers }: QuranPageSectionProps) {
     const { setStorage } = useStorage();
     const [isFindPopupVisible, setIsFindPopupVisible] = useState<boolean>(false);
     const [isMorePopupVisible, setIsMorePopupVisible] = useState<boolean>(false);
     const [surahs, setSurahs] = useState<Surah[]>([]);
 
-    // Fetch surahs data once on component mount
+    // Fetch surahs data for FindPopup
     useEffect(() => {
         getSurahs().then((surahs) => {
             setSurahs(surahs);
@@ -52,9 +52,9 @@ export function QuranPageClient({ takhtitsAyahsBreakers }: QuranPageClientProps)
                         onClick={() => setIsFindPopupVisible(true)}
                     />
 
-                    <AyahsClient 
+                    <QuranPages 
                         takhtitsAyahsBreakers={takhtitsAyahsBreakers}
-                        surahs={surahs}
+                        mushaf="hafs"
                     />
                 </Container>
             </Main>

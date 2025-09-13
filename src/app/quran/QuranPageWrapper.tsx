@@ -3,8 +3,8 @@
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useStorage } from "@/contexts/storageContext";
-import { QuranPageClient } from "./QuranPageClient";
 import { AyahBreakersResponse } from "@ntq/sdk";
+import { QuranPageSection } from "./QuranPageSection";
 
 interface QuranPageWrapperProps {
     takhtitsAyahsBreakers: AyahBreakersResponse[];
@@ -32,5 +32,5 @@ export function QuranPageWrapper({ takhtitsAyahsBreakers }: QuranPageWrapperProp
         }
     }, [searchParams, setStorage]);
 
-    return <QuranPageClient takhtitsAyahsBreakers={takhtitsAyahsBreakers} />;
+    return <QuranPageSection takhtitsAyahsBreakers={takhtitsAyahsBreakers} />;
 }
