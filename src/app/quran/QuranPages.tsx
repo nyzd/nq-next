@@ -40,6 +40,16 @@ export function QuranPages({
 
     return (
         <div className={className}>
+            {/* First Page is not in the takhtits so we have to hard code it */}
+            <QuranPage 
+                pageNumber={1}
+                ayahRange={{
+                    offset: 0,
+                    limit: 7
+                }}
+                mushaf={mushaf}
+            />
+
             {allPages.map((page, index) => (
                 <div key={page.pageNumber}>
                     {/* Add PageDivider for each page */}
