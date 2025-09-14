@@ -3,14 +3,15 @@
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useStorage } from "@/contexts/storageContext";
-import { AyahBreakersResponse } from "@ntq/sdk";
+import { AyahBreakersResponse, TranslationList } from "@ntq/sdk";
 import { QuranPageSection } from "./QuranPageSection";
 
 interface QuranPageWrapperProps {
     takhtitsAyahsBreakers: AyahBreakersResponse[];
+    translation?: TranslationList;
 }
 
-export function QuranPageWrapper({ takhtitsAyahsBreakers }: QuranPageWrapperProps) {
+export function QuranPageWrapper({ takhtitsAyahsBreakers, translation }: QuranPageWrapperProps) {
     const searchParams = useSearchParams();
     const { setStorage } = useStorage();
 
@@ -32,5 +33,5 @@ export function QuranPageWrapper({ takhtitsAyahsBreakers }: QuranPageWrapperProp
         }
     }, [searchParams, setStorage]);
 
-    return <QuranPageSection takhtitsAyahsBreakers={takhtitsAyahsBreakers} />;
+    return <QuranPageSection takhtitsAyahsBreakers={takhtitsAyahsBreakers} translation={translation} />;
 }

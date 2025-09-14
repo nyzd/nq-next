@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Loading, P, Container } from "@yakad/ui";
 import { Ayah } from "@/components";
-import { Ayah as AyahType } from "@ntq/sdk";
+import { Ayah as AyahType, TranslationList } from "@ntq/sdk";
 import { getAyahs } from "@/actions/getAyahs";
 import { useStorage } from "@/contexts/storageContext";
 
@@ -12,9 +12,10 @@ interface AyahRangeProps {
     limit: number;
     mushaf?: string;
     className?: string;
+    translation?: TranslationList;
 }
 
-export function AyahRange({ offset, limit, mushaf = "hafs", className }: AyahRangeProps) {
+export function AyahRange({ offset, limit, mushaf = "hafs", className, translation }: AyahRangeProps) {
     const { storage } = useStorage();
     const [ayahs, setAyahs] = useState<AyahType[]>([]);
     const [loading, setLoading] = useState<boolean>(true);

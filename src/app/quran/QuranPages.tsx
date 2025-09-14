@@ -1,11 +1,11 @@
-import { QuranPage } from "@/components/quran/QuranPage";
-import { PageDivider } from "@/components/quran/PageDivider";
-import { AyahBreakersResponse } from "@ntq/sdk";
+import { LazyQuranPage, PageDivider } from "@/components";
+import { AyahBreakersResponse, TranslationList } from "@ntq/sdk";
 
 interface QuranPagesProps {
     takhtitsAyahsBreakers: AyahBreakersResponse[];
     mushaf?: string;
     className?: string;
+    translation?: TranslationList;
 }
 
 // Helper function to calculate pages and their ranges
@@ -41,7 +41,7 @@ export function QuranPages({
     return (
         <div className={className}>
             {/* First Page is not in the takhtits so we have to hard code it */}
-            <QuranPage 
+            <LazyQuranPage 
                 pageNumber={1}
                 ayahRange={{
                     offset: 0,
@@ -55,7 +55,7 @@ export function QuranPages({
                     {/* Add PageDivider for each page */}
                     <PageDivider pagenumber={page.pageNumber} />
                     
-                    <QuranPage 
+                    <LazyQuranPage 
                         pageNumber={page.pageNumber}
                         ayahRange={{
                             offset: page.offset,
