@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Loading, P, Container } from "@yakad/ui";
 import { Ayah } from "@/components";
-import { Ayah as AyahType, PaginatedAyahList, PaginatedAyahTranslationList, TranslationList } from "@ntq/sdk";
+import { Ayah as AyahType, PaginatedAyahTranslationList, TranslationList } from "@ntq/sdk";
 import { getAyahs } from "@/actions/getAyahs";
 import { useStorage } from "@/contexts/storageContext";
 import { getTranslationAyahs } from "@/actions/getTranslations";
