@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { QuranPage } from "./QuranPage";
 import { Loading, P, Container } from "@yakad/ui";
+import { TranslationList } from "@ntq/sdk";
 
 interface AyahRange {
     offset: number;
@@ -14,13 +15,15 @@ interface LazyQuranPageProps {
     ayahRange: AyahRange;
     mushaf?: string;
     className?: string;
+    translation?: TranslationList;
 }
 
 export function LazyQuranPage({ 
     pageNumber, 
     ayahRange, 
     mushaf = "hafs", 
-    className 
+    className,
+    translation
 }: LazyQuranPageProps) {
     const [isVisible, setIsVisible] = useState(false);
     const [hasLoaded, setHasLoaded] = useState(false);
@@ -75,6 +78,7 @@ export function LazyQuranPage({
                     pageNumber={pageNumber}
                     ayahRange={ayahRange}
                     mushaf={mushaf}
+                    translation={translation}
                 />
             )}
         </div>

@@ -10,6 +10,8 @@ export default async function Page() {
         const takhtitsAyahsBreakers = await getTakhtitsAyahsBreakers(firstTakhtitUuid);
 
         const translations = await getTranslations("hafs", 1);
+
+        console.log(translations)
         
         return <QuranPageWrapper translation={translations[0]} takhtitsAyahsBreakers={takhtitsAyahsBreakers} />;
     } catch (error) {

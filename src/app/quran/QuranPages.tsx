@@ -33,7 +33,8 @@ function calculatePages(takhtitsAyahsBreakers: AyahBreakersResponse[]) {
 export function QuranPages({ 
     takhtitsAyahsBreakers, 
     mushaf = "hafs", 
-    className
+    className,
+    translation
 }: QuranPagesProps) {
     // Calculate all pages and their ranges
     const allPages = calculatePages(takhtitsAyahsBreakers);
@@ -48,6 +49,7 @@ export function QuranPages({
                     limit: 7
                 }}
                 mushaf={mushaf}
+                translation={translation}
             />
 
             {allPages.map((page, index) => (
@@ -62,6 +64,7 @@ export function QuranPages({
                             limit: page.limit
                         }}
                         mushaf={mushaf}
+                        translation={translation}
                     />
                     
                     {/* Add spacing between pages (except for the last page) */}
