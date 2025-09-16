@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Loading, P, Container } from "@yakad/ui";
 import { Ayah } from "@/components";
 import { Ayah as AyahType, PaginatedAyahTranslationList, TranslationList } from "@ntq/sdk";
@@ -22,6 +22,32 @@ export function AyahRange({ offset, limit, mushaf = "hafs", className, translati
     const [translations, setTranslations] = useState<PaginatedAyahTranslationList>();
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+
+    const ayahsRefs = useRef<Record<string, HTMLDivElement | null>>({});
+    
+    useEffect(() => {
+        const selected_ayah = storage.selected.ayahUUID ?? undefined;
+        if (selected_ayah && ayahsRefs.current[selected_ayah]) {
+            ayahsRefs.current[selected_ayah].scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+        }
+    }, [storage.selected.ayahUUID]);
+
+    // After ayahs render/update, try scrolling to the selected ayah again
+    useEffect(() => {
+        const selected_ayah = storage.selected.ayahUUID ?? undefined;
+        if (!selected_ayah) return;
+        // Defer to next tick to ensure refs are attached
+        const id = window.setTimeout(() => {
+            const el = ayahsRefs.current[selected_ayah];
+            if (el) {
+                el.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        }, 0);
+        return () => window.clearTimeout(id);
+    }, [ayahs, storage.selected.ayahUUID]);
 
     useEffect(() => {
         let isActive = true;
@@ -134,6 +160,10 @@ export function AyahRange({ offset, limit, mushaf = "hafs", className, translati
                     
                     {/* Render the ayah */}
                     <Ayah
+                        ref={(el) => {
+                            ayahsRefs.current[ayah.uuid] = el;
+                        }}
+                        id={`ayah-${ayah.uuid}`}
                         number={ayah.number}
                         text={ayah.text}
                         sajdah={ayah.sajdah || "none"}

@@ -1,5 +1,7 @@
 import { LazyQuranPage, PageDivider } from "@/components";
 import { AyahBreakersResponse, TranslationList } from "@ntq/sdk";
+import { useEffect, useRef } from "react";
+import { useStorage } from "@/contexts/storageContext";
 
 interface QuranPagesProps {
     takhtitsAyahsBreakers: AyahBreakersResponse[];
@@ -39,21 +41,49 @@ export function QuranPages({
     // Calculate all pages and their ranges
     const allPages = calculatePages(takhtitsAyahsBreakers);
 
+    // Refs to each page wrapper for scrolling
+    const pageRefs = useRef<Record<number, HTMLDivElement | null>>({});
+    const { storage } = useStorage();
+
+    // When a selected ayah changes but it's not rendered yet, scroll to its page wrapper
+    useEffect(() => {
+        const selectedUuid = storage.selected.ayahUUID;
+        if (!selectedUuid) return;
+
+        const ayahMeta = takhtitsAyahsBreakers.find(a => a.uuid === selectedUuid);
+        const pageNumber = ayahMeta?.page;
+        if (!pageNumber) return;
+
+        const pageEl = pageRefs.current[pageNumber];
+        if (pageEl) {
+            pageEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+    }, [storage.selected.ayahUUID, takhtitsAyahsBreakers]);
+
     return (
         <div className={className}>
             {/* First Page is not in the takhtits so we have to hard code it */}
-            <LazyQuranPage 
-                pageNumber={1}
-                ayahRange={{
-                    offset: 0,
-                    limit: 7
+            <div
+                ref={(el) => {
+                    pageRefs.current[1] = el;
                 }}
-                mushaf={mushaf}
-                translation={translation}
-            />
+                id={`quran-page-1`}
+            >
+                <LazyQuranPage 
+                    pageNumber={1}
+                    ayahRange={{
+                        offset: 0,
+                        limit: 7
+                    }}
+                    mushaf={mushaf}
+                    translation={translation}
+                />
+            </div>
 
             {allPages.map((page, index) => (
-                <div key={page.pageNumber}>
+                <div key={page.pageNumber} ref={(el) => {
+                    pageRefs.current[page.pageNumber] = el;
+                }} id={`quran-page-${page.pageNumber}`}>
                     {/* Add PageDivider for each page */}
                     <PageDivider pagenumber={page.pageNumber} />
                     
