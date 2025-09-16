@@ -13,16 +13,17 @@ import {
 } from "@/components";
 import FooterWrapper from "./FooterWrapper";
 import AppBarWrapper from "./AppBarWrapper";
-import { Surah, AyahBreakersResponse } from "@ntq/sdk";
+import { Surah, AyahBreakersResponse, TranslationList } from "@ntq/sdk";
 import { getSurahs } from "@/actions/getSurahs";
 import { useStorage } from "@/contexts/storageContext";
 import { QuranPages } from "./QuranPages";
 
 interface QuranPageSectionProps {
     takhtitsAyahsBreakers: AyahBreakersResponse[];
+    translation?: TranslationList;
 }
 
-export function QuranPageSection({ takhtitsAyahsBreakers }: QuranPageSectionProps) {
+export function QuranPageSection({ takhtitsAyahsBreakers, translation }: QuranPageSectionProps) {
     const { setStorage } = useStorage();
     const [isFindPopupVisible, setIsFindPopupVisible] = useState<boolean>(false);
     const [isMorePopupVisible, setIsMorePopupVisible] = useState<boolean>(false);
@@ -55,6 +56,7 @@ export function QuranPageSection({ takhtitsAyahsBreakers }: QuranPageSectionProp
                     <QuranPages 
                         takhtitsAyahsBreakers={takhtitsAyahsBreakers}
                         mushaf="hafs"
+                        translation={translation}
                     />
                 </Container>
             </Main>

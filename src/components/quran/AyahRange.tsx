@@ -1,42 +1,95 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Loading, P, Container } from "@yakad/ui";
 import { Ayah } from "@/components";
-import { Ayah as AyahType } from "@ntq/sdk";
+import { Ayah as AyahType, PaginatedAyahTranslationList, TranslationList } from "@ntq/sdk";
 import { getAyahs } from "@/actions/getAyahs";
 import { useStorage } from "@/contexts/storageContext";
+import { getTranslationAyahs } from "@/actions/getTranslations";
 
 interface AyahRangeProps {
     offset: number;
     limit: number;
     mushaf?: string;
     className?: string;
+    translation?: TranslationList;
 }
 
-export function AyahRange({ offset, limit, mushaf = "hafs", className }: AyahRangeProps) {
+export function AyahRange({ offset, limit, mushaf = "hafs", className, translation }: AyahRangeProps) {
     const { storage } = useStorage();
     const [ayahs, setAyahs] = useState<AyahType[]>([]);
+    const [translations, setTranslations] = useState<PaginatedAyahTranslationList>();
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
+    const ayahsRefs = useRef<Record<string, HTMLDivElement | null>>({});
+    
     useEffect(() => {
-        const loadAyahs = async () => {
+        const selected_ayah = storage.selected.ayahUUID ?? undefined;
+        if (selected_ayah && ayahsRefs.current[selected_ayah]) {
+            ayahsRefs.current[selected_ayah].scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+        }
+    }, [storage.selected.ayahUUID]);
+
+    // After ayahs render/update, try scrolling to the selected ayah again
+    useEffect(() => {
+        const selected_ayah = storage.selected.ayahUUID ?? undefined;
+        if (!selected_ayah) return;
+        // Defer to next tick to ensure refs are attached
+        const id = window.setTimeout(() => {
+            const el = ayahsRefs.current[selected_ayah];
+            if (el) {
+                el.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        }, 0);
+        return () => window.clearTimeout(id);
+    }, [ayahs, storage.selected.ayahUUID]);
+
+    useEffect(() => {
+        let isActive = true;
+
+        const loadData = async () => {
             try {
                 setLoading(true);
                 setError(null);
-                const loadedAyahs = await getAyahs(mushaf, limit, offset);
+
+                const ayahsPromise = getAyahs(mushaf, limit, offset);
+                const translationsPromise = translation?.uuid
+                    ? getTranslationAyahs(translation.uuid, limit, offset)
+                    : Promise.resolve(undefined);
+
+                const [loadedAyahs, loadedTranslations] = await Promise.all([
+                    ayahsPromise,
+                    translationsPromise
+                ]);
+
+                if (!isActive) return;
+
                 setAyahs(loadedAyahs);
+                // Only set translations if a translation is selected
+                if (loadedTranslations) {
+                    setTranslations(loadedTranslations);
+                } else {
+                    setTranslations(undefined);
+                }
             } catch (err) {
-                console.error('Error loading ayahs:', err);
-                setError('Failed to load ayahs');
+                console.error('Error loading ayahs/translations:', err);
+                setError('Failed to load ayahs or translations');
             } finally {
-                setLoading(false);
+                if (isActive) setLoading(false);
             }
         };
 
-        loadAyahs();
-    }, [offset, limit, mushaf]);
+        loadData();
+
+        return () => {
+            isActive = false;
+        };
+    }, [offset, limit, mushaf, translation?.uuid]);
 
     if (loading) {
         return (
@@ -81,7 +134,7 @@ export function AyahRange({ offset, limit, mushaf = "hafs", className }: AyahRan
                             <P variant="heading6" style={{ marginBottom: '0.5rem' }}>
                                 {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                                 {/* @ts-ignore */}
-                                {ayah.surah?.names[0]?.name}
+                                {(ayah.surah?.names || [{name: "NOTFOUND"}])[0]?.name || "Name Not found!"}
                             </P>
                             <P variant="body2" style={{ color: '#666' }}>
                                 {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
@@ -107,11 +160,17 @@ export function AyahRange({ offset, limit, mushaf = "hafs", className }: AyahRan
                     
                     {/* Render the ayah */}
                     <Ayah
+                        ref={(el) => {
+                            ayahsRefs.current[ayah.uuid] = el;
+                        }}
+                        id={`ayah-${ayah.uuid}`}
                         number={ayah.number}
                         text={ayah.text}
                         sajdah={ayah.sajdah || "none"}
                         selected={ayah.uuid === storage.selected.ayahUUID}
                     />
+
+                    <h3>{translations?.[index]?.text}</h3>
                 </div>
             ))}
         </div>

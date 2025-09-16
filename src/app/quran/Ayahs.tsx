@@ -140,7 +140,7 @@ export function Ayahs({ takhtitsAyahsBreakers, surahs }: AyahsProps) {
         if (visibleKeys.length > 0) {
             loadVisibleAyahs(visibleKeys);
         }
-    }, [takhtitsAyahsBreakers, loadVisibleAyahs]);
+    }, [takhtitsAyahsBreakers, loadVisibleAyahs, storage.selected.ayahUUID]);
 
     // Row renderer for the virtualized list
     const rowRenderer = useCallback(({ index, key, style }: { index: number; key: string; style: React.CSSProperties }) => {

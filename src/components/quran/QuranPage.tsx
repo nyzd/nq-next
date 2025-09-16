@@ -1,3 +1,4 @@
+import { TranslationList } from "@ntq/sdk";
 import { AyahRange } from "./AyahRange";
 
 interface AyahRange {
@@ -10,10 +11,10 @@ interface QuranPageProps {
     ayahRange: AyahRange | null;
     mushaf?: string;
     className?: string;
+    translation?: TranslationList;
 }
 
-export function QuranPage({ pageNumber, ayahRange, mushaf = "hafs", className }: QuranPageProps) {
-    // If no ayahs found for this page, show a message
+export function QuranPage({ pageNumber, ayahRange, mushaf = "hafs", className, translation }: QuranPageProps) { // If no ayahs found for this page, show a message
     if (!ayahRange) {
         return (
             <div className={className}>
@@ -34,6 +35,7 @@ export function QuranPage({ pageNumber, ayahRange, mushaf = "hafs", className }:
                 offset={ayahRange.offset}
                 limit={ayahRange.limit}
                 mushaf={mushaf}
+                translation={translation}
             />
         </div>
     );

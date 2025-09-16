@@ -15,6 +15,7 @@ export * from "./popups/PlayOptionsPopup";
 export * from "./quran/Ayah";
 export * from "./quran/AyahRange";
 export * from "./quran/FindBar";
+export * from "./quran/LazyQuranPage";
 export * from "./quran/PageDivider";
 export * from "./quran/QuranPage";
 

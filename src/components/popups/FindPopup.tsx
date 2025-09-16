@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef, useState, useMemo, useEffect } from "react";
-import { Button, InputField, Row, Select, Text } from "@yakad/ui";
+import { Button, Row, Select, Text } from "@yakad/ui";
 import { Xpopup, XpopupProps } from "@yakad/x";
 import { Surah, AyahBreakersResponse } from "@ntq/sdk";
 import { useStorage } from "@/contexts/storageContext";
@@ -19,7 +19,7 @@ export const FindPopup = forwardRef<HTMLDivElement, FindPopupProps>(
         const [currentAyah, setCurrentAyah] = useState<number>();
         const [currentJuz, setCurrentJuz] = useState<number>();
         const [currentHizb, setCurrentHizb] = useState<number>();
-        const [currentRuku, setCurrentRuku] = useState<number>();
+        // Ruku selection is not implemented yet; keep placeholder Select disabled below
         const [currentPage, setCurrentPage] = useState<number>();
 
         // Find current ayah from localStorage and set initial state
