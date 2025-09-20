@@ -170,28 +170,18 @@ export function Ayahs({ takhtitsAyahsBreakers, surahs }: AyahsProps) {
                                 loadedAyah.surah && (
                                     <Container size="sm" align="center">
                                         <Row>
-                                            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                                            {/* @ts-ignore */}  
-                                            <SurahPeriodIcon variant="filled" period={loadedAyah.surah?.period || "Not Found!"} />
+                                            <SurahPeriodIcon variant="filled" period={loadedAyah.surah?.period || "makki"} />
                                             <H2 title="Surah name" variant="heading6">
-                                            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                                            {/* @ts-ignore */}
                                             {loadedAyah.surah?.names[0].name}
                                             </H2>
                                             <Spacer />
-                                            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                                            {/* @ts-ignore */}
                                             <P variant="heading6">{loadedAyah.surah?.number_of_ayahs} Ayahs</P>
                                         </Row>
-                                        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                                        {/* @ts-ignore */}
                                         <P variant="body1">{loadedAyah.surah?.bismillah?.is_ayah ? loadedAyah.text : loadedAyah.surah?.bismillah?.text}</P>
                                     </Container>
                                 )
                             }
                             {
-                                /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
-                                /* @ts-ignore */
                                 (!loadedAyah.surah || !(loadedAyah.surah?.bismillah?.is_ayah)) && (
                                     <Ayah
                                         number={loadedAyah.number}

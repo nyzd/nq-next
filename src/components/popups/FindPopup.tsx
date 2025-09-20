@@ -232,8 +232,6 @@ export const FindPopup = forwardRef<HTMLDivElement, FindPopupProps>(
                         onChange={(e) => handleSurahSelect(+e.target.value)}
                     >
                         {
-                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                            // @ts-ignore
                             surahs.map(surah => <option key={surah.number} value={surah.number}>{surah.names[0]?.name}</option>)
                         }
                     </Select>
