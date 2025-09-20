@@ -10,7 +10,7 @@ interface Preferences {
 
 const defaultPreferences: Preferences = {
     darkStyle: "system",
-    themeColor: (process.env.THEME_COLOR as ThemeColor) || "blue",
+    themeColor: (process.env.THEME_COLOR as ThemeColor) || "green",
     zoom: 100,
     language: "en",
 };
