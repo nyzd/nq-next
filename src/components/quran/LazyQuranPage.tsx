@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { QuranPage } from "./QuranPage";
-import { Loading, P, Container } from "@yakad/ui";
+import { LoadingIcon, P, Container } from "@yakad/ui";
 import { TranslationList } from "@ntq/sdk";
 
 interface AyahRange {
@@ -18,12 +18,12 @@ interface LazyQuranPageProps {
     translation?: TranslationList;
 }
 
-export function LazyQuranPage({ 
-    pageNumber, 
-    ayahRange, 
-    mushaf = "hafs", 
+export function LazyQuranPage({
+    pageNumber,
+    ayahRange,
+    mushaf = "hafs",
     className,
-    translation
+    translation,
 }: LazyQuranPageProps) {
     const [isVisible, setIsVisible] = useState(false);
     const [hasLoaded, setHasLoaded] = useState(false);
@@ -44,7 +44,7 @@ export function LazyQuranPage({
             {
                 // Load content when the page is 100px away from being visible
                 rootMargin: "100px 0px",
-                threshold: 0.1
+                threshold: 0.1,
             }
         );
 
@@ -60,21 +60,28 @@ export function LazyQuranPage({
     return (
         <div ref={pageRef} className={className}>
             {!isVisible ? (
-                <Container size="sm" align="center" style={{ 
-                    minHeight: '400px', 
-                    display: 'flex', 
-                    flexDirection: 'column', 
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    padding: '2rem'
-                }}>
-                    <Loading variant="dots" />
-                    <P variant="body2" style={{ marginTop: '1rem', color: '#666' }}>
+                <Container
+                    size="sm"
+                    align="center"
+                    style={{
+                        minHeight: "400px",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: "2rem",
+                    }}
+                >
+                    <LoadingIcon variant="dots" />
+                    <P
+                        variant="body2"
+                        style={{ marginTop: "1rem", color: "#666" }}
+                    >
                         Page {pageNumber} - Scroll to load content
                     </P>
                 </Container>
             ) : (
-                <QuranPage 
+                <QuranPage
                     pageNumber={pageNumber}
                     ayahRange={ayahRange}
                     mushaf={mushaf}

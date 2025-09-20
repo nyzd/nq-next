@@ -16,6 +16,7 @@ export default function FooterWrapper({
         <>
             <Footer
                 position="sticky"
+                align="space"
                 size="md"
                 blur
                 style={{

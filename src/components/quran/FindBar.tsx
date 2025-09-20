@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef, useEffect, useState } from "react";
-import { Card, CardProps } from "@yakad/ui";
+import { Card, CardProps, Text } from "@yakad/ui";
 
 interface FindBarProps extends CardProps {
     surahnumber: number;
@@ -13,7 +13,15 @@ interface FindBarProps extends CardProps {
 }
 export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
     function FindBar(
-        { surahnumber, ayahnumber, pagenumber, juz, hizb, surahName, ...restProps },
+        {
+            surahnumber,
+            ayahnumber,
+            pagenumber,
+            juz,
+            hizb,
+            surahName,
+            ...restProps
+        },
         ref
     ) {
         const [top, setTop] = useState(2);
@@ -49,7 +57,9 @@ export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "space-between",
-                    padding: "1rem 2.5rem",
+                    alignItems: "center",
+                    height: "4rem",
+                    padding: "0 2.5rem",
                     fontSize: "1.4rem",
                     boxShadow:
                         "1.8rem -2rem 0 0.6rem rgb(var(--surfaceColor, 254 247 255)), -1.8rem -2rem 0 0.6rem rgb(var(--surfaceColor, 254 247 255))",
@@ -60,9 +70,15 @@ export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
                     userSelect: "none",
                 }}
             >
-                <div>{surahnumber + ". " + (surahName || "Al-Fatihah") + ": " + ayahnumber}</div>
-                <div>{"Page " + pagenumber}</div>
-                <div>{"Juz " + juz + " / " + "Hizb " + hizb}</div>
+                <Text>
+                    {surahnumber +
+                        ". " +
+                        (surahName || "Al-Fatihah") +
+                        ": " +
+                        ayahnumber}
+                </Text>
+                <Text>{"Page " + pagenumber}</Text>
+                <Text>{"Juz " + juz + " / " + "Hizb " + hizb}</Text>
             </Card>
         );
     }
