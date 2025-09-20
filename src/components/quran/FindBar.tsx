@@ -9,10 +9,11 @@ interface FindBarProps extends CardProps {
     pagenumber: number;
     juz: number;
     hizb: number;
+    surahName?: string;
 }
 export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
     function FindBar(
-        { surahnumber, ayahnumber, pagenumber, juz, hizb, ...restProps },
+        { surahnumber, ayahnumber, pagenumber, juz, hizb, surahName, ...restProps },
         ref
     ) {
         const [top, setTop] = useState(2);
@@ -59,7 +60,7 @@ export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
                     userSelect: "none",
                 }}
             >
-                <div>{surahnumber + ". Al-Fatihah: " + ayahnumber}</div>
+                <div>{surahnumber + ". " + (surahName || "Al-Fatihah") + ": " + ayahnumber}</div>
                 <div>{"Page " + pagenumber}</div>
                 <div>{"Juz " + juz + " / " + "Hizb " + hizb}</div>
             </Card>

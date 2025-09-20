@@ -17,13 +17,24 @@ interface AyahRangeProps {
 }
 
 export function AyahRange({ offset, limit, mushaf = "hafs", className, translation }: AyahRangeProps) {
-    const { storage } = useStorage();
+    const { storage, setStorage } = useStorage();
     const [ayahs, setAyahs] = useState<AyahType[]>([]);
     const [translations, setTranslations] = useState<PaginatedAyahTranslationList>();
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
     const ayahsRefs = useRef<Record<string, HTMLDivElement | null>>({});
+    
+    // Handle ayah click to update selected ayah
+    const handleAyahClick = (ayahUUID: string) => {
+        setStorage(prev => ({
+            ...prev,
+            selected: {
+                ...prev.selected,
+                ayahUUID: ayahUUID
+            }
+        }));
+    };
     
     useEffect(() => {
         const selected_ayah = storage.selected.ayahUUID ?? undefined;
@@ -158,6 +169,7 @@ export function AyahRange({ offset, limit, mushaf = "hafs", className, translati
                         text={ayah.text}
                         sajdah={ayah.sajdah || "none"}
                         selected={ayah.uuid === storage.selected.ayahUUID}
+                        onClick={() => handleAyahClick(ayah.uuid)}
                     />
 
                     <h3>{translations?.[index]?.text}</h3>
