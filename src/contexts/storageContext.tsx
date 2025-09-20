@@ -12,12 +12,6 @@ import {
 } from "react";
 
 // ----- 1. Types for each storage section -----
-interface Settings {
-    darkStyle: DarkStyle;
-    themeColor: ThemeColor;
-    zoom?: number; //Percentage zoom level (e.g., 100 for 100%)
-    language: string;
-}
 interface Options {
     arabicFont: "test";
     arabicFontSize: "small" | "medium" | "large";
@@ -51,19 +45,12 @@ interface Selected {
 }
 // ----- 2. Combined Storage type -----
 interface Storage {
-    settings: Settings;
     options: Options;
     selected: Selected;
 }
 
 // ----- 3. Default values -----
 const defaultStorage: Storage = {
-    settings: {
-        darkStyle: "system",
-        themeColor: "green",
-        zoom: 100,
-        language: "en",
-    },
     options: {
         arabicFont: "test",
         arabicFontSize: "medium",

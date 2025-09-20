@@ -11,12 +11,12 @@ import {
     List,
     ListItem,
     Display,
-    ClickOutsideListener,
     AppBarProps,
     NavigationProps,
+    WithInteractions,
 } from "@yakad/ui";
 import { Symbol } from "@yakad/symbols";
-import LogoIcon from "@/assets/svg/natiqLogoIcon";
+import LogoIcon from "@/assets/svg/LogoIcon";
 
 interface NavListItem {
     href: string;
@@ -81,9 +81,9 @@ export default function AppBarWrapper({ ...restProps }: AppBarProps) {
                     </Button>
                 </Link>
             </AppBar>
-            <ClickOutsideListener onclickoutside={() => setNavOpen(false)}>
+            <WithInteractions onOutsideClick={() => setNavOpen(false)}>
                 <NavigationWrapper anchor="top" open={navOpen} />
-            </ClickOutsideListener>
+            </WithInteractions>
         </>
     );
 }

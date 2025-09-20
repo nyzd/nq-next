@@ -1,4 +1,4 @@
-const NatiqLogoIcon = () => (
+const LogoIcon = () => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         height="1000"
@@ -11,4 +11,4 @@ const NatiqLogoIcon = () => (
     </svg>
 );
 
-export default NatiqLogoIcon;
+export default LogoIcon;

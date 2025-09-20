@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button, Row } from "@yakad/ui";
 import { XgetStart, XgetStartProps } from "@yakad/x";
 import { Symbol } from "@yakad/symbols";
-import LogoIcon from "@/assets/svg/natiqLogoIcon";
+import LogoIcon from "@/assets/svg/LogoIcon";
 
 export default function XgetStartWrapper({ ...restProps }: XgetStartProps) {
     return (

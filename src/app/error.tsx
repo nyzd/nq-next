@@ -2,8 +2,8 @@
 
 import { useEffect } from "react";
 import { Button, H1, P, Screen } from "@yakad/ui";
-import { GoBackButton } from "@/components";
 import { Symbol } from "@yakad/symbols";
+import { GoBackButton } from "@/components/buttons/GoBackButton";
 
 type ErrorProps = {
     error: Error & { digest?: string };
@@ -16,7 +16,7 @@ export default function Error({ error, reset }: ErrorProps) {
     }, [error]);
 
     return (
-        <Screen align="center">
+        <Screen align="space">
             <H1 variant="heading3">Something went wrong.</H1>
             <P variant="body3">{error.message}</P>
             <Button
