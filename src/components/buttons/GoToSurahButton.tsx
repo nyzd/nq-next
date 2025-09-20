@@ -18,7 +18,7 @@ export const GoToSurahButton = forwardRef<
             passHref
         >
             <Button ref={ref} {...restProps}>
-                {surahList[surahNumber - 1].names[0]}
+                {surahList[surahNumber - 1].names[0].name}
             </Button>
         </Link>
     );

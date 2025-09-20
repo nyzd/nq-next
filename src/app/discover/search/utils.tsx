@@ -73,7 +73,7 @@ const SurahLinkBox = (props: { surah: SurahsListResponse[0] }) => (
                                 fontWeight: "bold",
                             }}
                         >
-                            {props.surah.names[0]}
+                            {props.surah.names[0].name}
                         </span>
                         {/* <SurahPeriodIcon period={props.surah.period} /> */}
                         <h5>{props.surah.period}</h5>

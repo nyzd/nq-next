@@ -127,22 +127,14 @@ export function AyahRange({ offset, limit, mushaf = "hafs", className, translati
             {ayahs.map((ayah, index) => (
                 <div key={`${ayah.uuid}-${index}`} style={{ marginBottom: '1rem' }}>
                     {/* Show surah header for first ayah or when surah changes */}
-                    {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                    {/* @ts-ignore */}
                     {ayah.surah && (index === 0 || ayahs[index - 1]?.surah?.uuid !== ayah.surah.uuid) && (
                         <Container size="sm" align="center" style={{ marginBottom: '1.5rem' }}>
                             <P variant="heading6" style={{ marginBottom: '0.5rem' }}>
-                                {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                                {/* @ts-ignore */}
                                 {(ayah.surah?.names || [{name: "NOTFOUND"}])[0]?.name || "Name Not found!"}
                             </P>
                             <P variant="body2" style={{ color: '#666' }}>
-                                {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                                {/* @ts-ignore */}
                                 {ayah.surah?.number_of_ayahs} Ayahs
                             </P>
-                            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                            {/* @ts-ignore */}
                             {ayah.surah?.bismillah?.text && !ayah.surah?.bismillah?.is_ayah && (
                                 <P variant="body1" style={{ 
                                     direction: 'rtl', 
@@ -150,8 +142,6 @@ export function AyahRange({ offset, limit, mushaf = "hafs", className, translati
                                     marginTop: '1rem',
                                     fontStyle: 'italic'
                                 }}>
-                                    {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                                    {/* @ts-ignore */}
                                     {ayah.surah?.bismillah?.text}
                                 </P>
                             )}
