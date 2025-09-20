@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "private": false,
     "scripts": {
+        "sync": "yakad-sync -r https://github.com/natiq-foundation/yakad-template.git -v",
         "dev": "next dev --turbopack",
         "build": "next build --turbopack",
         "start": "next start",
@@ -10,7 +11,7 @@
     },
     "dependencies": {
         "@ntq/sdk": "1.1.79",
-        "@yakad/lib": "1.0.15",
+        "@yakad/lib": "1.0.22",
         "@yakad/symbols": "1.0.24",
         "@yakad/ui": "1.3.111",
         "@yakad/x": "1.1.26",
@@ -20,6 +21,7 @@
         "react-virtualized": "^9.22.6"
     },
     "devDependencies": {
+        "@yakad/sync": "latest",
         "@eslint/eslintrc": "^3",
         "@types/node": "^20",
         "@types/react": "^19",

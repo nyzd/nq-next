@@ -2,43 +2,51 @@
 
 import { forwardRef } from "react";
 import classNames from "classnames";
-import { Button, ButtonProps, ThemeColor } from "@yakad/ui";
-import { Symbol } from "@yakad/symbols";
+import { Button, ButtonProps } from "@yakad/ui";
+import { IconCode, Symbol } from "@yakad/symbols";
 import { usePreferences } from "@/contexts/preferencesContext";
 
-const order: ThemeColor[] = ["blue", "green", "red", "yellow", "purple"];
+const order: number[] = [75, 90, 100, 110, 125];
 
-const optionsMap: Record<ThemeColor, { name: string; title: string }> = {
-    blue: {
-        name: "Blue",
-        title: "Switch to green",
+const optionsMap: Record<
+    number,
+    { name: string; title: string; icon: IconCode }
+> = {
+    75: {
+        name: "75%",
+        title: "Switch to 90%",
+        icon: "zoom_in",
     },
-    green: {
-        name: "Green",
-        title: "Switch to red",
+    90: {
+        name: "90%",
+        title: "Switch to 100%",
+        icon: "zoom_in",
     },
-    red: {
-        name: "Red",
-        title: "Switch to yellow",
+    100: {
+        name: "100%",
+        title: "Switch to 110%",
+        icon: "zoom_in",
     },
-    yellow: {
-        name: "Yellow",
-        title: "Switch to purple",
+    110: {
+        name: "110%",
+        title: "Switch to 125%",
+        icon: "zoom_in",
     },
-    purple: {
-        name: "Purple",
-        title: "Switch to blue",
+    125: {
+        name: "125%",
+        title: "Switch to 75%",
+        icon: "zoom_out",
     },
 };
 
-export const ColorButton = forwardRef<HTMLButtonElement, ButtonProps>(
-    function ColorButton(
+export const ZoomButton = forwardRef<HTMLButtonElement, ButtonProps>(
+    function ZoomButton(
         { title, icon, onClick, children, className, ...restProps },
         ref
     ) {
         const [preferences, setPreferences] = usePreferences();
 
-        const currentOption: ThemeColor = preferences.themeColor || "green";
+        const currentOption: number = preferences.zoom || 100;
 
         const toggleOption = () => {
             const currentIndex = order.indexOf(currentOption);
@@ -47,7 +55,7 @@ export const ColorButton = forwardRef<HTMLButtonElement, ButtonProps>(
 
             setPreferences((prev) => ({
                 ...prev,
-                themeColor: nextOption,
+                zoom: nextOption,
             }));
         };
 
@@ -58,7 +66,7 @@ export const ColorButton = forwardRef<HTMLButtonElement, ButtonProps>(
                 ref={ref}
                 className={joinedClassNames}
                 title={title || optionsMap[currentOption].title}
-                icon={icon || <Symbol icon="circle" />}
+                icon={icon || <Symbol icon={optionsMap[currentOption].icon} />}
                 onClick={(e) => {
                     toggleOption();
                     onClick?.(e);

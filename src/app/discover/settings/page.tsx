@@ -1,6 +1,6 @@
 import { Container, H1 } from "@yakad/ui";
 import { ResetButton } from "@/components";
-import AppSettingsSection from "./AppSettingsSection";
+import PreferencesSection from "./PreferencesSection";
 
 export default function Page() {
     return (
@@ -9,7 +9,7 @@ export default function Page() {
                 <H1 variant="heading3">Settings</H1>
             </Container>
             <Container size="sm" align="center">
-                <AppSettingsSection />
+                <PreferencesSection />
                 <ResetButton />
             </Container>
         </>
