@@ -11,6 +11,8 @@ import {
     SetStateAction,
 } from "react";
 
+export type PlayBackRate = 0.25 | 0.5 | 0.75 | 1 | 1.25 | 1.5 | 1.75 | 2;
+
 // ----- 1. Types for each storage section -----
 interface Options {
     arabicFont: "test";
@@ -22,7 +24,8 @@ interface Options {
     recitationStatus: boolean;
     ayahRepeat: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | "infinite"; //times
     delay: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10; //sec
-    playBackRate: 0.25 | 0.5 | 0.75 | 1 | 1.25 | 1.5 | 1.75 | 2;
+    playBackRate: PlayBackRate;
+    playBackActive: boolean;
     limitMode:
         | "continuous"
         | "surah"
@@ -61,6 +64,7 @@ const defaultStorage: Storage = {
         recitationStatus: true,
         ayahRepeat: 0,
         delay: 0,
+        playBackActive: false,
         playBackRate: 1,
         limitMode: "continuous",
         limitRange: 1,

@@ -1,14 +1,12 @@
 import { forwardRef } from "react";
-import { Button, Stack, Text } from "@yakad/ui";
-import { Xpopup, XpopupProps } from "@yakad/x";
+import { Button, Popup, PopupProps, Stack, Text } from "@yakad/ui";
 
-export const MorePopup = forwardRef<HTMLDivElement, XpopupProps>(
-    function MorePopup({ onclosebuttonclick, ...restProps }, ref) {
+export const MorePopup = forwardRef<HTMLDivElement, PopupProps>(
+    function MorePopup({ ...restProps }, ref) {
         return (
-            <Xpopup
+            <Popup
                 ref={ref}
                 {...restProps}
-                onclosebuttonclick={onclosebuttonclick}
                 align="center"
             >
                 <Text variant="heading3">Al-Fatihah:4</Text>
@@ -16,10 +14,7 @@ export const MorePopup = forwardRef<HTMLDivElement, XpopupProps>(
                     <Button>Share</Button>
                     <Button>Favorite</Button>
                 </Stack>
-                <Button variant="link" onClick={onclosebuttonclick}>
-                    Close
-                </Button>
-            </Xpopup>
+            </Popup>
         );
     }
 );

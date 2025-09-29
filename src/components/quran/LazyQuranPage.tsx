@@ -82,7 +82,7 @@ export function LazyQuranPage({
                 </Container>
             ) : (
                 <QuranPage
-                    pageNumber={pageNumber}
+                    index={pageNumber}
                     ayahRange={ayahRange}
                     mushaf={mushaf}
                     translation={translation}

@@ -1,12 +1,11 @@
 "use client";
 
 import { forwardRef, useState, useMemo, useEffect } from "react";
-import { Button, Row, Select, Text } from "@yakad/ui";
-import { Xpopup, XpopupProps } from "@yakad/x";
+import { Button, Popup, PopupProps, Row, Select, Text } from "@yakad/ui";
 import { Surah, AyahBreakersResponse } from "@ntq/sdk";
 import { useStorage } from "@/contexts/storageContext";
 
-interface FindPopupProps extends XpopupProps {
+interface FindPopupProps extends PopupProps {
     surahs: Surah[];
     takhtitsAyahsBreakers: AyahBreakersResponse[];
     onButtonClicked: (surah_num: number, ayah_num: number) => void;
@@ -255,7 +254,7 @@ export const FindPopup = forwardRef<HTMLDivElement, FindPopupProps>(
         };
 
         return (
-            <Xpopup ref={ref} {...restProps}>
+            <Popup ref={ref} {...restProps}>
                 <Text variant="heading5">By Surah</Text>
                 <Row>
                     <Select
@@ -345,7 +344,7 @@ export const FindPopup = forwardRef<HTMLDivElement, FindPopupProps>(
                         Find
                     </Button>
                 </Row>
-            </Xpopup>
+            </Popup>
         );
     }
 );

@@ -7,15 +7,20 @@ interface AyahRange {
 }
 
 interface QuranPageProps {
-    pageNumber: number;
-    ayahRange: AyahRange | null;
+    index: number;
     mushaf?: string;
+    pages: {
+        pageNumber: number;
+        ayahCount: number;
+        offset: number;
+        limit: number;
+    }[];
     className?: string;
     translation?: TranslationList;
 }
 
-export function QuranPage({ pageNumber, ayahRange, mushaf = "hafs", className, translation }: QuranPageProps) { // If no ayahs found for this page, show a message
-    if (!ayahRange) {
+export function QuranPage({ index, mushaf = "hafs", className, translation, pages}: QuranPageProps) { // If no ayahs found for this page, show a message
+    if (!pages) {
         return (
             <div className={className}>
                 <div style={{ 
@@ -23,17 +28,20 @@ export function QuranPage({ pageNumber, ayahRange, mushaf = "hafs", className, t
                     textAlign: 'center',
                     color: '#666'
                 }}>
-                    No ayahs found for page {pageNumber}
+                    No ayahs found for page {index}
                 </div>
             </div>
         );
     }
 
+    // Find Page from index
+    const page = pages[index];
+
     return (
         <div className={className}>
             <AyahRange 
-                offset={ayahRange.offset}
-                limit={ayahRange.limit}
+                offset={page?.offset ?? 0}
+                limit={page?.limit ?? 0}
                 mushaf={mushaf}
                 translation={translation}
             />

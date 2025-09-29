@@ -8,6 +8,8 @@ export function Audio(
 ) {
     const { storage, setStorage } = useStorage();
     const isPlaying = storage.options.playing;
+
+    const playBackActive = storage.options.playBackActive;
     const playBackRate = storage.options.playBackRate;
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -24,8 +26,8 @@ export function Audio(
     // Update playback rate when playBackRate changes
     useEffect(() => {
         if (!audioRef.current) return;
-        audioRef.current.playbackRate = playBackRate;
-    }, [playBackRate]);
+        audioRef.current.playbackRate = playBackActive ? playBackRate : 1;
+    }, [playBackRate, playBackActive]);
 
     const handleEnded = () => {
         console.log("Audio has ended");

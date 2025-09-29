@@ -1,11 +1,10 @@
 import { forwardRef } from "react";
-import { Row, Select, Text, GridContainer, GridItem } from "@yakad/ui";
-import { Xpopup, XpopupProps } from "@yakad/x";
+import { Row, Select, Text, GridContainer, GridItem, PopupProps, Popup } from "@yakad/ui";
 import { DarkStyleButton, ColorButton } from "@/components";
 import { useStorage } from "@/contexts/storageContext";
 import { ZoomButton } from "../buttons/ZoomButton";
 
-export const MushafOptionsPopup = forwardRef<HTMLDivElement, XpopupProps>(
+export const MushafOptionsPopup = forwardRef<HTMLDivElement, PopupProps>(
     function MushafOptionsPopup({ ...restProps }, ref) {
         const { storage, setStorage } = useStorage();
         const handleSelectChange = (
@@ -23,7 +22,7 @@ export const MushafOptionsPopup = forwardRef<HTMLDivElement, XpopupProps>(
         };
 
         return (
-            <Xpopup ref={ref} {...restProps}>
+            <Popup ref={ref} {...restProps}>
                 <Text variant="heading5">Arabic Text</Text>
                 <Row>
                     <Select
@@ -61,7 +60,7 @@ export const MushafOptionsPopup = forwardRef<HTMLDivElement, XpopupProps>(
                         <ZoomButton variant="filled" />
                     </GridItem>
                 </GridContainer>
-            </Xpopup>
+            </Popup>
         );
     }
 );

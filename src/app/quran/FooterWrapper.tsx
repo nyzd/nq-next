@@ -1,17 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Footer, FooterProps } from "@yakad/ui";
+import { Button, Footer, FooterProps, WithOverlay } from "@yakad/ui";
 import { Symbol } from "@yakad/symbols";
 import { PlayButton, PlayOptionsPopup } from "@/components";
+import { PlayBackButton } from "@/components/quran/PlayBackButton";
 
 export default function FooterWrapper({
     style,
     ...restProps
 }: Omit<FooterProps, "children">) {
-    const [isPlayOptionsPopupVisible, setIsPlayOptionsPopupVisible] =
-        useState<boolean>(false);
-
     return (
         <>
             <Footer
@@ -27,15 +25,21 @@ export default function FooterWrapper({
                 }}
                 {...restProps}
             >
+            <WithOverlay overlay={
+                <PlayOptionsPopup
+                    heading="Playing options"
+                />
+            }>
                 <Button
                     title="Options"
                     icon={<Symbol icon="tune" />}
-                    onClick={() => setIsPlayOptionsPopupVisible(true)}
                 />
-                <Button
+            </WithOverlay>
+                {/* <Button
                     title="Previous Ayah"
                     icon={<Symbol icon="chevron_left" />}
-                />
+                /> */}
+                <PlayBackButton />
                 <PlayButton variant="filled" />
                 <Button
                     title="Next Ayah"
@@ -46,14 +50,7 @@ export default function FooterWrapper({
                     icon={<Symbol icon="fullscreen" />}
                 />
             </Footer>
-            {isPlayOptionsPopupVisible && (
-                <PlayOptionsPopup
-                    heading="Playing options"
-                    onclosebuttonclick={() =>
-                        setIsPlayOptionsPopupVisible(false)
-                    }
-                />
-            )}
+            
         </>
     );
 }
