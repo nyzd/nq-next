@@ -1,9 +1,8 @@
 import { forwardRef } from "react";
-import { CheckBox, Row, Select, Spacer, Text } from "@yakad/ui";
-import { Xpopup, XpopupProps } from "@yakad/x";
+import { CheckBox, Popup, PopupProps, Row, Select, Spacer, Text } from "@yakad/ui";
 import { useStorage } from "@/contexts/storageContext";
 
-export const PlayOptionsPopup = forwardRef<HTMLDivElement, XpopupProps>(
+export const PlayOptionsPopup = forwardRef<HTMLDivElement, PopupProps>(
     function PlayOptionsPopup({ ...restProps }, ref) {
         const { storage, setStorage } = useStorage();
         const handleSelectChange = (
@@ -35,7 +34,7 @@ export const PlayOptionsPopup = forwardRef<HTMLDivElement, XpopupProps>(
         const isContinuousMode = storage.options.limitMode === "continuous";
 
         return (
-            <Xpopup ref={ref} {...restProps}>
+            <Popup ref={ref} {...restProps}>
                 <Row>
                     <Text variant="heading5">Recite</Text>
                     <Spacer />
@@ -176,7 +175,7 @@ export const PlayOptionsPopup = forwardRef<HTMLDivElement, XpopupProps>(
                     checked={storage.options.autoScroll}
                     onChange={handleCheckBoxChange}
                 />
-            </Xpopup>
+            </Popup>
         );
     }
 );
