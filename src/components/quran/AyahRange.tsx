@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { LoadingIcon, P, Container } from "@yakad/ui";
+import { LoadingIcon, P, Container, Stack } from "@yakad/ui";
 import { Ayah } from "@/components";
+import SurahHeader from "./SurahHeader";
 import {
     Ayah as AyahType,
     PaginatedAyahTranslationList,
@@ -18,6 +19,7 @@ interface AyahRangeProps {
     mushaf?: string;
     className?: string;
     translation?: TranslationList;
+    onLoad?: () => void;
 }
 
 export function AyahRange({
@@ -26,6 +28,7 @@ export function AyahRange({
     mushaf = "hafs",
     className,
     translation,
+    onLoad,
 }: AyahRangeProps) {
     const { storage, setStorage } = useStorage();
     const [ayahs, setAyahs] = useState<AyahType[]>([]);
@@ -102,7 +105,10 @@ export function AyahRange({
                 console.error("Error loading ayahs/translations:", err);
                 setError("Failed to load ayahs or translations");
             } finally {
-                if (isActive) setLoading(false);
+                if (isActive) {
+                    setLoading(false);
+                    onLoad?.();
+                };
             }
         };
 
@@ -143,66 +149,47 @@ export function AyahRange({
     }
 
     return (
-        <div className={className}>
+        <>
             {ayahs.map((ayah, index) => (
-                <div
-                    key={`${ayah.uuid}-${index}`}
-                    style={{ marginBottom: "1rem" }}
-                >
-                    {/* Show surah header for first ayah or when surah changes */}
+                <Stack key={index}>
                     {ayah.surah &&
                         (index === 0 ||
                             ayahs[index - 1]?.surah?.uuid !==
                                 ayah.surah.uuid) && (
-                            <Container
-                                size="sm"
-                                align="center"
-                                style={{ marginBottom: "1.5rem" }}
-                            >
-                                <P
-                                    variant="heading6"
-                                    style={{ marginBottom: "0.5rem" }}
-                                >
-                                    {(ayah.surah?.names || [
-                                        { name: "NOTFOUND" },
-                                    ])[0]?.name || "Name Not found!"}
-                                </P>
-                                <P variant="body2" style={{ color: "#666" }}>
-                                    {ayah.surah?.number_of_ayahs} Ayahs
-                                </P>
-                                {ayah.surah?.bismillah?.text &&
-                                    !ayah.surah?.bismillah?.is_ayah && (
-                                        <P
-                                            variant="body1"
-                                            style={{
-                                                direction: "rtl",
-                                                textAlign: "right",
-                                                marginTop: "1rem",
-                                                fontStyle: "italic",
-                                            }}
-                                        >
-                                            {ayah.surah?.bismillah?.text}
-                                        </P>
-                                    )}
-                            </Container>
+                            <SurahHeader surah={ayah.surah} bismillah={(surah) => 
+                                (
+                                    surah?.bismillah?.is_ayah
+                                        ? <Ayah
+                                                number={1}
+                                                text={ayah.text}
+                                                id={`ayah-${ayah.uuid}`}
+                                                ref={(el) => {
+                                                    ayahsRefs.current[ayah.uuid] = el;
+                                                }}
+                                                selected={ayah.uuid === storage.selected.ayahUUID}
+                                                onClick={() => handleAyahClick(ayah.uuid)}
+                                            />
+                                        : surah?.bismillah?.text
+                                )
+                            } />
                         )}
 
-                    {/* Render the ayah */}
-                    <Ayah
-                        ref={(el) => {
-                            ayahsRefs.current[ayah.uuid] = el;
-                        }}
-                        id={`ayah-${ayah.uuid}`}
-                        number={ayah.number}
-                        text={ayah.text}
-                        sajdah={ayah.sajdah || "none"}
-                        selected={ayah.uuid === storage.selected.ayahUUID}
-                        onClick={() => handleAyahClick(ayah.uuid)}
-                    />
-
-                    <h3>{translations?.[index]?.text}</h3>
-                </div>
+                    {!ayah.surah?.bismillah.is_ayah && 
+                        <Ayah
+                            ref={(el) => {
+                                ayahsRefs.current[ayah.uuid] = el;
+                            }}
+                            id={`ayah-${ayah.uuid}`}
+                            number={ayah.number}
+                            text={ayah.text}
+                            translationText={translations?.[index]?.text}
+                            sajdah={ayah.sajdah || "none"}
+                            selected={ayah.uuid === storage.selected.ayahUUID}
+                            onClick={() => handleAyahClick(ayah.uuid)}
+                        />
+                    }
+                </Stack>
             ))}
-        </div>
+        </>
     );
 }

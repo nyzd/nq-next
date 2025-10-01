@@ -1,5 +1,6 @@
-import { TranslationList } from "@ntq/sdk";
+import { TranslationList} from "@ntq/sdk";
 import { AyahRange } from "./AyahRange";
+import { Card, Text } from "@yakad/ui";
 
 interface AyahRange {
     offset: number;
@@ -9,18 +10,19 @@ interface AyahRange {
 interface QuranPageProps {
     index: number;
     mushaf?: string;
-    pages: {
+    page: {
         pageNumber: number;
         ayahCount: number;
         offset: number;
         limit: number;
-    }[];
+    };
     className?: string;
     translation?: TranslationList;
+    onLoad?: () => void;
 }
 
-export function QuranPage({ index, mushaf = "hafs", className, translation, pages}: QuranPageProps) { // If no ayahs found for this page, show a message
-    if (!pages) {
+export function QuranPage({ mushaf = "hafs", className, translation, page, onLoad}: QuranPageProps) { // If no ayahs found for this page, show a message
+    if (!page) {
         return (
             <div className={className}>
                 <div style={{ 
@@ -28,23 +30,23 @@ export function QuranPage({ index, mushaf = "hafs", className, translation, page
                     textAlign: 'center',
                     color: '#666'
                 }}>
-                    No ayahs found for page {index}
+                    Page Not found!
                 </div>
             </div>
         );
     }
 
-    // Find Page from index
-    const page = pages[index];
-
     return (
-        <div className={className}>
+        <Card align="center">
             <AyahRange 
                 offset={page?.offset ?? 0}
                 limit={page?.limit ?? 0}
                 mushaf={mushaf}
                 translation={translation}
+                onLoad={onLoad}
             />
-        </div>
+
+            <Text>{page.pageNumber}</Text>
+        </Card>
     );
 }
