@@ -29,19 +29,8 @@ export default function SurahHeader({ surah, bismillah }: SurahHeaderProps) {
             <P variant="body2" style={{ color: "#666" }}>
                 {surah?.number_of_ayahs} Ayahs
             </P>
-            {(
-                <P
-                    variant="body1"
-                    style={{
-                        direction: "rtl",
-                        textAlign: "right",
-                        marginTop: "1rem",
-                        fontStyle: "italic",
-                    }}
-                >
-                    {bismillah(surah)}
-                </P>
-            )}
+                
+            {bismillah(surah)}
         </Container>
     );
 }

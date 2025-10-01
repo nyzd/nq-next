@@ -160,6 +160,7 @@ export function AyahRange({
                                 (
                                     surah?.bismillah?.is_ayah
                                         ? <Ayah
+                                                align="center"
                                                 number={1}
                                                 text={ayah.text}
                                                 id={`ayah-${ayah.uuid}`}
@@ -168,8 +169,12 @@ export function AyahRange({
                                                 }}
                                                 selected={ayah.uuid === storage.selected.ayahUUID}
                                                 onClick={() => handleAyahClick(ayah.uuid)}
+                                                translationText={translations?.[index]?.text}
                                             />
-                                        : surah?.bismillah?.text
+                                        : <Stack align="center" style={{paddingTop: "2rem"}}>
+                                            <P variant="body2">{surah?.bismillah?.text}</P>
+                                            <P variant="body4">{translations?.[index]?.text}</P>
+                                        </Stack>
                                 )
                             } />
                         )}

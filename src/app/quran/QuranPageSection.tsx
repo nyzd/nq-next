@@ -72,12 +72,10 @@ export function QuranPageSection({ takhtitsAyahsBreakers, translation }: QuranPa
     const [loading, setLoading] = useState(true);
 
     const calculated_pages = calculatePages(takhtitsAyahsBreakers);
-    console.log("pages", calculated_pages)
 
     // Fetch surahs data for FindPopup
     useEffect(() => {
         getSurahs().then((surahs) => {
-            console.log('Loaded surahs:', surahs.length, 'First few:', surahs.slice(0, 3));
             setSurahs(surahs);
         }).catch((error) => {
             console.error("Error fetching surahs:", error);
@@ -116,9 +114,6 @@ export function QuranPageSection({ takhtitsAyahsBreakers, translation }: QuranPa
         const surah = surahs.find(s => s.number === currentAyah.surah);
         const surahName = surah ? (surah.names?.[0]?.name || `Surah ${currentAyah.surah}`) : `Surah ${currentAyah.surah}`;
         
-        // Debug logging
-        console.log('Current ayah:', currentAyah.surah, 'Surah found:', surah, 'Surah name:', surahName);
-
         return {
             surahnumber: currentAyah.surah,
             ayahnumber: currentAyah.ayah,
@@ -175,7 +170,7 @@ export function QuranPageSection({ takhtitsAyahsBreakers, translation }: QuranPa
                     /> */}
                     {/* <QuranPage index={0} pages={calculated_pages} mushaf="hafs"/> */}
                     <RenderByVisibility
-                        stopRendering={loading}
+                        stopNewRenders={loading}
                         newChildRendered={() => setLoading(true)} 
                     >
                         {calculated_pages.map((page, index)=> (
