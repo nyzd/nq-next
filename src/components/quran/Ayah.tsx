@@ -10,6 +10,7 @@ interface AyahProps extends CardProps {
     text: string;
     sajdah?: string;
     selected?: boolean;
+    translationText?: string;
     onHold?: () => void;
     onRightClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
@@ -19,6 +20,7 @@ export const Ayah = forwardRef<HTMLDivElement, AyahProps>(function Ayah(
         number,
         sajdah,
         text,
+        translationText,
         selected = false,
         onHold,
         onMouseDown,
@@ -103,9 +105,9 @@ export const Ayah = forwardRef<HTMLDivElement, AyahProps>(function Ayah(
                     <AyahNumber number={number} />
                 </P>
             </div>
-            <div>
-                <P variant="body4">-</P>
-            </div>
+            {translationText && (
+                <P style={{marginTop: "20px"}} variant="body4">{translationText}</P>
+            )}
         </Card>
     );
 });

@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import {
     Container,
-    LoadingControl,
+    RenderByVisibility,
     Main,
     Screen,
     WithOverlay,
@@ -11,7 +11,6 @@ import {
 import {
     FindBar,
     FindPopup,
-    MorePopup,
     QuranPage,
 } from "@/components";
 import FooterWrapper from "./FooterWrapper";
@@ -19,7 +18,6 @@ import AppBarWrapper from "./AppBarWrapper";
 import { Surah, AyahBreakersResponse, TranslationList } from "@ntq/sdk";
 import { getSurahs } from "@/actions/getSurahs";
 import { useStorage } from "@/contexts/storageContext";
-import { QuranPages } from "./QuranPages";
 
 interface QuranPageSectionProps {
     takhtitsAyahsBreakers: AyahBreakersResponse[];
@@ -71,14 +69,13 @@ function calculatePages(takhtitsAyahsBreakers: AyahBreakersResponse[]) {
 export function QuranPageSection({ takhtitsAyahsBreakers, translation }: QuranPageSectionProps) {
     const { storage, setStorage } = useStorage();
     const [surahs, setSurahs] = useState<Surah[]>([]);
+    const [loading, setLoading] = useState(true);
 
     const calculated_pages = calculatePages(takhtitsAyahsBreakers);
-    console.log("pages", calculated_pages)
 
     // Fetch surahs data for FindPopup
     useEffect(() => {
         getSurahs().then((surahs) => {
-            console.log('Loaded surahs:', surahs.length, 'First few:', surahs.slice(0, 3));
             setSurahs(surahs);
         }).catch((error) => {
             console.error("Error fetching surahs:", error);
@@ -117,9 +114,6 @@ export function QuranPageSection({ takhtitsAyahsBreakers, translation }: QuranPa
         const surah = surahs.find(s => s.number === currentAyah.surah);
         const surahName = surah ? (surah.names?.[0]?.name || `Surah ${currentAyah.surah}`) : `Surah ${currentAyah.surah}`;
         
-        // Debug logging
-        console.log('Current ayah:', currentAyah.surah, 'Surah found:', surah, 'Surah name:', surahName);
-
         return {
             surahnumber: currentAyah.surah,
             ayahnumber: currentAyah.ayah,
@@ -175,9 +169,14 @@ export function QuranPageSection({ takhtitsAyahsBreakers, translation }: QuranPa
                         translation={translation}
                     /> */}
                     {/* <QuranPage index={0} pages={calculated_pages} mushaf="hafs"/> */}
-                    <LoadingControl>
-                        <QuranPage index={0} pages={calculated_pages} mushaf="hafs"/>
-                    </LoadingControl>
+                    <RenderByVisibility
+                        stopNewRenders={loading}
+                        newChildRendered={() => setLoading(true)} 
+                    >
+                        {calculated_pages.map((page, index)=> (
+                            <QuranPage key={index} onLoad={() => setLoading(false)} index={0} page={page} mushaf="hafs" translation={translation} />
+                        ))}
+                    </RenderByVisibility>
                 </Container>
             </Main>
             <FooterWrapper />
