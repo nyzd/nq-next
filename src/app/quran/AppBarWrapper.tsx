@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { AppBar, AppBarProps, Button, H1, Spacer } from "@yakad/ui";
+import { AppBar, AppBarProps, Button, H1, Spacer, WithOverlay } from "@yakad/ui";
 import { Symbol } from "@yakad/symbols";
 import { GoBackButton, MushafOptionsPopup } from "@/components";
 
@@ -11,9 +10,6 @@ export default function AppBarWrapper({
     blur = true,
     ...restProps
 }: Omit<AppBarProps, "children">) {
-    const [isMushafOptionsPopupVisible, setIsMushafOptionsPopupVisible] =
-        useState<boolean>(false);
-
     return (
         <>
             <AppBar {...restProps} position={position} size={size} blur={blur}>
@@ -26,20 +22,17 @@ export default function AppBarWrapper({
                     Natiq
                 </H1>
                 <Spacer />
-                <Button
-                    title="Mushaf Options"
-                    icon={<Symbol type="outlined" icon="settings" />}
-                    onClick={() => setIsMushafOptionsPopupVisible(true)}
-                />
+                <WithOverlay overlay={
+                    <MushafOptionsPopup
+                        heading="Mushaf options"
+                    />
+                }>
+                    <Button
+                        title="Mushaf Options"
+                        icon={<Symbol type="outlined" icon="settings" />}
+                    />
+                </WithOverlay>
             </AppBar>
-            {isMushafOptionsPopupVisible && (
-                <MushafOptionsPopup
-                    heading="Mushaf options"
-                    onclosebuttonclick={() =>
-                        setIsMushafOptionsPopupVisible(false)
-                    }
-                />
-            )}
         </>
     );
 }

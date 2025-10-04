@@ -3,14 +3,12 @@
 import { useEffect, useState, useMemo } from "react";
 import {
     Container,
-    RenderByVisibility,
+    RenderByScroll,
     Main,
     Screen,
-    WithOverlay,
 } from "@yakad/ui";
 import {
     FindBar,
-    FindPopup,
     QuranPage,
 } from "@/components";
 import FooterWrapper from "./FooterWrapper";
@@ -42,11 +40,14 @@ function calculatePages(takhtitsAyahsBreakers: AyahBreakersResponse[]) {
     return uniquePages.map(pageNumber => {
         if (pageNumber === 1) {
             // Hardcode page 1 data since it may not be in takhtits
+            // For page 1, we need to get the first 7 ayahs from takhtitsAyahsBreakers
+            const page1Ayahs = takhtitsAyahsBreakers.slice(0, 7);
             return {
                 pageNumber: 1,
                 ayahCount: 7, // Al-Fatihah has 7 ayahs
                 offset: 0,
-                limit: 7
+                limit: 7,
+                ayahUUIDs: page1Ayahs.map(ayah => ayah.uuid)
             };
         }
 
@@ -61,17 +62,32 @@ function calculatePages(takhtitsAyahsBreakers: AyahBreakersResponse[]) {
             pageNumber: pageNumber!,
             ayahCount: pageAyahs.length,
             offset: firstAyahIndex + baseOffset,
-            limit: lastAyahIndex - firstAyahIndex + 1
+            limit: lastAyahIndex - firstAyahIndex + 1,
+            ayahUUIDs: pageAyahs.map(ayah => ayah.uuid)
         };
     });
 }
 
 export function QuranPageSection({ takhtitsAyahsBreakers, translation }: QuranPageSectionProps) {
-    const { storage, setStorage } = useStorage();
+    const { storage } = useStorage();
     const [surahs, setSurahs] = useState<Surah[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loadingInProgress, setLoadingInProgress] = useState(true);
 
     const calculated_pages = calculatePages(takhtitsAyahsBreakers);
+
+    // Calculate the index for RenderByScroll based on selected ayah UUID
+    const selectedAyahIndex = useMemo(() => {
+        if (!storage.selected.ayahUUID) {
+            return 0; // Default to first page if no ayah is selected
+        }
+
+        // Find which page contains the selected ayah UUID
+        const pageIndex = calculated_pages.findIndex(page => 
+            page.ayahUUIDs.includes(storage.selected.ayahUUID!)
+        );
+
+        return pageIndex >= 0 ? pageIndex : 0;
+    }, [storage.selected.ayahUUID, calculated_pages]);
 
     // Fetch surahs data for FindPopup
     useEffect(() => {
@@ -83,100 +99,27 @@ export function QuranPageSection({ takhtitsAyahsBreakers, translation }: QuranPa
         });
     }, []);
 
-    // Get current selected ayah information
-    const currentAyahInfo = useMemo(() => {
-        if (!storage.selected.ayahUUID) {
-            return {
-                surahnumber: 1,
-                ayahnumber: 1,
-                pagenumber: 1,
-                juz: 1,
-                hizb: 1,
-                surahName: "Al-Fatihah"
-            };
-        }
-
-        const currentAyah = takhtitsAyahsBreakers.find(
-            ayah => ayah.uuid === storage.selected.ayahUUID
-        );
-
-        if (!currentAyah) {
-            return {
-                surahnumber: 1,
-                ayahnumber: 1,
-                pagenumber: 1,
-                juz: 1,
-                hizb: 1,
-                surahName: "Al-Fatihah"
-            };
-        }
-
-        const surah = surahs.find(s => s.number === currentAyah.surah);
-        const surahName = surah ? (surah.names?.[0]?.name || `Surah ${currentAyah.surah}`) : `Surah ${currentAyah.surah}`;
-        
-        return {
-            surahnumber: currentAyah.surah,
-            ayahnumber: currentAyah.ayah,
-            pagenumber: currentAyah.page || 1,
-            juz: currentAyah.juz || 1,
-            hizb: currentAyah.hizb || 1,
-            surahName: surahName
-        };
-    }, [storage.selected.ayahUUID, takhtitsAyahsBreakers, surahs]);
 
     return (
         <Screen>
             <AppBarWrapper />
             <Main>
                 <Container size="md">
-                    <WithOverlay overlay={
-                        <FindPopup
-                            heading="Find"
-                            onButtonClicked={(surahNum, ayahNum) => {
-                                // Find the ayah in takhtitsAyahsBreakers by surah and ayah number
-                                const targetAyah = takhtitsAyahsBreakers.find(
-                                    ayah => ayah.surah === surahNum && ayah.ayah === ayahNum
-                                );
-
-                                if (targetAyah && targetAyah.uuid) {
-                                    // Update localStorage with the selected ayah UUID
-                                    setStorage(prev => ({
-                                        ...prev,
-                                        selected: {
-                                            ...prev.selected,
-                                            ayahUUID: targetAyah.uuid
-                                        }
-                                    }));
-                                }
-                            }}
-                            surahs={surahs}
-                            takhtitsAyahsBreakers={takhtitsAyahsBreakers}
-                        />
-                    }>
-                        <FindBar
-                            surahnumber={currentAyahInfo.surahnumber}
-                            ayahnumber={currentAyahInfo.ayahnumber}
-                            pagenumber={currentAyahInfo.pagenumber}
-                            juz={currentAyahInfo.juz}
-                            hizb={currentAyahInfo.hizb}
-                            surahName={currentAyahInfo.surahName}
-                        />
-                    </WithOverlay>
-
-                    {/* <QuranPages 
+                    <FindBar
                         takhtitsAyahsBreakers={takhtitsAyahsBreakers}
-                        mushaf="hafs"
-                        translation={translation}
-                    /> */}
-                    {/* <QuranPage index={0} pages={calculated_pages} mushaf="hafs"/> */}
-                    <RenderByVisibility
-                        stopNewRenders={loading}
-                        newChildRendered={() => setLoading(true)} 
+                        surahs={surahs}
+                    />
+
+                    <RenderByScroll
+                        scrollMarginTop={12}
+                        jumpToIndex={selectedAyahIndex}
+                        stopNewRenders={loadingInProgress}
+                        newChildRendered={() => setLoadingInProgress(true)} 
                     >
                         {calculated_pages.map((page, index)=> (
-                            <QuranPage key={index} onLoad={() => setLoading(false)} index={0} page={page} mushaf="hafs" translation={translation} />
+                            <QuranPage key={index} onLoad={() => setLoadingInProgress(false)} index={0} page={page} mushaf="hafs" translation={translation} />
                         ))}
-                    </RenderByVisibility>
+                    </RenderByScroll>
                 </Container>
             </Main>
             <FooterWrapper />

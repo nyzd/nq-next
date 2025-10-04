@@ -1,6 +1,5 @@
 "use client";
 
-import { ThemeColor, DarkStyle } from "@yakad/ui";
 import {
     createContext,
     useContext,

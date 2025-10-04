@@ -98,8 +98,8 @@ function NavigationWrapper({ ...restProps }: NavigationProps) {
                             <Button
                                 variant="link"
                                 style={{ width: "100%" }}
-                                borderstyle="semi"
-                                iconposition="end"
+                                borderStyle="semi"
+                                iconPosition="end"
                             >
                                 {item.name}
                             </Button>
