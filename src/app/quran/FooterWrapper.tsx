@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Button, Footer, FooterProps, WithOverlay } from "@yakad/ui";
 import { Symbol } from "@yakad/symbols";
 import { PlayButton, PlayOptionsPopup } from "@/components";

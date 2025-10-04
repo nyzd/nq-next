@@ -1,17 +1,17 @@
 import { PlayBackRate, useStorage } from "@/contexts/storageContext";
-import { Button, ButtonProps, Dropdown, Popup, WithOverlay } from "@yakad/ui";
+import { Button, ButtonProps, Dropdown, WithOverlay } from "@yakad/ui";
 import { forwardRef } from "react";
 import {IconCode, Symbol} from "@yakad/symbols";
 
 
 const playBackButtonIcon: Record<PlayBackRate, IconCode> = {
-    0.5: "javascript",
-    0.75: "10k",
-    1: "3k",
-    1.25: "10mp",
-    1.5: "11mp",
-    1.75: "12mp",
-    2: "11mp"
+    0.5: "speed_0_5",
+    0.75: "speed_0_75",
+    1: "1x_mobiledata",
+    1.25: "speed_1_25",
+    1.5: "speed_1_5",
+    1.75: "speed_1_75",
+    2: "speed_2x"
 };
 
 type PlayBackButtonProps = Omit<ButtonProps, "variant" | "icon" | "onClick">
