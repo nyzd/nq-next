@@ -72,7 +72,7 @@ export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
 
             if (targetAyah && targetAyah.uuid) {
                 // Update localStorage with the selected ayah UUID
-                setStorage((prev: any) => ({
+                setStorage((prev) => ({
                     ...prev,
                     selected: {
                         ...prev.selected,
@@ -118,6 +118,7 @@ export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
                 }}
             >
                 <Card
+                    level="high"
                     blur
                     style={{
                         display: "flex",

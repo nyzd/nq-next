@@ -6,7 +6,6 @@ import {IconCode, Symbol} from "@yakad/symbols";
 
 const playBackButtonIcon: Record<PlayBackRate, IconCode> = {
     0.5: "speed_0_5",
-    0.75: "speed_0_75",
     1: "1x_mobiledata",
     1.25: "speed_1_25",
     1.5: "speed_1_5",
@@ -58,28 +57,31 @@ export const PlayBackButton = forwardRef<HTMLButtonElement, PlayBackButtonProps>
         const variant = (rate: PlayBackRate): ButtonProps["variant"] => {
             if (rate === 1)
                 return !storage.options.playBackActive 
-                    ? "filled" : "text";
+                    ? "filledtonal" : "text";
 
             return storage.options.playBackRate === rate
                 ? storage.options.playBackActive 
-                    ? "filled" : "tonal"
+                    ? "filledtonal" : "tonal"
                 : "text";
         }
 
         return (
-            <WithOverlay trigger="onRightClick" overlay={
-                <Dropdown>
-                    {
-                        ([0.5, 0.75, 1, 1.25, 1.5, 1.75, 2] as PlayBackRate[])
-                            .map((rate, index) => <Button key={index} size="small" variant={variant(rate)} onClick={() => setPlayBackRate(rate)}>{rate}x</Button>)
-                    }
-                </Dropdown>
-            }>
+            <WithOverlay 
+                trigger="onRightClick" 
+                overlay={
+                    <Dropdown style={{minWidth: "18rem"}}>
+                        {
+                            ([[0.5, "Slow"], [1, "Normal"], [1.25, "Medium"], [1.5, "Fast"], [1.75, "Very fast"], [2, "Super fast"]] as [PlayBackRate, string][])
+                                .map((rate, index) => <Button key={index} icon={<Symbol icon={playBackButtonIcon[rate[0]]}/>} size="small" variant={variant(rate[0])} onClick={() => setPlayBackRate(rate[0])}>{rate[1]}</Button>)
+                        }
+                    </Dropdown>
+                }
+            >
                 <Button 
                     ref={ref}
                     {...restProps}
-                    variant={storage.options.playBackActive ? "tonal" : "text"} 
-                    icon={<Symbol icon={playBackButtonIcon[storage.options.playBackRate] }/>} 
+                    variant={storage.options.playBackActive ? "filledtonal" : "text"} 
+                    icon={<Symbol icon={storage.options.playBackActive ? playBackButtonIcon[storage.options.playBackRate] : playBackButtonIcon[1] }/>} 
                     onClick={onClickHandler} 
                 />
             </WithOverlay>

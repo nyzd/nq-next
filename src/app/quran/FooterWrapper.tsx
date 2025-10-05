@@ -3,7 +3,8 @@
 import { Button, Footer, FooterProps, WithOverlay } from "@yakad/ui";
 import { Symbol } from "@yakad/symbols";
 import { PlayButton, PlayOptionsPopup } from "@/components";
-import { PlayBackButton } from "@/components/quran/PlayBackButton";
+import { PlayBackButton } from "@/components/buttons/PlayBackButton";
+import { RepeatButton } from "@/components/buttons/RepeatButton";
 
 export default function FooterWrapper({
     style,
@@ -40,10 +41,7 @@ export default function FooterWrapper({
                 /> */}
                 <PlayBackButton />
                 <PlayButton variant="filled" />
-                <Button
-                    title="Next Ayah"
-                    icon={<Symbol icon="chevron_right" />}
-                />
+                <RepeatButton />
                 <Button
                     title="Fillscreen"
                     icon={<Symbol icon="fullscreen" />}

@@ -43,7 +43,7 @@ export function SearchPageClient({ initialSurahList }: SearchPageClientProps) {
                 </Row>
                 <Row>
                     <InputField
-                        boxsize="small"
+                        boxSize="small"
                         placeholder="Search Surah by Name or Number"
                         onChange={(e) => {
                             filterBySearchInputOnChange(e.target.value);
