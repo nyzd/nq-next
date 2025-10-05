@@ -26,7 +26,7 @@ export default function RecitersSection() {
                 <Link href="/discover/library/reciters">
                     <Button
                         variant="fab"
-                        iconposition="end"
+                        iconPosition="end"
                         icon={<Symbol icon="keyboard_arrow_right" />}
                     >
                         View All

@@ -10,7 +10,13 @@ import {
     SetStateAction,
 } from "react";
 
-export type PlayBackRate = 0.5 | 0.75 | 1 | 1.25 | 1.5 | 1.75 | 2;
+export type PlayBackRate = 0.5 | 1 | 1.25 | 1.5 | 1.75 | 2;
+export type RepeatRange = 
+        | "surah"
+        | "juz"
+        | "hizb"
+        | "ruku"
+        | "page"
 
 // ----- 1. Types for each storage section -----
 interface Options {
@@ -21,21 +27,10 @@ interface Options {
     playing: boolean;
     playBoxShow: boolean;
     recitationStatus: boolean;
-    ayahRepeat: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | "infinite"; //times
-    delay: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10; //sec
     playBackRate: PlayBackRate;
     playBackActive: boolean;
-    limitMode:
-        | "continuous"
-        | "surah"
-        | "ayah"
-        | "juz"
-        | "hizb"
-        | "ruku"
-        | "page"
-        | "time";
-    limitRange: number;
-    limitRepeat: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | "infinite"; //times
+    repeatMode: "off" | "range" | "ayah";
+    repeatRange: RepeatRange;
     autoScroll: boolean;
 }
 interface Selected {
@@ -61,13 +56,10 @@ const defaultStorage: Storage = {
         playing: false,
         playBoxShow: false,
         recitationStatus: true,
-        ayahRepeat: 0,
-        delay: 0,
         playBackActive: false,
         playBackRate: 1,
-        limitMode: "continuous",
-        limitRange: 1,
-        limitRepeat: 0,
+        repeatMode: "off",
+        repeatRange: "surah",
         autoScroll: true,
     },
     selected: {
@@ -106,7 +98,10 @@ export const StorageProvider = ({ children }: { children: ReactNode }) => {
                     options: {
                         ...prev.options,
                         ...parsed.options,
-                        playing: false, // force playing to false on load
+                        // Set data on refresh
+                        playing: defaultStorage.options.playing, 
+                        repeatMode: defaultStorage.options.repeatMode,
+                        playBackActive: defaultStorage.options.playBackActive,
                         playBoxShow: prev.selected.ayahUUID !== undefined,
                     },
                 }));
