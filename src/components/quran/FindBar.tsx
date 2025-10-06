@@ -1,10 +1,11 @@
 "use client";
 
 import { forwardRef, useEffect, useState, useMemo } from "react";
-import { Card, Text, WithOverlay, WithOverlayProps } from "@yakad/ui";
+import { Card, Row, Text, WithOverlay, WithOverlayProps } from "@yakad/ui";
 import { AyahBreakersResponse, Surah } from "@ntq/sdk";
 import { FindPopup } from "../popups/FindPopup";
 import { useSelected } from "@/contexts/selectedsContext";
+import { Symbol } from "@yakad/symbols";
 
 interface FindBarProps extends WithOverlayProps {
     takhtitsAyahsBreakers: AyahBreakersResponse[];
@@ -141,7 +142,10 @@ export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
                             ": " +
                             currentAyahInfo.ayahnumber}
                     </Text>
-                    <Text>{"Page " + currentAyahInfo.pagenumber}</Text>
+                    <Text>
+                        <Symbol icon={"menu_book"} size="small" mirror={currentAyahInfo.pagenumber % 2 === 0 ? "vertical" : undefined} />
+                        {"Page " + currentAyahInfo.pagenumber}
+                    </Text>
                     <Text>{"Juz " + currentAyahInfo.juz + " / " + "Hizb " + currentAyahInfo.hizb}</Text>
                 </Card>
             </WithOverlay>
