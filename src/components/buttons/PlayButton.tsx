@@ -3,20 +3,17 @@
 import { forwardRef } from "react";
 import { Button, ButtonProps } from "@yakad/ui";
 import { Symbol } from "@yakad/symbols";
-import { useStorage } from "@/contexts/storageContext";
+import { useOptions } from "@/contexts/optionsContext";
 
 export const PlayButton = forwardRef<HTMLButtonElement, ButtonProps>(
     function PlayButton({ title, icon, onClick, ...restProps }, ref) {
-        const { storage, setStorage } = useStorage();
+        const [options, setOptions] = useOptions();
 
         const togglePlay = () => {
-            setStorage((prev) => ({
+            setOptions((prev) => ({
                 ...prev,
-                options: {
-                    ...prev.options,
-                    playing: !storage.options.playing,
-                    playBoxShow: true,
-                },
+                playing: !options.playing,
+                playBoxShow: true,
             }));
         };
 
@@ -24,12 +21,12 @@ export const PlayButton = forwardRef<HTMLButtonElement, ButtonProps>(
             <Button
                 ref={ref}
                 {...restProps}
-                title={title || storage.options.playing ? "Pause" : "Play"}
+                title={title || options.playing ? "Pause" : "Play"}
                 icon={
                     icon || (
                         <Symbol
                             icon={
-                                storage.options.playing ? "pause" : "play_arrow"
+                                options.playing ? "pause" : "play_arrow"
                             }
                         />
                     )

@@ -15,7 +15,7 @@ import FooterWrapper from "./FooterWrapper";
 import AppBarWrapper from "./AppBarWrapper";
 import { Surah, AyahBreakersResponse, TranslationList } from "@ntq/sdk";
 import { getSurahs } from "@/actions/getSurahs";
-import { useStorage } from "@/contexts/storageContext";
+import { useSelected } from "@/contexts/selectedsContext";
 
 interface QuranPageSectionProps {
     takhtitsAyahsBreakers: AyahBreakersResponse[];
@@ -69,7 +69,7 @@ function calculatePages(takhtitsAyahsBreakers: AyahBreakersResponse[]) {
 }
 
 export function QuranPageSection({ takhtitsAyahsBreakers, translation }: QuranPageSectionProps) {
-    const { storage } = useStorage();
+    const [selected] = useSelected();
     const [surahs, setSurahs] = useState<Surah[]>([]);
     const [loadingInProgress, setLoadingInProgress] = useState(true);
 
@@ -77,17 +77,17 @@ export function QuranPageSection({ takhtitsAyahsBreakers, translation }: QuranPa
 
     // Calculate the index for RenderByScroll based on selected ayah UUID
     const selectedAyahIndex = useMemo(() => {
-        if (!storage.selected.ayahUUID) {
+        if (!selected.ayahUUID) {
             return 0; // Default to first page if no ayah is selected
         }
 
         // Find which page contains the selected ayah UUID
         const pageIndex = calculated_pages.findIndex(page => 
-            page.ayahUUIDs.includes(storage.selected.ayahUUID!)
+            page.ayahUUIDs.includes(selected.ayahUUID!)
         );
 
         return pageIndex >= 0 ? pageIndex : 0;
-    }, [storage.selected.ayahUUID, calculated_pages]);
+    }, [selected.ayahUUID, calculated_pages]);
 
     // Fetch surahs data for FindPopup
     useEffect(() => {

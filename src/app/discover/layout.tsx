@@ -1,17 +1,17 @@
 "use client";
 
 import { Container, Main, Screen } from "@yakad/ui";
-import { useStorage } from "@/contexts/storageContext";
 import { PlayBox } from "@/components";
 import FooterWrapper from "./FooterWrapper";
+import { useOptions } from "@/contexts/optionsContext";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-    const { storage } = useStorage();
+    const [ options ] = useOptions();
 
     return (
         <Screen>
             <Main>{children}</Main>
-            {storage.options.playBoxShow && (
+            {options.playBoxShow && (
                 <Container
                     size="md"
                     style={{

@@ -10,8 +10,8 @@ import {
     TranslationList,
 } from "@ntq/sdk";
 import { getAyahs } from "@/actions/getAyahs";
-import { useStorage } from "@/contexts/storageContext";
 import { getTranslationAyahs } from "@/actions/getTranslations";
+import { useSelected } from "@/contexts/selectedsContext";
 
 interface AyahRangeProps {
     offset: number;
@@ -30,7 +30,7 @@ export function AyahRange({
     translation,
     onLoad,
 }: AyahRangeProps) {
-    const { storage, setStorage } = useStorage();
+    const [selected, setSelected] = useSelected();
     const [ayahs, setAyahs] = useState<AyahType[]>([]);
     const [translations, setTranslations] =
         useState<PaginatedAyahTranslationList>();
@@ -41,28 +41,25 @@ export function AyahRange({
 
     // Handle ayah click to update selected ayah
     const handleAyahClick = (ayahUUID: string) => {
-        setStorage((prev) => ({
+        setSelected((prev) => ({
             ...prev,
-            selected: {
-                ...prev.selected,
-                ayahUUID: ayahUUID,
-            },
+            ayahUUID: ayahUUID,
         }));
     };
 
     useEffect(() => {
-        const selected_ayah = storage.selected.ayahUUID ?? undefined;
+        const selected_ayah = selected.ayahUUID ?? undefined;
         if (selected_ayah && ayahsRefs.current[selected_ayah]) {
             ayahsRefs.current[selected_ayah].scrollIntoView({
                 behavior: "smooth",
                 block: "start",
             });
         }
-    }, [storage.selected.ayahUUID]);
+    }, [selected.ayahUUID]);
 
     // After ayahs render/update, try scrolling to the selected ayah again
     useEffect(() => {
-        const selected_ayah = storage.selected.ayahUUID ?? undefined;
+        const selected_ayah = selected.ayahUUID ?? undefined;
         if (!selected_ayah) return;
         // Defer to next tick to ensure refs are attached
         const id = window.setTimeout(() => {
@@ -72,7 +69,7 @@ export function AyahRange({
             }
         }, 0);
         return () => window.clearTimeout(id);
-    }, [ayahs, storage.selected.ayahUUID]);
+    }, [ayahs, selected.ayahUUID]);
 
     useEffect(() => {
         let isActive = true;
@@ -167,7 +164,7 @@ export function AyahRange({
                                                 ref={(el) => {
                                                     ayahsRefs.current[ayah.uuid] = el;
                                                 }}
-                                                selected={ayah.uuid === storage.selected.ayahUUID}
+                                                selected={ayah.uuid === selected.ayahUUID}
                                                 onClick={() => handleAyahClick(ayah.uuid)}
                                                 translationText={translations?.[index]?.text}
                                             />
@@ -189,7 +186,7 @@ export function AyahRange({
                             text={ayah.text}
                             translationText={translations?.[index]?.text}
                             sajdah={ayah.sajdah || "none"}
-                            selected={ayah.uuid === storage.selected.ayahUUID}
+                            selected={ayah.uuid === selected.ayahUUID}
                             onClick={() => handleAyahClick(ayah.uuid)}
                         />
                     }

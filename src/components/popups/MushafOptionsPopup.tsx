@@ -1,23 +1,20 @@
 import { forwardRef } from "react";
 import { Row, Select, Text, GridContainer, GridItem, PopupProps, Popup } from "@yakad/ui";
 import { DarkStyleButton, ColorButton } from "@/components";
-import { useStorage } from "@/contexts/storageContext";
 import { ZoomButton } from "../buttons/ZoomButton";
+import { useOptions } from "@/contexts/optionsContext";
 
 export const MushafOptionsPopup = forwardRef<HTMLDivElement, PopupProps>(
     function MushafOptionsPopup({ ...restProps }, ref) {
-        const { storage, setStorage } = useStorage();
+        const [options, setOptions] = useOptions();
         const handleSelectChange = (
             e: React.ChangeEvent<HTMLSelectElement>
         ) => {
             const { name, value } = e.target;
             const castedValue = isNaN(Number(value)) ? value : Number(value);
-            setStorage((prev) => ({
+            setOptions((prev) => ({
                 ...prev,
-                options: {
-                    ...prev.options,
-                    [name]: castedValue,
-                },
+                [name]: castedValue,
             }));
         };
 
@@ -28,7 +25,7 @@ export const MushafOptionsPopup = forwardRef<HTMLDivElement, PopupProps>(
                     <Select
                         placeholder="Font"
                         name="arabicFont"
-                        value={storage.options.arabicFont}
+                        value={options.arabicFont}
                         onChange={handleSelectChange}
                     >
                         <option value="tahoma">Tahoma</option>
@@ -36,7 +33,7 @@ export const MushafOptionsPopup = forwardRef<HTMLDivElement, PopupProps>(
                     <Select
                         placeholder="Font size"
                         name="arabicFontSize"
-                        value={storage.options.arabicFontSize}
+                        value={options.arabicFontSize}
                         onChange={handleSelectChange}
                     >
                         <option value="small">Small</option>

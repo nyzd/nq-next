@@ -4,7 +4,7 @@ import { forwardRef, useEffect, useState, useMemo } from "react";
 import { Card, Text, WithOverlay, WithOverlayProps } from "@yakad/ui";
 import { AyahBreakersResponse, Surah } from "@ntq/sdk";
 import { FindPopup } from "../popups/FindPopup";
-import { useStorage } from "@/contexts/storageContext";
+import { useSelected } from "@/contexts/selectedsContext";
 
 interface FindBarProps extends WithOverlayProps {
     takhtitsAyahsBreakers: AyahBreakersResponse[];
@@ -21,11 +21,11 @@ export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
     ) {
         const [top, setTop] = useState(2);
         const [lastScrollY, setLastScrollY] = useState(0);
-        const {storage, setStorage} = useStorage();
+        const [selected, setSelected] = useSelected();
 
         // Calculate current ayah info from selected ayah UUID and takhtits data
         const currentAyahInfo = useMemo(() => {
-            if (!storage.selected.ayahUUID) {
+            if (!selected.ayahUUID) {
                 return {
                     surahnumber: 1,
                     ayahnumber: 1,
@@ -37,7 +37,7 @@ export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
             }
 
             const currentAyah = takhtitsAyahsBreakers.find(
-                ayah => ayah.uuid === storage.selected.ayahUUID
+                ayah => ayah.uuid === selected.ayahUUID
             );
 
             if (!currentAyah) {
@@ -62,7 +62,7 @@ export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
                 hizb: currentAyah.hizb || 1,
                 surahName: surahName
             };
-        }, [storage.selected.ayahUUID, takhtitsAyahsBreakers, surahs]);
+        }, [selected.ayahUUID, takhtitsAyahsBreakers, surahs]);
 
         const handleAyahSelection = (surahNum: number, ayahNum: number) => {
             // Fallback to internal logic
@@ -72,12 +72,9 @@ export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
 
             if (targetAyah && targetAyah.uuid) {
                 // Update localStorage with the selected ayah UUID
-                setStorage((prev) => ({
+                setSelected((prev) => ({
                     ...prev,
-                    selected: {
-                        ...prev.selected,
-                        ayahUUID: targetAyah.uuid
-                    }
+                    ayahUUID: targetAyah.uuid
                 }));
             }
         };
