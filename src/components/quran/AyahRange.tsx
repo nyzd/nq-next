@@ -114,7 +114,7 @@ export function AyahRange({
         return () => {
             isActive = false;
         };
-    }, [offset, limit, mushaf, translation?.uuid]);
+    }, [offset, limit, mushaf, translation?.uuid, onLoad]);
 
     if (loading) {
         return (

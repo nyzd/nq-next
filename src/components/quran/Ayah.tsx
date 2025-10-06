@@ -60,7 +60,6 @@ export const Ayah = forwardRef<HTMLDivElement, AyahProps>(function Ayah(
 
     const joinedClassNames = classNames(
         styles.ayah,
-        { [styles.selected]: selected },
         { [styles.holding]: isHolding },
         className
     );
@@ -93,6 +92,7 @@ export const Ayah = forwardRef<HTMLDivElement, AyahProps>(function Ayah(
                 onContextMenu?.(e);
             }}
             className={joinedClassNames}
+            level={selected ? undefined : "transparent"}
             {...restProps}
         >
             <div style={{ direction: "rtl", textAlign: "right" }}>
