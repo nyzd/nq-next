@@ -13,7 +13,7 @@ interface QuranPageWrapperProps {
 
 export function QuranPageWrapper({ takhtitsAyahsBreakers, translation }: QuranPageWrapperProps) {
     const searchParams = useSearchParams();
-    const [_selected, setSelected] = useSelected();
+    const [_, setSelected] = useSelected();
 
     // Handle URL parameter on component mount
     useEffect(() => {

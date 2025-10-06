@@ -16,7 +16,7 @@ export const FindPopup = forwardRef<HTMLDivElement, FindPopupProps>(
         { surahs, takhtitsAyahsBreakers, onButtonClicked, ...restProps },
         ref
     ) {
-        const [selected, setSelected] = useSelected();
+        const [selected] = useSelected();
         const [currentSurah, setCurrentSurah] = useState<number>();
         const [currentAyah, setCurrentAyah] = useState<number>();
         const [currentJuz, setCurrentJuz] = useState<number>();

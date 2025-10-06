@@ -8,7 +8,7 @@ import { useSelected } from "@/contexts/selectedsContext";
 
 export const LastReadingButton = forwardRef<HTMLButtonElement, ButtonProps>(
     function LastReadingButton({ disabled, children, ...restProps }, ref) {
-        const [selected, setSelected] = useSelected();
+        const [selected, _] = useSelected();
 
         return (
             <Link

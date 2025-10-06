@@ -1,3 +1,5 @@
+"use client";
+
 import { createLocalStorageContext } from "@yakad/lib";
 
 export type PlayBackRate = 0.5 | 1 | 1.25 | 1.5 | 1.75 | 2;

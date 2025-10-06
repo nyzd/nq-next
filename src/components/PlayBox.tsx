@@ -8,8 +8,8 @@ import { useSelected } from "@/contexts/selectedsContext";
 
 export const PlayBox = forwardRef<HTMLDivElement, Omit<CardProps, "children">>(
     function PlayBox({ ...restProps }, ref) {
-        const [options, setOptions] = useOptions();
-        const [selected, setSelected] = useSelected();
+        const [_options, setOptions] = useOptions();
+        const [selected, _setSelected] = useSelected();
 
         const closePlayer = () => {
             setOptions((prev) => ({
