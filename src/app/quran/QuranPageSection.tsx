@@ -105,10 +105,7 @@ export function QuranPageSection({ takhtitsAyahsBreakers, translation }: QuranPa
             <AppBarWrapper />
             <Main>
                 <Container size="md">
-                    <FindBar
-                        takhtitsAyahsBreakers={takhtitsAyahsBreakers}
-                        surahs={surahs}
-                    />
+                   
 
                     <RenderByScroll
                         scrollMarginTop={12}
@@ -117,7 +114,16 @@ export function QuranPageSection({ takhtitsAyahsBreakers, translation }: QuranPa
                         newChildRendered={() => setLoadingInProgress(true)} 
                     >
                         {calculated_pages.map((page, index)=> (
-                            <QuranPage key={index} onLoad={() => setLoadingInProgress(false)} index={0} page={page} mushaf="hafs" translation={translation} />
+                            <QuranPage
+                                key={index}
+                                onLoad={() => setLoadingInProgress(false)}
+                                index={0}
+                                page={page}
+                                mushaf="hafs"
+                                translation={translation}
+                                takhtitsAyahsBreakers={takhtitsAyahsBreakers}
+                                surahs={surahs}
+                            />
                         ))}
                     </RenderByScroll>
                 </Container>

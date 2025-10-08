@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import { LoadingIcon, P, Container, Stack } from "@yakad/ui";
+import { useEffect, useState, useRef, useCallback } from "react";
+import { LoadingIcon, P, Container, Stack, WithInteractions } from "@yakad/ui";
 import { Ayah } from "@/components";
 import SurahHeader from "./SurahHeader";
 import {
@@ -20,6 +20,7 @@ interface AyahRangeProps {
     className?: string;
     translation?: TranslationList;
     onLoad?: () => void;
+    firstVisibleAyahChanged: (uuid: string) => void;
 }
 
 export function AyahRange({
@@ -29,6 +30,7 @@ export function AyahRange({
     className,
     translation,
     onLoad,
+    firstVisibleAyahChanged
 }: AyahRangeProps) {
     const [selected, setSelected] = useSelected();
     const [ayahs, setAyahs] = useState<AyahType[]>([]);
@@ -36,6 +38,14 @@ export function AyahRange({
         useState<PaginatedAyahTranslationList>();
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [visibleAyahs, setVisibleAyahs] = useState<Set<number>>(new Set());
+
+    useEffect(() => {
+        const first = Math.min(...visibleAyahs.keys());
+        if (ayahs[first]){
+            firstVisibleAyahChanged(ayahs[first].uuid);
+        }
+    }, [visibleAyahs]);
 
     const ayahsRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
@@ -114,7 +124,7 @@ export function AyahRange({
         return () => {
             isActive = false;
         };
-    }, [offset, limit, mushaf, translation?.uuid, onLoad]);
+    }, [offset, limit, mushaf, translation?.uuid]);
 
     if (loading) {
         return (
@@ -177,18 +187,34 @@ export function AyahRange({
                         )}
 
                     {!ayah.surah?.bismillah.is_ayah && 
-                        <Ayah
-                            ref={(el) => {
-                                ayahsRefs.current[ayah.uuid] = el;
-                            }}
-                            id={`ayah-${ayah.uuid}`}
-                            number={ayah.number}
-                            text={ayah.text}
-                            translationText={translations?.[index]?.text}
-                            sajdah={ayah.sajdah || "none"}
-                            selected={ayah.uuid === selected.ayahUUID}
-                            onClick={() => handleAyahClick(ayah.uuid)}
-                        />
+                        <WithInteractions onVisibilityChange={(visible) => {
+                            if (visible) {
+                                setVisibleAyahs((set) => {
+                                    if (set.has(index)) return set;
+                                    return new Set(set).add(index);
+                                });
+                            } else {
+                                setVisibleAyahs((set) => {
+                                    if (!set.has(index)) return set;
+                                    const newSet = new Set(set);
+                                    newSet.delete(index);
+                                    return newSet;
+                                });
+                            }
+                        }}>
+                            <Ayah
+                                ref={(el) => {
+                                    ayahsRefs.current[ayah.uuid] = el;
+                                }}
+                                id={`ayah-${ayah.uuid}`}
+                                number={ayah.number}
+                                text={ayah.text}
+                                translationText={translations?.[index]?.text}
+                                sajdah={ayah.sajdah || "none"}
+                                selected={ayah.uuid === selected.ayahUUID}
+                                onClick={() => handleAyahClick(ayah.uuid)}
+                            />
+                        </WithInteractions>
                     }
                 </Stack>
             ))}

@@ -4,29 +4,31 @@ import { forwardRef, useEffect, useState, useMemo } from "react";
 import { Card, Row, Text, WithOverlay, WithOverlayProps } from "@yakad/ui";
 import { AyahBreakersResponse, Surah } from "@ntq/sdk";
 import { FindPopup } from "../popups/FindPopup";
-import { useSelected } from "@/contexts/selectedsContext";
 import { Symbol } from "@yakad/symbols";
 
 interface FindBarProps extends WithOverlayProps {
     takhtitsAyahsBreakers: AyahBreakersResponse[];
     surahs: Surah[];
+    ayahUuid?: string;
+    onAyahSelect?: (ayahUuid: string) => void;
 }
 export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
     function FindBar(
         {
             takhtitsAyahsBreakers,
             surahs,
+            ayahUuid,
+            onAyahSelect,
             ...restProps
         },
         ref
     ) {
         const [top, setTop] = useState(2);
         const [lastScrollY, setLastScrollY] = useState(0);
-        const [selected, setSelected] = useSelected();
 
-        // Calculate current ayah info from selected ayah UUID and takhtits data
+        // Calculate current ayah info from provided ayah UUID and takhtits data
         const currentAyahInfo = useMemo(() => {
-            if (!selected.ayahUUID) {
+            if (!ayahUuid) {
                 return {
                     surahnumber: 1,
                     ayahnumber: 1,
@@ -38,7 +40,7 @@ export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
             }
 
             const currentAyah = takhtitsAyahsBreakers.find(
-                ayah => ayah.uuid === selected.ayahUUID
+                ayah => ayah.uuid === ayahUuid
             );
 
             if (!currentAyah) {
@@ -63,20 +65,15 @@ export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
                 hizb: currentAyah.hizb || 1,
                 surahName: surahName
             };
-        }, [selected.ayahUUID, takhtitsAyahsBreakers, surahs]);
+        }, [ayahUuid, takhtitsAyahsBreakers, surahs]);
 
         const handleAyahSelection = (surahNum: number, ayahNum: number) => {
-            // Fallback to internal logic
             const targetAyah = takhtitsAyahsBreakers.find(
                 ayah => ayah.surah === surahNum && ayah.ayah === ayahNum
             );
 
-            if (targetAyah && targetAyah.uuid) {
-                // Update localStorage with the selected ayah UUID
-                setSelected((prev) => ({
-                    ...prev,
-                    ayahUUID: targetAyah.uuid
-                }));
+            if (targetAyah?.uuid) {
+                onAyahSelect?.(targetAyah.uuid);
             }
         };
 

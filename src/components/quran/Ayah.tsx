@@ -2,7 +2,7 @@
 
 import { forwardRef, useRef, useState } from "react";
 import classNames from "classnames";
-import { Card, CardProps, P } from "@yakad/ui";
+import { Card, CardProps, P, WithInteractions } from "@yakad/ui";
 import styles from "./Ayah.module.css";
 
 interface AyahProps extends CardProps {
