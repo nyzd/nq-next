@@ -8,7 +8,6 @@ import {
     Screen,
 } from "@yakad/ui";
 import {
-    FindBar,
     QuranPage,
 } from "@/components";
 import FooterWrapper from "./FooterWrapper";
@@ -24,44 +23,20 @@ interface QuranPageSectionProps {
 
 function calculatePages(takhtitsAyahsBreakers: AyahBreakersResponse[]) {
     // Get unique page numbers from takhtits and sort them
-    const rawUniquePages = Array.from(
-        new Set(takhtitsAyahsBreakers.map(ayah => ayah.page).filter(Boolean))
-    ).sort((a, b) => (a || 0) - (b || 0));
+    const uniquePages = Array.from(
+        new Set(takhtitsAyahsBreakers.map(ayah => ayah.page).filter((p): p is number => !!p))
+    ).sort((a, b) => a - b);
 
-    // Detect whether takhtits already includes page 1
-    const hasPage1InTakhtits = rawUniquePages.includes(1);
-
-    // Build the pages list, ensuring page 1 exists at the beginning
-    const uniquePages = hasPage1InTakhtits
-        ? rawUniquePages
-        : [1, ...rawUniquePages];
-
-    // Calculate ayah range for each page
+    // Calculate ayah range for each page directly from takhtits
     return uniquePages.map(pageNumber => {
-        if (pageNumber === 1) {
-            // Hardcode page 1 data since it may not be in takhtits
-            // For page 1, we need to get the first 7 ayahs from takhtitsAyahsBreakers
-            const page1Ayahs = takhtitsAyahsBreakers.slice(0, 7);
-            return {
-                pageNumber: 1,
-                ayahCount: 7, // Al-Fatihah has 7 ayahs
-                offset: 0,
-                limit: 7,
-                ayahUUIDs: page1Ayahs.map(ayah => ayah.uuid)
-            };
-        }
-
         const pageAyahs = takhtitsAyahsBreakers.filter(ayah => ayah.page === pageNumber);
         const firstAyahIndex = takhtitsAyahsBreakers.findIndex(ayah => ayah.page === pageNumber);
         const lastAyahIndex = takhtitsAyahsBreakers.findLastIndex(ayah => ayah.page === pageNumber);
 
-        // If takhtits does not include page 1, global offset should be shifted by 7
-        const baseOffset = hasPage1InTakhtits ? 0 : 7;
-
         return {
-            pageNumber: pageNumber!,
+            pageNumber: pageNumber - 1,
             ayahCount: pageAyahs.length,
-            offset: firstAyahIndex + baseOffset,
+            offset: firstAyahIndex,
             limit: lastAyahIndex - firstAyahIndex + 1,
             ayahUUIDs: pageAyahs.map(ayah => ayah.uuid)
         };

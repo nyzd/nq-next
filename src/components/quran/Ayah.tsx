@@ -93,6 +93,7 @@ export const Ayah = forwardRef<HTMLDivElement, AyahProps>(function Ayah(
             }}
             className={joinedClassNames}
             level={selected ? undefined : "transparent"}
+            hoverEffect
             {...restProps}
         >
             <div style={{ direction: "rtl", textAlign: "right" }}>

@@ -1,7 +1,7 @@
 "use client"
 import { TranslationList, AyahBreakersResponse, Surah } from "@ntq/sdk";
 import { AyahRange } from "./AyahRange";
-import { Card, Text } from "@yakad/ui";
+import { Card, Stack, Text } from "@yakad/ui";
 import { FindBar } from "./FindBar";
 import { useState } from "react";
 
@@ -43,26 +43,25 @@ export function QuranPage({ mushaf = "hafs", className, translation, takhtitsAya
     }
 
     return (
-        <Card align="center">
+        <Card align="center" style={{padding: 0}}>
             <FindBar
                 takhtitsAyahsBreakers={takhtitsAyahsBreakers}
                 surahs={surahs}
                 ayahUuid={selected}
                 // onAyahSelect={(uuid) => setSelected(prev => ({ ...prev, ayahUUID: uuid }))}
             />
-            <AyahRange 
-                offset={page?.offset ?? 0}
-                limit={page?.limit ?? 0}
-                mushaf={mushaf}
-                translation={translation}
-                onLoad={onLoad}
-                firstVisibleAyahChanged={(uuid) => {
-                    console.log(uuid)
-                    setSelected(prev => prev !== uuid ? uuid : prev)
-                }}
-            />
-
-            <Text>{page.pageNumber}</Text>
+            <Stack style={{ padding: "2rem" }}>
+                <AyahRange 
+                    offset={page?.offset ?? 0}
+                    limit={page?.limit ?? 0}
+                    mushaf={mushaf}
+                    translation={translation}
+                    onLoad={onLoad}
+                    firstVisibleAyahChanged={(uuid) => {
+                        setSelected(prev => prev !== uuid ? uuid : prev)
+                    }}
+                />
+            </Stack>
         </Card>
     );
 }

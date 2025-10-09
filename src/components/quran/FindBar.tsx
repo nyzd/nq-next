@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef, useEffect, useState, useMemo } from "react";
-import { Card, Row, Text, WithOverlay, WithOverlayProps } from "@yakad/ui";
+import { Card, Text, WithOverlay, WithOverlayProps } from "@yakad/ui";
 import { AyahBreakersResponse, Surah } from "@ntq/sdk";
 import { FindPopup } from "../popups/FindPopup";
 import { Symbol } from "@yakad/symbols";
@@ -60,8 +60,8 @@ export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
             return {
                 surahnumber: currentAyah.surah,
                 ayahnumber: currentAyah.ayah,
-                pagenumber: currentAyah.page || 1,
-                juz: currentAyah.juz || 1,
+                pagenumber: currentAyah.page! - 1 || 1,
+                juz: currentAyah.juz! - 1 || 1,
                 hizb: currentAyah.hizb || 1,
                 surahName: surahName
             };
@@ -132,18 +132,18 @@ export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
                         userSelect: "none",
                     }}
                 >
-                    <Text>
+                    <Text color="onSurfaceVariantColor">
                         {currentAyahInfo.surahnumber +
                             ". " +
                             (currentAyahInfo.surahName || "Al-Fatihah") +
                             ": " +
                             currentAyahInfo.ayahnumber}
                     </Text>
-                    <Text>
+                    <Text color="onSurfaceVariantColor" style={{gap: "1rem"}}>
                         <Symbol icon={"menu_book"} size="small" mirror={currentAyahInfo.pagenumber % 2 === 0 ? "vertical" : undefined} />
                         {"Page " + currentAyahInfo.pagenumber}
                     </Text>
-                    <Text>{"Juz " + currentAyahInfo.juz + " / " + "Hizb " + currentAyahInfo.hizb}</Text>
+                    <Text color="onSurfaceVariantColor">{"Juz " + currentAyahInfo.juz + " / " + "Hizb " + currentAyahInfo.hizb}</Text>
                 </Card>
             </WithOverlay>
         );
