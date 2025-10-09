@@ -3,20 +3,19 @@ import Link from "next/link";
 import { Button, Card, CardProps, Row, Text } from "@yakad/ui";
 import { Symbol } from "@yakad/symbols";
 import { PlayButton } from "@/components";
-import { useStorage } from "@/contexts/storageContext";
+import { useOptions } from "@/contexts/optionsContext";
+import { useSelected } from "@/contexts/selectedsContext";
 
 export const PlayBox = forwardRef<HTMLDivElement, Omit<CardProps, "children">>(
     function PlayBox({ ...restProps }, ref) {
-        const { storage, setStorage } = useStorage();
+        const [_options, setOptions] = useOptions();
+        const [selected, _setSelected] = useSelected();
 
         const closePlayer = () => {
-            setStorage((prev) => ({
+            setOptions((prev) => ({
                 ...prev,
-                options: {
-                    ...prev.options,
-                    playing: false,
-                    playBoxShow: false,
-                },
+                playing: false,
+                playBoxShow: false,
             }));
         };
 
@@ -36,7 +35,7 @@ export const PlayBox = forwardRef<HTMLDivElement, Omit<CardProps, "children">>(
             >
                 <Row style={{ minHeight: "6rem" }}>
                     <Link
-                        href={`/quran?ayah_uuid=${storage.selected.ayahUUID}`}
+                        href={`/quran?ayah_uuid=${selected.ayahUUID}`}
                         passHref
                         style={{ flexGrow: 1 }}
                     >

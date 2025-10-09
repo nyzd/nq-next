@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef } from "react";
-import classNames from "classnames";
 import { Button, ButtonProps } from "@yakad/ui";
 import { IconCode, Symbol } from "@yakad/symbols";
 import { usePreferences } from "@/contexts/preferencesContext";
@@ -41,7 +40,7 @@ const optionsMap: Record<
 
 export const ZoomButton = forwardRef<HTMLButtonElement, ButtonProps>(
     function ZoomButton(
-        { title, icon, onClick, children, className, ...restProps },
+        { title, icon, onClick, children, ...restProps },
         ref
     ) {
         const [preferences, setPreferences] = usePreferences();
@@ -59,12 +58,9 @@ export const ZoomButton = forwardRef<HTMLButtonElement, ButtonProps>(
             }));
         };
 
-        const joinedClassNames = classNames("fullWidthLover", className);
-
         return (
             <Button
                 ref={ref}
-                className={joinedClassNames}
                 title={title || optionsMap[currentOption].title}
                 icon={icon || <Symbol icon={optionsMap[currentOption].icon} />}
                 onClick={(e) => {

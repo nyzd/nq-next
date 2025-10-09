@@ -1,7 +1,7 @@
-import { PlayBackRate, useStorage } from "@/contexts/storageContext";
 import { Button, ButtonProps, Dropdown, WithOverlay } from "@yakad/ui";
 import { forwardRef } from "react";
 import {IconCode, Symbol} from "@yakad/symbols";
+import { PlayBackRate, useOptions } from "@/contexts/optionsContext";
 
 
 const playBackButtonIcon: Record<PlayBackRate, IconCode> = {
@@ -17,51 +17,42 @@ type PlayBackButtonProps = Omit<ButtonProps, "variant" | "icon" | "onClick">
 
 export const PlayBackButton = forwardRef<HTMLButtonElement, PlayBackButtonProps>(
     function PlayBackButton({ ...restProps }, ref) {
-        const { storage, setStorage } = useStorage();
+        const [options, setOptions] = useOptions();
 
         const onClickHandler = () => {
-            setStorage((prev) => (
+            setOptions((prev) => (
                 {
                     ...prev,
-                    options: {
-                        ...prev.options,
-                        playBackActive: !prev.options.playBackActive
-                    }
+                    playBackActive: !prev.playBackActive
                 }
             ));
         };
 
         const setPlayBackRate = (newRate: PlayBackRate) => {
             if (newRate === 1){ 
-                setStorage(prev => ({
+                setOptions(prev => ({
                     ...prev,
-                    options: {
-                        ...prev.options,
-                        playBackActive: false
-                    }
+                    playBackActive: false
                 }))
 
                 return;
             }
 
-            setStorage(prev => ({
+            setOptions(prev => ({
                 ...prev,
-                options: {
-                    ...prev.options,
-                    playBackActive: true,
-                    playBackRate: newRate
-                }
+                playBackActive: true,
+                playBackRate: newRate
             }));
         }
 
         const variant = (rate: PlayBackRate): ButtonProps["variant"] => {
             if (rate === 1)
-                return !storage.options.playBackActive 
+                return !options.playBackActive 
                     ? "filledtonal" : "text";
 
-            return storage.options.playBackRate === rate
-                ? storage.options.playBackActive 
-                    ? "filledtonal" : "tonal"
+            return options.playBackRate === rate
+                ? options.playBackActive 
+                    ? "filled" : "tonal"
                 : "text";
         }
 
@@ -80,8 +71,8 @@ export const PlayBackButton = forwardRef<HTMLButtonElement, PlayBackButtonProps>
                 <Button 
                     ref={ref}
                     {...restProps}
-                    variant={storage.options.playBackActive ? "filledtonal" : "text"} 
-                    icon={<Symbol icon={storage.options.playBackActive ? playBackButtonIcon[storage.options.playBackRate] : playBackButtonIcon[1] }/>} 
+                    variant={options.playBackActive ? "filledtonal" : "text"} 
+                    icon={<Symbol icon={options.playBackActive ? playBackButtonIcon[options.playBackRate] : playBackButtonIcon[1] }/>} 
                     onClick={onClickHandler} 
                 />
             </WithOverlay>

@@ -4,28 +4,31 @@ import { forwardRef, useEffect, useState, useMemo } from "react";
 import { Card, Text, WithOverlay, WithOverlayProps } from "@yakad/ui";
 import { AyahBreakersResponse, Surah } from "@ntq/sdk";
 import { FindPopup } from "../popups/FindPopup";
-import { useStorage } from "@/contexts/storageContext";
+import { Symbol } from "@yakad/symbols";
 
 interface FindBarProps extends WithOverlayProps {
     takhtitsAyahsBreakers: AyahBreakersResponse[];
     surahs: Surah[];
+    ayahUuid?: string;
+    onAyahSelect?: (ayahUuid: string) => void;
 }
 export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
     function FindBar(
         {
             takhtitsAyahsBreakers,
             surahs,
+            ayahUuid,
+            onAyahSelect,
             ...restProps
         },
         ref
     ) {
         const [top, setTop] = useState(2);
         const [lastScrollY, setLastScrollY] = useState(0);
-        const {storage, setStorage} = useStorage();
 
-        // Calculate current ayah info from selected ayah UUID and takhtits data
+        // Calculate current ayah info from provided ayah UUID and takhtits data
         const currentAyahInfo = useMemo(() => {
-            if (!storage.selected.ayahUUID) {
+            if (!ayahUuid) {
                 return {
                     surahnumber: 1,
                     ayahnumber: 1,
@@ -37,7 +40,7 @@ export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
             }
 
             const currentAyah = takhtitsAyahsBreakers.find(
-                ayah => ayah.uuid === storage.selected.ayahUUID
+                ayah => ayah.uuid === ayahUuid
             );
 
             if (!currentAyah) {
@@ -57,28 +60,20 @@ export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
             return {
                 surahnumber: currentAyah.surah,
                 ayahnumber: currentAyah.ayah,
-                pagenumber: currentAyah.page || 1,
-                juz: currentAyah.juz || 1,
+                pagenumber: currentAyah.page! - 1 || 1,
+                juz: currentAyah.juz! - 1 || 1,
                 hizb: currentAyah.hizb || 1,
                 surahName: surahName
             };
-        }, [storage.selected.ayahUUID, takhtitsAyahsBreakers, surahs]);
+        }, [ayahUuid, takhtitsAyahsBreakers, surahs]);
 
         const handleAyahSelection = (surahNum: number, ayahNum: number) => {
-            // Fallback to internal logic
             const targetAyah = takhtitsAyahsBreakers.find(
                 ayah => ayah.surah === surahNum && ayah.ayah === ayahNum
             );
 
-            if (targetAyah && targetAyah.uuid) {
-                // Update localStorage with the selected ayah UUID
-                setStorage((prev) => ({
-                    ...prev,
-                    selected: {
-                        ...prev.selected,
-                        ayahUUID: targetAyah.uuid
-                    }
-                }));
+            if (targetAyah?.uuid) {
+                onAyahSelect?.(targetAyah.uuid);
             }
         };
 
@@ -137,15 +132,18 @@ export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
                         userSelect: "none",
                     }}
                 >
-                    <Text>
+                    <Text color="onSurfaceVariantColor">
                         {currentAyahInfo.surahnumber +
                             ". " +
                             (currentAyahInfo.surahName || "Al-Fatihah") +
                             ": " +
                             currentAyahInfo.ayahnumber}
                     </Text>
-                    <Text>{"Page " + currentAyahInfo.pagenumber}</Text>
-                    <Text>{"Juz " + currentAyahInfo.juz + " / " + "Hizb " + currentAyahInfo.hizb}</Text>
+                    <Text color="onSurfaceVariantColor" style={{gap: "1rem"}}>
+                        <Symbol icon={"menu_book"} size="small" mirror={currentAyahInfo.pagenumber % 2 === 0 ? "vertical" : undefined} />
+                        {"Page " + currentAyahInfo.pagenumber}
+                    </Text>
+                    <Text color="onSurfaceVariantColor">{"Juz " + currentAyahInfo.juz + " / " + "Hizb " + currentAyahInfo.hizb}</Text>
                 </Card>
             </WithOverlay>
         );

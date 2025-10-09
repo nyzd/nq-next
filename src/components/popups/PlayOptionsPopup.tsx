@@ -1,20 +1,16 @@
 import { forwardRef } from "react";
 import { CheckBox, Popup, PopupProps, Row, Select, Spacer, Text } from "@yakad/ui";
-import { useStorage } from "@/contexts/storageContext";
-
+import { useOptions } from "@/contexts/optionsContext";
 export const PlayOptionsPopup = forwardRef<HTMLDivElement, PopupProps>(
     function PlayOptionsPopup({ ...restProps }, ref) {
-        const { storage, setStorage } = useStorage();
+        const [options, setOptions] = useOptions();
         const handleCheckBoxChange = (
             e: React.ChangeEvent<HTMLInputElement>
         ) => {
             const { name, checked } = e.target;
-            setStorage((prev) => ({
+            setOptions((prev) => ({
                 ...prev,
-                options: {
-                    ...prev.options,
-                    [name]: checked,
-                },
+                [name]: checked,
             }));
         };
 
@@ -26,7 +22,7 @@ export const PlayOptionsPopup = forwardRef<HTMLDivElement, PopupProps>(
                     <CheckBox
                         title="Recitation play status"
                         name="recitationStatus"
-                        checked={storage.options.recitationStatus}
+                        checked={options.recitationStatus}
                         onChange={handleCheckBoxChange}
                     />
                 </Row>
@@ -41,7 +37,7 @@ export const PlayOptionsPopup = forwardRef<HTMLDivElement, PopupProps>(
                 <CheckBox
                     label="Auto scroll"
                     name="autoScroll"
-                    checked={storage.options.autoScroll}
+                    checked={options.autoScroll}
                     onChange={handleCheckBoxChange}
                 />
             </Popup>

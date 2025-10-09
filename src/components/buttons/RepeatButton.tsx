@@ -1,7 +1,7 @@
 import { Button, ButtonProps, Dropdown, WithOverlay } from "@yakad/ui";
 import { forwardRef } from "react";
 import { IconCode, Symbol } from "@yakad/symbols";
-import { RepeatRange, useStorage } from "@/contexts/storageContext";
+import { RepeatRange, useOptions } from "@/contexts/optionsContext";
 
 const decideRepeatMode = (current_repeat_mode: "off" | "range" | "ayah") =>
     current_repeat_mode === "off" ? "ayah" : current_repeat_mode  === "ayah" ? "range" : "off";
@@ -13,51 +13,42 @@ const repeateRangeNames = {
 
 export const RepeatButton = forwardRef<HTMLButtonElement, ButtonProps>(
     function RepeatButton({ ...restProps }, ref) {
-        const { storage, setStorage } = useStorage();
+        const [options, setOptions] = useOptions();
 
         const onClickHandler = () => {
-            setStorage((prev) => (
+            setOptions((prev) => (
                 {
                     ...prev,
-                    options: {
-                        ...prev.options,
-                        repeatMode: decideRepeatMode(storage.options.repeatMode)
-                    }
+                    repeatMode: decideRepeatMode(options.repeatMode)
                 }
             ));
         };
 
         const setRepeatRange = (new_range: RepeatRange) => {
-            setStorage((prev) => (
+            setOptions((prev) => (
                 {
                     ...prev,
-                    options: {
-                        ...prev.options,
-                        repeatMode: "range",
-                        repeatRange: new_range,
-                    }
+                    repeatMode: "range",
+                    repeatRange: new_range,
                 }
             ));
         }
 
         const variant = (range: RepeatRange) => {
-            return storage.options.repeatRange === range
-                ? storage.options.repeatMode === "range" 
-                    ? "filledtonal" : "tonal"
+            return options.repeatRange === range
+                ? options.repeatMode === "range" 
+                    ? "filled" : "tonal"
                 : "text";
         }
 
         const modeVariant = (mode: "off" | "ayah") =>
-            storage.options.repeatMode === mode ? "filledtonal" : "text"
+            options.repeatMode === mode ? "filledtonal" : "text"
 
         const repeatModeItemsOnClickHandler = (mode: "ayah" | "off") => {
-            setStorage((prev) => (
+            setOptions((prev) => (
                 {
                     ...prev,
-                    options: {
-                        ...prev.options,
-                        repeatMode: mode,
-                    }
+                    repeatMode: mode,
                 }
             ));
         }
@@ -79,11 +70,11 @@ export const RepeatButton = forwardRef<HTMLButtonElement, ButtonProps>(
                 <Button
                     ref={ref}
                     {...restProps}
-                    variant={storage.options.repeatMode === "off" ? "text" : "filledtonal"}
+                    variant={options.repeatMode === "off" ? "text" : "filledtonal"}
                     onClick={onClickHandler}
                     icon={
                         <Symbol
-                            icon={storage.options.repeatMode === "ayah" ? "repeat_one" : "repeat"}
+                            icon={options.repeatMode === "ayah" ? "repeat_one" : "repeat"}
                         />
                     }
                 />

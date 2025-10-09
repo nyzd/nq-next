@@ -1,16 +1,16 @@
 "use client";
 
+import { useOptions } from "@/contexts/optionsContext";
 import { useEffect, useRef } from "react";
-import { useStorage } from "@/contexts/storageContext";
 
 export function Audio(
     restProps: Omit<React.HTMLAttributes<HTMLAudioElement>, "style">
 ) {
-    const { storage, setStorage } = useStorage();
-    const isPlaying = storage.options.playing;
+    const [options, setOptions] = useOptions();
+    const isPlaying = options.playing;
 
-    const playBackActive = storage.options.playBackActive;
-    const playBackRate = storage.options.playBackRate;
+    const playBackActive = options.playBackActive;
+    const playBackRate = options.playBackRate;
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
@@ -32,12 +32,9 @@ export function Audio(
     const handleEnded = () => {
         console.log("Audio has ended");
 
-        setStorage((prev) => ({
+        setOptions((prev) => ({
             ...prev,
-            options: {
-                ...prev.options,
-                playing: false,
-            },
+            playing: false,
         }));
     };
 

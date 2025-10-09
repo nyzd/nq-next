@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef } from "react";
-import classNames from "classnames";
 import { Button, ButtonProps, ThemeColor } from "@yakad/ui";
 import { Symbol } from "@yakad/symbols";
 import { usePreferences } from "@/contexts/preferencesContext";
@@ -33,7 +32,7 @@ const optionsMap: Record<ThemeColor, { name: string; title: string }> = {
 
 export const ColorButton = forwardRef<HTMLButtonElement, ButtonProps>(
     function ColorButton(
-        { title, icon, onClick, children, className, ...restProps },
+        { title, icon, onClick, children, ...restProps },
         ref
     ) {
         const [preferences, setPreferences] = usePreferences();
@@ -51,12 +50,9 @@ export const ColorButton = forwardRef<HTMLButtonElement, ButtonProps>(
             }));
         };
 
-        const joinedClassNames = classNames("fullWidthLover", className);
-
         return (
             <Button
                 ref={ref}
-                className={joinedClassNames}
                 title={title || optionsMap[currentOption].title}
                 icon={icon || <Symbol icon="circle" />}
                 onClick={(e) => {

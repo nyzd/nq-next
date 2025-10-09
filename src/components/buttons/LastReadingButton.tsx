@@ -3,22 +3,23 @@
 import { forwardRef } from "react";
 import Link from "next/link";
 import { Button, ButtonProps } from "@yakad/ui";
-import { useStorage } from "@/contexts/storageContext";
+import { useSelected } from "@/contexts/selectedsContext";
+
 
 export const LastReadingButton = forwardRef<HTMLButtonElement, ButtonProps>(
     function LastReadingButton({ disabled, children, ...restProps }, ref) {
-        const { storage } = useStorage();
+        const [selected, _] = useSelected();
 
         return (
             <Link
-                href={`/quran?ayah_uuid=${storage.selected.ayahUUID}`}
+                href={`/quran?ayah_uuid=${selected.ayahUUID}`}
                 passHref
             >
                 <Button
                     ref={ref}
                     {...restProps}
                     disabled={
-                        disabled || storage.selected.ayahUUID === undefined
+                        disabled || selected.ayahUUID === undefined
                     }
                 >
                     {children || "Last reading"}

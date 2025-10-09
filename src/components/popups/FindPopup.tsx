@@ -3,7 +3,7 @@
 import { forwardRef, useState, useMemo, useEffect } from "react";
 import { Button, Popup, PopupProps, Row, Select, Text } from "@yakad/ui";
 import { Surah, AyahBreakersResponse } from "@ntq/sdk";
-import { useStorage } from "@/contexts/storageContext";
+import { useSelected } from "@/contexts/selectedsContext";
 
 interface FindPopupProps extends PopupProps {
     surahs: Surah[];
@@ -16,7 +16,7 @@ export const FindPopup = forwardRef<HTMLDivElement, FindPopupProps>(
         { surahs, takhtitsAyahsBreakers, onButtonClicked, ...restProps },
         ref
     ) {
-        const { storage } = useStorage();
+        const [selected] = useSelected();
         const [currentSurah, setCurrentSurah] = useState<number>();
         const [currentAyah, setCurrentAyah] = useState<number>();
         const [currentJuz, setCurrentJuz] = useState<number>();
@@ -26,9 +26,9 @@ export const FindPopup = forwardRef<HTMLDivElement, FindPopupProps>(
 
         // Find current ayah from localStorage and set initial state
         useEffect(() => {
-            if (storage.selected.ayahUUID && takhtitsAyahsBreakers.length > 0) {
+            if (selected.ayahUUID && takhtitsAyahsBreakers.length > 0) {
                 const currentAyahData = takhtitsAyahsBreakers.find(
-                    (ayah) => ayah.uuid === storage.selected.ayahUUID
+                    (ayah) => ayah.uuid === selected.ayahUUID
                 );
 
                 if (currentAyahData) {
@@ -51,7 +51,7 @@ export const FindPopup = forwardRef<HTMLDivElement, FindPopupProps>(
                 setCurrentSurah(1);
                 setCurrentAyah(1);
             }
-        }, [storage.selected.ayahUUID, takhtitsAyahsBreakers]);
+        }, [selected.ayahUUID, takhtitsAyahsBreakers]);
 
         // Unified function to update all selections based on an ayah
         const updateAllSelections = (ayah: AyahBreakersResponse) => {

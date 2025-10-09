@@ -2,9 +2,9 @@
 
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { useStorage } from "@/contexts/storageContext";
 import { AyahBreakersResponse, TranslationList } from "@ntq/sdk";
 import { QuranPageSection } from "./QuranPageSection";
+import { useSelected } from "@/contexts/selectedsContext";
 
 interface QuranPageWrapperProps {
     takhtitsAyahsBreakers: AyahBreakersResponse[];
@@ -13,7 +13,7 @@ interface QuranPageWrapperProps {
 
 export function QuranPageWrapper({ takhtitsAyahsBreakers, translation }: QuranPageWrapperProps) {
     const searchParams = useSearchParams();
-    const { setStorage } = useStorage();
+    const [_, setSelected] = useSelected();
 
     // Handle URL parameter on component mount
     useEffect(() => {
@@ -22,16 +22,13 @@ export function QuranPageWrapper({ takhtitsAyahsBreakers, translation }: QuranPa
         if (ayahUuid) {
             // Add a small delay to ensure localStorage has been loaded first
             setTimeout(() => {
-                setStorage(prev => ({
+                setSelected(prev => ({
                     ...prev,
-                    selected: {
-                        ...prev.selected,
-                        ayahUUID: ayahUuid
-                    }
+                    ayahUUID: ayahUuid
                 }));
             }, 50);
         }
-    }, [searchParams, setStorage]);
+    }, [searchParams, setSelected]);
 
     return <QuranPageSection takhtitsAyahsBreakers={takhtitsAyahsBreakers} translation={translation} />;
 }

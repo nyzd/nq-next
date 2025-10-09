@@ -2,12 +2,15 @@
 
 import { ReactNode } from "react";
 import { PreferencesProvider } from "@/contexts/preferencesContext";
-import { StorageProvider } from "@/contexts/storageContext";
+import { OptionsProvider } from "@/contexts/optionsContext";
+import { SelectedProvider } from "@/contexts/selectedsContext";
 
 export default function Providers({ children }: { children: ReactNode }) {
     return (
-        <StorageProvider>
-            <PreferencesProvider>{children}</PreferencesProvider>
-        </StorageProvider>
+        <OptionsProvider>
+            <SelectedProvider>
+                <PreferencesProvider>{children}</PreferencesProvider>
+            </SelectedProvider>
+        </OptionsProvider>
     );
 }
