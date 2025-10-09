@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
 import { LoadingIcon, P, Container, Stack, WithInteractions } from "@yakad/ui";
 import { Ayah } from "@/components";
 import SurahHeader from "./SurahHeader";
@@ -130,9 +130,6 @@ export function AyahRange({
         return (
             <Container size="sm" align="center" className={className}>
                 <LoadingIcon variant="dots" />
-                <P variant="body2" style={{ marginTop: "1rem" }}>
-                    Loading ayahs...
-                </P>
             </Container>
         );
     }
