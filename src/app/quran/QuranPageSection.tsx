@@ -12,13 +12,12 @@ import {
 } from "@/components";
 import FooterWrapper from "./FooterWrapper";
 import AppBarWrapper from "./AppBarWrapper";
-import { Surah, AyahBreakersResponse, TranslationList } from "@ntq/sdk";
+import { Surah, AyahBreakersResponse } from "@ntq/sdk";
 import { getSurahs } from "@/actions/getSurahs";
 import { useSelected } from "@/contexts/selectedsContext";
 
 interface QuranPageSectionProps {
     takhtitsAyahsBreakers: AyahBreakersResponse[];
-    translation?: TranslationList;
 }
 
 function calculatePages(takhtitsAyahsBreakers: AyahBreakersResponse[]) {
@@ -43,7 +42,7 @@ function calculatePages(takhtitsAyahsBreakers: AyahBreakersResponse[]) {
     });
 }
 
-export function QuranPageSection({ takhtitsAyahsBreakers, translation }: QuranPageSectionProps) {
+export function QuranPageSection({ takhtitsAyahsBreakers }: QuranPageSectionProps) {
     const [selected] = useSelected();
     const [surahs, setSurahs] = useState<Surah[]>([]);
     const [loadingInProgress, setLoadingInProgress] = useState(true);
@@ -80,7 +79,6 @@ export function QuranPageSection({ takhtitsAyahsBreakers, translation }: QuranPa
             <AppBarWrapper />
             <Main>
                 <Container size="md">
-                   
 
                     <RenderByScroll
                         scrollMarginTop={12}
@@ -95,7 +93,6 @@ export function QuranPageSection({ takhtitsAyahsBreakers, translation }: QuranPa
                                 index={0}
                                 page={page}
                                 mushaf="hafs"
-                                translation={translation}
                                 takhtitsAyahsBreakers={takhtitsAyahsBreakers}
                                 surahs={surahs}
                             />

@@ -3,6 +3,7 @@ import { Row, Select, Text, GridContainer, GridItem, PopupProps, Popup } from "@
 import { DarkStyleButton, ColorButton } from "@/components";
 import { ZoomButton } from "../buttons/ZoomButton";
 import { useOptions } from "@/contexts/optionsContext";
+import { TranslationSelect } from "../forms/TranslationSelect";
 
 export const MushafOptionsPopup = forwardRef<HTMLDivElement, PopupProps>(
     function MushafOptionsPopup({ ...restProps }, ref) {
@@ -42,9 +43,7 @@ export const MushafOptionsPopup = forwardRef<HTMLDivElement, PopupProps>(
                     </Select>
                 </Row>
                 <Text variant="heading5">Translate</Text>
-                <Select placeholder="Translation" disabled>
-                    {/* OPTIONS */}
-                </Select>
+                <TranslationSelect />
                 <Text variant="heading5">Theme</Text>
                 <GridContainer columns={3}>
                     <GridItem>

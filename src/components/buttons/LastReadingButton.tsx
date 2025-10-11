@@ -8,12 +8,11 @@ import { useSelected } from "@/contexts/selectedsContext";
 
 export const LastReadingButton = forwardRef<HTMLButtonElement, ButtonProps>(
     function LastReadingButton({ disabled, children, ...restProps }, ref) {
-        const [selected, _] = useSelected();
+        const [selected] = useSelected();
 
         return (
             <Link
-                href={`/quran?ayah_uuid=${selected.ayahUUID}`}
-                passHref
+                href="/quran"
             >
                 <Button
                     ref={ref}

@@ -2,16 +2,15 @@
 
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { AyahBreakersResponse, TranslationList } from "@ntq/sdk";
+import { AyahBreakersResponse } from "@ntq/sdk";
 import { QuranPageSection } from "./QuranPageSection";
 import { useSelected } from "@/contexts/selectedsContext";
 
 interface QuranPageWrapperProps {
     takhtitsAyahsBreakers: AyahBreakersResponse[];
-    translation?: TranslationList;
 }
 
-export function QuranPageWrapper({ takhtitsAyahsBreakers, translation }: QuranPageWrapperProps) {
+export function QuranPageWrapper({ takhtitsAyahsBreakers }: QuranPageWrapperProps) {
     const searchParams = useSearchParams();
     const [_, setSelected] = useSelected();
 
@@ -30,5 +29,5 @@ export function QuranPageWrapper({ takhtitsAyahsBreakers, translation }: QuranPa
         }
     }, [searchParams, setSelected]);
 
-    return <QuranPageSection takhtitsAyahsBreakers={takhtitsAyahsBreakers} translation={translation} />;
+    return <QuranPageSection takhtitsAyahsBreakers={takhtitsAyahsBreakers} />;
 }

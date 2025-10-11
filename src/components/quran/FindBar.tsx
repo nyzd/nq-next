@@ -1,10 +1,11 @@
 "use client";
 
 import { forwardRef, useEffect, useState, useMemo } from "react";
-import { Card, Text, WithOverlay, WithOverlayProps } from "@yakad/ui";
+import { Card, Spacer, Text, WithOverlay, WithOverlayProps } from "@yakad/ui";
 import { AyahBreakersResponse, Surah } from "@ntq/sdk";
 import { FindPopup } from "../popups/FindPopup";
 import { Symbol } from "@yakad/symbols";
+import { SurahPeriodIcon } from "../SurahPeriodIcon";
 
 interface FindBarProps extends WithOverlayProps {
     takhtitsAyahsBreakers: AyahBreakersResponse[];
@@ -118,13 +119,10 @@ export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
                     style={{
                         display: "flex",
                         flexDirection: "row",
-                        justifyContent: "space-between",
                         alignItems: "center",
                         height: "4rem",
                         padding: "0 2.5rem",
                         fontSize: "1.4rem",
-                        boxShadow:
-                            "1.8rem -2rem 0 0.6rem rgb(var(--surfaceColor, 254 247 255)), -1.8rem -2rem 0 0.6rem rgb(var(--surfaceColor, 254 247 255))",
                         transition: "top 0.3s ease",
                         willChange: "top",
                         zIndex: "1",
@@ -132,18 +130,18 @@ export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
                         userSelect: "none",
                     }}
                 >
+                    <SurahPeriodIcon period={"madani"} />
                     <Text color="onSurfaceVariantColor">
                         {currentAyahInfo.surahnumber +
-                            ". " +
-                            (currentAyahInfo.surahName || "Al-Fatihah") +
+                            "." +
+                            // (currentAyahInfo.surahName || "SurahName") +
+                            "SurahName" +
                             ": " +
                             currentAyahInfo.ayahnumber}
                     </Text>
-                    <Text color="onSurfaceVariantColor" style={{gap: "1rem"}}>
-                        <Symbol icon={"menu_book"} size="small" mirror={currentAyahInfo.pagenumber % 2 === 0 ? "vertical" : undefined} />
-                        {"Page " + currentAyahInfo.pagenumber}
-                    </Text>
-                    <Text color="onSurfaceVariantColor">{"Juz " + currentAyahInfo.juz + " / " + "Hizb " + currentAyahInfo.hizb}</Text>
+                    <Spacer />
+                    <Text color="onSurfaceVariantColor">{"J " + currentAyahInfo.juz + " / " + "H " + currentAyahInfo.hizb + " / " + "P " + currentAyahInfo.pagenumber}</Text>
+                    <Symbol icon={"menu_book"} size="small" mirror={currentAyahInfo.pagenumber % 2 === 0 ? "vertical" : undefined} />
                 </Card>
             </WithOverlay>
         );

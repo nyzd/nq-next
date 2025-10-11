@@ -28,6 +28,7 @@ export const PlayButton = forwardRef<HTMLButtonElement, ButtonProps>(
                             icon={
                                 options.playing ? "pause" : "play_arrow"
                             }
+                            filled
                         />
                     )
                 }

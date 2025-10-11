@@ -18,7 +18,7 @@ export default function RecomendedSection() {
             </XScrollContainer>
             <XScrollContainer size="md">
                 {Array.from({ length: 10 }, (_, index) => (
-                    <Link key={index} href="/quran?ayahUUID=UUID" passHref>
+                    <Link key={index} href="/quran?ayahUUID=UUID">
                         <SurahCard
                             arabicname="الفاتحه"
                             englishname="Al-Fatihah"
