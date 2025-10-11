@@ -51,7 +51,7 @@ const SearchResult = (props: { surahList: SurahsListResponse }) => (
 );
 
 const SurahLinkBox = (props: { surah: SurahsListResponse[0] }) => (
-    <Link href={`/quran/${props.surah.uuid}`} passHref>
+    <Link href={`/quran/${props.surah.uuid}`}>
         <Card>
             <Row>
                 <span

@@ -35,7 +35,7 @@ export default function XgetStartWrapper({ ...restProps }: XgetStartProps) {
                 Natiq Quran, Easy to use quran app.
             </p>
             <Row align="center">
-                <Link href="/discover/home" passHref>
+                <Link href="/discover/home">
                     <Button variant="filled" icon={<Symbol icon="home" />}>
                         Open App
                     </Button>

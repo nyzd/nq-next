@@ -75,7 +75,7 @@ export default function AppBarWrapper({ ...restProps }: AppBarProps) {
                     </List>
                 </Display>
                 <Spacer />
-                <Link href="/discover/search" passHref>
+                <Link href="/discover/search">
                     <Button variant="outlined" icon={<Symbol icon="search" />}>
                         <Display minWidth="xs">Search</Display>
                     </Button>

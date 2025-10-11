@@ -18,7 +18,6 @@ export const RandomSurahButton = forwardRef<
     return (
         <Link
             href={`/quran?surah_uuid=${surahList[randomNumber].uuid}`}
-            passHref
         >
             <Button ref={ref} {...restProps}>
                 {children || "Random Surah"}

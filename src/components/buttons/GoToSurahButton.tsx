@@ -15,7 +15,6 @@ export const GoToSurahButton = forwardRef<
     return (
         <Link
             href={`/quran?surah_uuid=${surahList[surahNumber - 1].uuid}`}
-            passHref
         >
             <Button ref={ref} {...restProps}>
                 {surahList[surahNumber - 1].names[0].name}

@@ -31,7 +31,6 @@ export default function FooterWrapper() {
                 <Link
                     key={footerLink.url}
                     href={`/discover/${footerLink.url}`}
-                    passHref
                 >
                     <Button
                         title={footerLink.title}

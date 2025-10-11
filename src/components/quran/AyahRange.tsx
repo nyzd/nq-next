@@ -7,7 +7,6 @@ import SurahHeader from "./SurahHeader";
 import {
     Ayah as AyahType,
     PaginatedAyahTranslationList,
-    TranslationList,
 } from "@ntq/sdk";
 import { getAyahs } from "@/actions/getAyahs";
 import { getTranslationAyahs } from "@/actions/getTranslations";
@@ -18,7 +17,7 @@ interface AyahRangeProps {
     limit: number;
     mushaf?: string;
     className?: string;
-    translation?: TranslationList;
+    translationUuid?: string;
     onLoad?: () => void;
     firstVisibleAyahChanged: (uuid: string) => void;
 }
@@ -28,7 +27,7 @@ export function AyahRange({
     limit,
     mushaf = "hafs",
     className,
-    translation,
+    translationUuid,
     onLoad,
     firstVisibleAyahChanged
 }: AyahRangeProps) {
@@ -90,8 +89,8 @@ export function AyahRange({
                 setError(null);
 
                 const ayahsPromise = getAyahs(mushaf, limit, offset);
-                const translationsPromise = translation?.uuid
-                    ? getTranslationAyahs(translation.uuid, limit, offset)
+                const translationsPromise = translationUuid
+                    ? getTranslationAyahs(translationUuid, limit, offset)
                     : Promise.resolve(undefined);
 
                 const [loadedAyahs, loadedTranslations] = await Promise.all([
@@ -124,7 +123,7 @@ export function AyahRange({
         return () => {
             isActive = false;
         };
-    }, [offset, limit, mushaf, translation?.uuid]);
+    }, [offset, limit, mushaf, translationUuid]);
 
     if (loading) {
         return (

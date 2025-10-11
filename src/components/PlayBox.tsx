@@ -36,7 +36,6 @@ export const PlayBox = forwardRef<HTMLDivElement, Omit<CardProps, "children">>(
                 <Row style={{ minHeight: "6rem" }}>
                     <Link
                         href={`/quran?ayah_uuid=${selected.ayahUUID}`}
-                        passHref
                         style={{ flexGrow: 1 }}
                     >
                         <div>
