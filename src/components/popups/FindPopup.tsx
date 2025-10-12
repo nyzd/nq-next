@@ -16,6 +16,24 @@ export const FindPopup = forwardRef<HTMLDivElement, FindPopupProps>(
         { surahs, takhtitsAyahsBreakers, onButtonClicked, ...restProps },
         ref
     ) {
+        const breakers: AyahBreakersResponse[] = useMemo(
+            () => [
+                {
+                    ayah: 1,
+                    hizb: 0,
+                    juz: 0,
+                    page: 1,
+                    manzil: 0,
+                    rub: 0,
+                    ruku: 0,
+                    surah: 1,
+                    uuid: "",
+                    length: 0,
+                },
+                ...(takhtitsAyahsBreakers || []),
+            ],
+            [takhtitsAyahsBreakers]
+        );
         const [selected] = useSelected();
         const [currentSurah, setCurrentSurah] = useState<number>();
         const [currentAyah, setCurrentAyah] = useState<number>();
@@ -26,15 +44,15 @@ export const FindPopup = forwardRef<HTMLDivElement, FindPopupProps>(
 
         // Find current ayah from localStorage and set initial state
         useEffect(() => {
-            if (selected.ayahUUID && takhtitsAyahsBreakers.length > 0) {
-                const currentAyahData = takhtitsAyahsBreakers.find(
+            if (selected.ayahUUID && breakers.length > 0) {
+                const currentAyahData = breakers.find(
                     (ayah) => ayah.uuid === selected.ayahUUID
                 );
 
                 if (currentAyahData) {
                     setCurrentSurah(currentAyahData.surah);
                     setCurrentAyah(currentAyahData.ayah);
-                    setCurrentPage(currentAyahData.page || undefined);
+                    setCurrentPage(currentAyahData.page || 1);
 
                     // Set juz if available in the data
                     if (currentAyahData.juz) {
@@ -51,13 +69,13 @@ export const FindPopup = forwardRef<HTMLDivElement, FindPopupProps>(
                 setCurrentSurah(1);
                 setCurrentAyah(1);
             }
-        }, [selected.ayahUUID, takhtitsAyahsBreakers]);
+        }, [selected.ayahUUID, breakers]);
 
         // Unified function to update all selections based on an ayah
         const updateAllSelections = (ayah: AyahBreakersResponse) => {
             setCurrentSurah(ayah.surah);
             setCurrentAyah(ayah.ayah);
-            setCurrentPage(ayah.page || undefined);
+            setCurrentPage(ayah.page || 1);
 
             // Set juz if available in the data
             if (ayah.juz) {
@@ -70,10 +88,10 @@ export const FindPopup = forwardRef<HTMLDivElement, FindPopupProps>(
             }
         };
 
-        // Extract juz and hizb data dynamically from takhtitsAyahsBreakers
+        // Extract juz and hizb data dynamically from breakers
         const juzData = useMemo(() => {
             const juzMap = new Map();
-            takhtitsAyahsBreakers.forEach((ayah) => {
+            breakers.forEach((ayah) => {
                 // Check if ayah has juz property
                 if (ayah.juz && !juzMap.has(ayah.juz)) {
                     juzMap.set(ayah.juz, {
@@ -86,10 +104,8 @@ export const FindPopup = forwardRef<HTMLDivElement, FindPopupProps>(
             // If no juz data found in the ayah objects, return empty array
             if (juzMap.size === 0) {
                 console.log(
-                    "No juz data found in takhtitsAyahsBreakers. Available properties:",
-                    takhtitsAyahsBreakers.length > 0
-                        ? Object.keys(takhtitsAyahsBreakers[0])
-                        : "No data"
+                    "No juz data found in breakers. Available properties:",
+                    breakers.length > 0 ? Object.keys(breakers[0]) : "No data"
                 );
                 return [];
             }
@@ -99,11 +115,11 @@ export const FindPopup = forwardRef<HTMLDivElement, FindPopupProps>(
                 surah,
                 ayah,
             }));
-        }, [takhtitsAyahsBreakers]);
+        }, [breakers]);
 
         const hizbData = useMemo(() => {
             const hizbMap = new Map();
-            takhtitsAyahsBreakers.forEach((ayah) => {
+            breakers.forEach((ayah) => {
                 // Check if ayah has hizb property
                 if (ayah.hizb && !hizbMap.has(ayah.hizb)) {
                     hizbMap.set(ayah.hizb, {
@@ -116,10 +132,8 @@ export const FindPopup = forwardRef<HTMLDivElement, FindPopupProps>(
             // If no hizb data found in the ayah objects, return empty array
             if (hizbMap.size === 0) {
                 console.log(
-                    "No hizb data found in takhtitsAyahsBreakers. Available properties:",
-                    takhtitsAyahsBreakers.length > 0
-                        ? Object.keys(takhtitsAyahsBreakers[0])
-                        : "No data"
+                    "No hizb data found in breakers. Available properties:",
+                    breakers.length > 0 ? Object.keys(breakers[0]) : "No data"
                 );
                 return [];
             }
@@ -129,45 +143,46 @@ export const FindPopup = forwardRef<HTMLDivElement, FindPopupProps>(
                 surah,
                 ayah,
             }));
-        }, [takhtitsAyahsBreakers]);
+        }, [breakers]);
 
         // Binary search function to find ayah by juz/hizb/ruku
         const findAyahByJuz = useMemo(() => {
             return (juz: number) => {
-                // Use dynamic juz data extracted from takhtitsAyahsBreakers
+                // Use dynamic juz data extracted from breakers
                 const mapping = juzData.find((m) => m.juz === juz);
                 if (!mapping) return null;
 
-                // Find the ayah in takhtitsAyahsBreakers
-                return takhtitsAyahsBreakers.find(
+                // Find the ayah in breakers
+                return breakers.find(
                     (ayah) =>
                         ayah.surah === mapping.surah &&
                         ayah.ayah === mapping.ayah
                 );
             };
-        }, [takhtitsAyahsBreakers, juzData]);
+        }, [breakers, juzData]);
 
         const findAyahByHizb = useMemo(() => {
             return (hizb: number) => {
-                // Use dynamic hizb data extracted from takhtitsAyahsBreakers
+                // Use dynamic hizb data extracted from breakers
                 const mapping = hizbData.find((m) => m.hizb === hizb);
                 if (!mapping) return null;
 
-                // Find the ayah in takhtitsAyahsBreakers
-                return takhtitsAyahsBreakers.find(
+                // Find the ayah in breakers
+                return breakers.find(
                     (ayah) =>
                         ayah.surah === mapping.surah &&
                         ayah.ayah === mapping.ayah
                 );
             };
-        }, [takhtitsAyahsBreakers, hizbData]);
+        }, [breakers, hizbData]);
 
         const findAyahByPage = useMemo(() => {
             return (page: number) => {
+                if (page === 1) return breakers[0];
                 // Find the first ayah on the specified page
-                return takhtitsAyahsBreakers.find((ayah) => ayah.page === page);
+                return breakers.find((ayah) => ayah.page === page);
             };
-        }, [takhtitsAyahsBreakers]);
+        }, [breakers]);
 
         // Get unique juz, hizb, and page numbers for dropdowns
         const availableJuz = useMemo(() => {
@@ -180,10 +195,10 @@ export const FindPopup = forwardRef<HTMLDivElement, FindPopupProps>(
 
         const availablePages = useMemo(() => {
             const pages = new Set(
-                takhtitsAyahsBreakers.map((ayah) => ayah.page).filter(Boolean)
+                breakers.map((ayah) => ayah.page).filter(Boolean)
             );
-            return Array.from(pages).sort((a, b) => (a || 0) - (b || 0));
-        }, [takhtitsAyahsBreakers]);
+            return Array.from([...pages]).sort((a, b) => (a || 0) - (b || 0));
+        }, [breakers]);
 
         // Handle juz selection
         const handleJuzSelect = (juz: number) => {
@@ -219,7 +234,7 @@ export const FindPopup = forwardRef<HTMLDivElement, FindPopupProps>(
             setCurrentAyah(1);
 
             // Find the first ayah of the selected surah to get juz/hizb/page info
-            const firstAyahOfSurah = takhtitsAyahsBreakers.find(
+            const firstAyahOfSurah = breakers.find(
                 (ayah) => ayah.surah === surah && ayah.ayah === 1
             );
             if (firstAyahOfSurah) {
@@ -238,12 +253,12 @@ export const FindPopup = forwardRef<HTMLDivElement, FindPopupProps>(
             setCurrentAyah(ayah);
 
             // Find the selected ayah to get juz/hizb/page info
-            const selectedAyah = takhtitsAyahsBreakers.find(
+            const selectedAyah = breakers.find(
                 (ayahData) =>
                     ayahData.surah === currentSurah && ayahData.ayah === ayah
             );
             if (selectedAyah) {
-                setCurrentPage(selectedAyah.page || undefined);
+                setCurrentPage(selectedAyah.page || 1);
                 if (selectedAyah.juz) {
                     setCurrentJuz(selectedAyah.juz);
                 }

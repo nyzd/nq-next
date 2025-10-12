@@ -132,15 +132,14 @@ export const FindBar = forwardRef<HTMLDivElement, FindBarProps>(
                 >
                     <SurahPeriodIcon period={"madani"} />
                     <Text color="onSurfaceVariantColor">
-                        {currentAyahInfo.surahnumber +
-                            "." +
-                            // (currentAyahInfo.surahName || "SurahName") +
+                        {
                             "SurahName" +
                             ": " +
-                            currentAyahInfo.ayahnumber}
+                            currentAyahInfo.ayahnumber
+                        }
                     </Text>
                     <Spacer />
-                    <Text color="onSurfaceVariantColor">{"J " + currentAyahInfo.juz + " / " + "H " + currentAyahInfo.hizb + " / " + "P " + currentAyahInfo.pagenumber}</Text>
+                    <Text color="onSurfaceVariantColor">{"Juz" + currentAyahInfo.juz + " - " + "Page" + currentAyahInfo.pagenumber}</Text>
                     <Symbol icon={"menu_book"} size="small" mirror={currentAyahInfo.pagenumber % 2 === 0 ? "vertical" : undefined} />
                 </Card>
             </WithOverlay>

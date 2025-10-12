@@ -25,20 +25,11 @@ export default function FooterWrapper({
                 }}
                 {...restProps}
             >
-            <WithOverlay overlay={
-                <PlayOptionsPopup
-                    heading="Playing options"
-                />
-            }>
-                <Button
-                    title="Options"
-                    icon={<Symbol icon="tune" />}
-                />
-            </WithOverlay>
-                {/* <Button
-                    title="Previous Ayah"
-                    icon={<Symbol icon="chevron_left" />}
-                /> */}
+                <WithOverlay
+                    overlay={<PlayOptionsPopup heading="Playing options" />}
+                >
+                    <Button title="Options" icon={<Symbol icon="tune" />} />
+                </WithOverlay>
                 <PlayBackButton />
                 <PlayButton variant="filled" />
                 <RepeatButton />
@@ -47,7 +38,6 @@ export default function FooterWrapper({
                     icon={<Symbol icon="fullscreen" />}
                 />
             </Footer>
-            
         </>
     );
 }
