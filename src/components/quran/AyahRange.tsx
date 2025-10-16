@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { LoadingIcon, P, Container, Stack, WithInteractions } from "@yakad/ui";
+import { LoadingIcon, P, Container, Stack, ActiveOnVisible } from "@yakad/ui";
 import { Ayah } from "@/components";
 import SurahHeader from "./SurahHeader";
 import { Ayah as AyahType, PaginatedAyahTranslationList } from "@ntq/sdk";
@@ -41,7 +41,7 @@ export function AyahRange({
         if (ayahs[first]) {
             firstVisibleAyahChanged(ayahs[first].uuid);
         }
-    }, [visibleAyahs]);
+    }, [visibleAyahs, ayahs, firstVisibleAyahChanged]);
 
     const ayahsRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
@@ -176,7 +176,7 @@ export function AyahRange({
                                 surah={ayah.surah}
                                 bismillah={(surah) =>
                                     surah?.bismillah?.is_ayah ? (
-                                        <WithInteractions
+                                        <ActiveOnVisible
                                             onVisibilityChange={(visible) =>
                                                 onVisibilityChange(
                                                     visible,
@@ -205,7 +205,7 @@ export function AyahRange({
                                                     translations?.[index]?.text
                                                 }
                                             />
-                                        </WithInteractions>
+                                        </ActiveOnVisible>
                                     ) : (
                                         <Stack
                                             align="center"
@@ -224,7 +224,7 @@ export function AyahRange({
                         )}
 
                     {!ayah.surah?.bismillah.is_ayah && (
-                        <WithInteractions
+                        <ActiveOnVisible
                             onVisibilityChange={(visible) =>
                                 onVisibilityChange(visible, index)
                             }
@@ -241,7 +241,7 @@ export function AyahRange({
                                 selected={ayah.uuid === selected.ayahUUID}
                                 onClick={() => handleAyahClick(ayah.uuid)}
                             />
-                        </WithInteractions>
+                        </ActiveOnVisible>
                     )}
                 </Stack>
             ))}

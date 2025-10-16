@@ -107,7 +107,13 @@ export const Ayah = forwardRef<HTMLDivElement, AyahProps>(function Ayah(
                 </P>
             </div>
             {translationText && (
-                <P style={{marginTop: "20px"}} variant="body4">{translationText}</P>
+                <P
+                    style={{ marginTop: "20px" }}
+                    variant="body4"
+                    palette="onSurfaceVariantColor"
+                >
+                    {translationText}
+                </P>
             )}
         </Card>
     );

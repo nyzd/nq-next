@@ -38,7 +38,9 @@ export function QuranPage({
 }: QuranPageProps) {
     // If no ayahs found for this page, show a message
     const [selected, setSelected] = useSelected();
-    const [visible, setVisible] = useState<string>();
+    const [visible, setVisible] = useState<string>(
+        takhtitsAyahsBreakers[page.offset].uuid || ""
+    );
 
     useEffect(() => {
         if (!selected.translationUUID || selected.translationUUID === "UUID") {
