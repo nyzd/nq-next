@@ -10,11 +10,15 @@ import { PaginatedRecitationListList } from "@ntq/sdk";
 export const PlayButton = forwardRef<HTMLButtonElement, ButtonProps>(
     function PlayButton({ title, icon, onClick, ...restProps }, ref) {
         const [options, setOptions] = useOptions();
-        const [recitations, setRecitations] = useState<PaginatedRecitationListList>([]);
+        const [recitations, setRecitations] =
+            useState<PaginatedRecitationListList>([]);
+        const [recitationsLoading, setRecitationsLoading] = useState(true);
 
-        useEffect(()=>{
-            getRecitations("hafs", 100)
-                .then(res => setRecitations(res));
+        useEffect(() => {
+            getRecitations("hafs", 100).then((res) => {
+                setRecitations(res);
+                setRecitationsLoading(false);
+            });
         }, []);
 
         const togglePlay = () => {
@@ -26,21 +30,24 @@ export const PlayButton = forwardRef<HTMLButtonElement, ButtonProps>(
         };
 
         return (
-            <WithOverlay trigger="onRightClick" overlay={
-                <Dropdown>
-                    {
-                    recitations.length <= 0 ? "No recitation Found!" :
-                        <Select>
-                            {
-                                recitations.map(
-                                    (recitation, index) => 
-                                        <option key={index}>{recitation.reciter_account_uuid}</option>
-                                )
-                            }
-                        </Select>
-                    }
-                </Dropdown>
-            }>
+            <WithOverlay
+                trigger="onRightClick"
+                overlay={
+                    <Dropdown>
+                        {recitations.length <= 0 && !recitationsLoading ? (
+                            "No recitation Found!"
+                        ) : (
+                            <Select disabled={recitationsLoading}>
+                                {recitations.map((recitation, index) => (
+                                    <option key={index}>
+                                        {recitation.reciter_account_uuid}
+                                    </option>
+                                ))}
+                            </Select>
+                        )}
+                    </Dropdown>
+                }
+            >
                 <Button
                     ref={ref}
                     {...restProps}
@@ -48,9 +55,7 @@ export const PlayButton = forwardRef<HTMLButtonElement, ButtonProps>(
                     icon={
                         icon || (
                             <Symbol
-                                icon={
-                                    options.playing ? "pause" : "play_arrow"
-                                }
+                                icon={options.playing ? "pause" : "play_arrow"}
                                 filled
                             />
                         )

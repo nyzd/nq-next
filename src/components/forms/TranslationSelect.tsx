@@ -11,19 +11,24 @@ export const TranslationSelect = forwardRef<HTMLSelectElement, SelectProps>(
         const [translations, setTranslations] =
             useState<PaginatedTranslationListList>([]);
         const [_, setSelected] = useSelected();
+        const [loading, setLoading] = useState(true);
 
         useEffect(() => {
-            getTranslations("hafs", 200).then((res) => setTranslations(res));
+            getTranslations("hafs", 200).then((res) => {
+                setTranslations(res);
+                setLoading(false);
+            });
         }, []);
 
         return (
             <>
-                {translations.length <= 0 ? (
+                {translations.length <= 0 && !loading ? (
                     "Translations Not Found!"
                 ) : (
                     <Select
                         ref={ref}
                         {...restProps}
+                        disabled={loading}
                         onChange={(e) =>
                             setSelected((older) => ({
                                 ...older,

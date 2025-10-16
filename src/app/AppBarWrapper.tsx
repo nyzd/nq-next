@@ -13,7 +13,7 @@ import {
     Display,
     AppBarProps,
     NavigationProps,
-    WithInteractions,
+    useOnOutsideClick,
 } from "@yakad/ui";
 import { Symbol } from "@yakad/symbols";
 import LogoIcon from "@/assets/svg/LogoIcon";
@@ -35,6 +35,8 @@ const navListItems: NavListItem[] = [
 
 export default function AppBarWrapper({ ...restProps }: AppBarProps) {
     const [navOpen, setNavOpen] = useState<boolean>(false);
+
+    const navRef = useOnOutsideClick<HTMLDivElement>(() => setNavOpen(false));
 
     return (
         <>
@@ -81,9 +83,9 @@ export default function AppBarWrapper({ ...restProps }: AppBarProps) {
                     </Button>
                 </Link>
             </AppBar>
-            <WithInteractions onOutsideClick={() => setNavOpen(false)}>
+            <div ref={navRef}>
                 <NavigationWrapper anchor="top" open={navOpen} />
-            </WithInteractions>
+            </div>
         </>
     );
 }
