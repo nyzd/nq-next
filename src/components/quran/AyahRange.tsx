@@ -8,6 +8,7 @@ import { Ayah as AyahType, PaginatedAyahTranslationList } from "@ntq/sdk";
 import { getAyahs } from "@/actions/getAyahs";
 import { getTranslationAyahs } from "@/actions/getTranslations";
 import { useSelected } from "@/contexts/selectedsContext";
+import { MushafOptions } from "@/contexts/mushafOptionsContext";
 
 interface AyahRangeProps {
     offset: number;
@@ -16,6 +17,7 @@ interface AyahRangeProps {
     className?: string;
     translationUuid?: string;
     onLoad?: () => void;
+    mushafOptions?: MushafOptions;
     firstVisibleAyahChanged: (uuid: string) => void;
 }
 
@@ -25,6 +27,7 @@ export function AyahRange({
     mushaf = "hafs",
     className,
     translationUuid,
+    mushafOptions,
     onLoad,
     firstVisibleAyahChanged,
 }: AyahRangeProps) {
@@ -194,6 +197,7 @@ export function AyahRange({
                                                         ayah.uuid
                                                     ] = el;
                                                 }}
+                                                mushafOptions={mushafOptions}
                                                 selected={
                                                     ayah.uuid ===
                                                     selected.ayahUUID
@@ -237,6 +241,7 @@ export function AyahRange({
                                 number={ayah.number}
                                 text={ayah.text}
                                 translationText={translations?.[index]?.text}
+                                mushafOptions={mushafOptions}
                                 sajdah={ayah.sajdah || "none"}
                                 selected={ayah.uuid === selected.ayahUUID}
                                 onClick={() => handleAyahClick(ayah.uuid)}

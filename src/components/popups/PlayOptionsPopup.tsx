@@ -1,14 +1,37 @@
-import { forwardRef } from "react";
-import { CheckBox, Popup, PopupProps, Row, Select, Spacer, Text } from "@yakad/ui";
-import { useOptions } from "@/contexts/optionsContext";
+"use client";
+
+import { forwardRef, useEffect, useState } from "react";
+import {
+    CheckBox,
+    LoadingIcon,
+    Popup,
+    PopupProps,
+    Row,
+    Select,
+    Spacer,
+    Text,
+} from "@yakad/ui";
+import { usePlayOptions } from "@/contexts/playOptionsContext";
+import { getRecitations } from "@/actions/getRecitations";
+import { PaginatedRecitationListList } from "@ntq/sdk";
 export const PlayOptionsPopup = forwardRef<HTMLDivElement, PopupProps>(
     function PlayOptionsPopup({ ...restProps }, ref) {
-        const [options, setOptions] = useOptions();
+        const [playOptions, setPlayOptions] = usePlayOptions();
+        const [recitations, setRecitations] =
+            useState<PaginatedRecitationListList>([]);
+        const [recitationsLoading, setRecitationsLoading] = useState(true);
+        useEffect(() => {
+            getRecitations("hafs", 100).then((res) => {
+                setRecitations(res);
+                setRecitationsLoading(false);
+            });
+        }, []);
+
         const handleCheckBoxChange = (
             e: React.ChangeEvent<HTMLInputElement>
         ) => {
             const { name, checked } = e.target;
-            setOptions((prev) => ({
+            setPlayOptions((prev) => ({
                 ...prev,
                 [name]: checked,
             }));
@@ -19,25 +42,30 @@ export const PlayOptionsPopup = forwardRef<HTMLDivElement, PopupProps>(
                 <Row>
                     <Text variant="heading5">Recite</Text>
                     <Spacer />
-                    <CheckBox
-                        title="Recitation play status"
-                        name="recitationStatus"
-                        checked={options.recitationStatus}
-                        onChange={handleCheckBoxChange}
-                    />
                 </Row>
-                <Select
-                    title="Reciter - Reciting type"
-                    placeholder="Reciter"
-                    disabled
-                >
-                    <option value="uuid">Abd-OlBasit</option>
-                </Select>
+                {recitations.length <= 0 && !recitationsLoading ? (
+                    "No recitation Found!"
+                ) : !recitationsLoading ? (
+                    <Select
+                        title="Reciter - Reciting type"
+                        placeholder="Reciter"
+                        disabled={recitationsLoading}
+                    >
+                        {recitations.map((recitation, index) => (
+                            <option key={index}>
+                                {recitation.reciter_account_uuid}
+                            </option>
+                        ))}
+                    </Select>
+                ) : (
+                    <LoadingIcon />
+                )}
+
                 <Text variant="heading5">Auto scroll</Text>
                 <CheckBox
                     label="Auto scroll"
                     name="autoScroll"
-                    checked={options.autoScroll}
+                    checked={playOptions.autoScroll}
                     onChange={handleCheckBoxChange}
                 />
             </Popup>

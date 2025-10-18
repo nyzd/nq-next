@@ -3,18 +3,9 @@
 import { createLocalStorageContext } from "@yakad/lib";
 
 export type PlayBackRate = 0.5 | 1 | 1.25 | 1.5 | 1.75 | 2;
-export type RepeatRange = 
-        | "surah"
-        | "juz"
-        | "hizb"
-        | "ruku"
-        | "page";
+export type RepeatRange = "surah" | "juz" | "hizb" | "ruku" | "page";
 
 interface Options {
-    arabicFont: "test";
-    arabicFontSize: "small" | "medium" | "large";
-    translationFontSize: "small" | "medium" | "large";
-
     playing: boolean;
     playBoxShow: boolean;
     recitationStatus: boolean;
@@ -26,10 +17,6 @@ interface Options {
 }
 
 const defaultOptions: Options = {
-    arabicFont: "test",
-    arabicFontSize: "medium",
-    translationFontSize: "medium",
-
     playing: false,
     playBoxShow: false,
     recitationStatus: true,
@@ -38,9 +25,9 @@ const defaultOptions: Options = {
     repeatMode: "off",
     repeatRange: "surah",
     autoScroll: true,
-}
+};
 
-const [OptionsProvider, useOptions] =
+const [PlayOptionsProvider, usePlayOptions] =
     createLocalStorageContext<Options>("options", defaultOptions);
 
-export { OptionsProvider, useOptions };
+export { PlayOptionsProvider, usePlayOptions };

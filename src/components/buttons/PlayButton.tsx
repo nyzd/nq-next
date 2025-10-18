@@ -1,71 +1,40 @@
 "use client";
 
-import { forwardRef, useEffect, useState } from "react";
-import { Button, ButtonProps, Dropdown, Select, WithOverlay } from "@yakad/ui";
+import { forwardRef } from "react";
+import { Button, ButtonProps } from "@yakad/ui";
 import { Symbol } from "@yakad/symbols";
-import { useOptions } from "@/contexts/optionsContext";
-import { getRecitations } from "@/actions/getRecitations";
-import { PaginatedRecitationListList } from "@ntq/sdk";
+import { usePlayOptions } from "@/contexts/playOptionsContext";
 
 export const PlayButton = forwardRef<HTMLButtonElement, ButtonProps>(
     function PlayButton({ title, icon, onClick, ...restProps }, ref) {
-        const [options, setOptions] = useOptions();
-        const [recitations, setRecitations] =
-            useState<PaginatedRecitationListList>([]);
-        const [recitationsLoading, setRecitationsLoading] = useState(true);
-
-        useEffect(() => {
-            getRecitations("hafs", 100).then((res) => {
-                setRecitations(res);
-                setRecitationsLoading(false);
-            });
-        }, []);
+        const [playOptions, setPlayOptions] = usePlayOptions();
 
         const togglePlay = () => {
-            setOptions((prev) => ({
+            setPlayOptions((prev) => ({
                 ...prev,
-                playing: !options.playing,
+                playing: !playOptions.playing,
                 playBoxShow: true,
             }));
         };
 
         return (
-            <WithOverlay
-                trigger="onRightClick"
-                overlay={
-                    <Dropdown>
-                        {recitations.length <= 0 && !recitationsLoading ? (
-                            "No recitation Found!"
-                        ) : (
-                            <Select disabled={recitationsLoading}>
-                                {recitations.map((recitation, index) => (
-                                    <option key={index}>
-                                        {recitation.reciter_account_uuid}
-                                    </option>
-                                ))}
-                            </Select>
-                        )}
-                    </Dropdown>
+            <Button
+                ref={ref}
+                {...restProps}
+                title={title || playOptions.playing ? "Pause" : "Play"}
+                icon={
+                    icon || (
+                        <Symbol
+                            icon={playOptions.playing ? "pause" : "play_arrow"}
+                            filled
+                        />
+                    )
                 }
-            >
-                <Button
-                    ref={ref}
-                    {...restProps}
-                    title={title || options.playing ? "Pause" : "Play"}
-                    icon={
-                        icon || (
-                            <Symbol
-                                icon={options.playing ? "pause" : "play_arrow"}
-                                filled
-                            />
-                        )
-                    }
-                    onClick={(e) => {
-                        togglePlay();
-                        onClick?.(e);
-                    }}
-                />
-            </WithOverlay>
+                onClick={(e) => {
+                    togglePlay();
+                    onClick?.(e);
+                }}
+            />
         );
     }
 );

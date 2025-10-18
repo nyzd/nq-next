@@ -3,16 +3,16 @@ import Link from "next/link";
 import { Button, Card, CardProps, Row, Text } from "@yakad/ui";
 import { Symbol } from "@yakad/symbols";
 import { PlayButton } from "@/components";
-import { useOptions } from "@/contexts/optionsContext";
+import { usePlayOptions } from "@/contexts/playOptionsContext";
 import { useSelected } from "@/contexts/selectedsContext";
 
 export const PlayBox = forwardRef<HTMLDivElement, Omit<CardProps, "children">>(
     function PlayBox({ ...restProps }, ref) {
-        const [_options, setOptions] = useOptions();
+        const [_options, setPlayOptions] = usePlayOptions();
         const [selected, _setSelected] = useSelected();
 
         const closePlayer = () => {
-            setOptions((prev) => ({
+            setPlayOptions((prev) => ({
                 ...prev,
                 playing: false,
                 playBoxShow: false,

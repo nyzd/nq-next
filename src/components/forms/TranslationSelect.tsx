@@ -3,7 +3,7 @@
 import { getTranslations } from "@/actions/getTranslations";
 import { useSelected } from "@/contexts/selectedsContext";
 import { PaginatedTranslationListList } from "@ntq/sdk";
-import { Select, SelectProps } from "@yakad/ui";
+import { LoadingIcon, Select, SelectProps } from "@yakad/ui";
 import { forwardRef, useEffect, useState } from "react";
 
 export const TranslationSelect = forwardRef<HTMLSelectElement, SelectProps>(
@@ -24,7 +24,7 @@ export const TranslationSelect = forwardRef<HTMLSelectElement, SelectProps>(
             <>
                 {translations.length <= 0 && !loading ? (
                     "Translations Not Found!"
-                ) : (
+                ) : !loading ? (
                     <Select
                         ref={ref}
                         {...restProps}
@@ -42,6 +42,8 @@ export const TranslationSelect = forwardRef<HTMLSelectElement, SelectProps>(
                             </option>
                         ))}
                     </Select>
+                ) : (
+                    <LoadingIcon />
                 )}
             </>
         );
