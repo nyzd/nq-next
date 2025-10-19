@@ -1,6 +1,5 @@
 "use client";
 
-import { forwardRef } from "react";
 import { Button, ButtonProps, DarkStyle } from "@yakad/ui";
 import { IconCode, Symbol } from "@yakad/symbols";
 import { usePreferences } from "@/contexts/preferencesContext";
@@ -28,39 +27,39 @@ const optionsMap: Record<
     },
 };
 
-export const DarkStyleButton = forwardRef<HTMLButtonElement, ButtonProps>(
-    function DarkStyleButton(
-        { title, icon, onClick, children, ...restProps },
-        ref
-    ) {
-        const [preferences, setPreferences] = usePreferences();
+export function DarkStyleButton({
+    title,
+    icon,
+    onClick,
+    children,
+    ...restProps
+}: ButtonProps) {
+    const [preferences, setPreferences] = usePreferences();
 
-        const currentOption: DarkStyle = preferences.darkStyle || "system";
+    const currentOption: DarkStyle = preferences.darkStyle || "system";
 
-        const toggleOption = () => {
-            const currentIndex = order.indexOf(currentOption);
-            const nextIndex = (currentIndex + 1) % order.length;
-            const nextOption = order[nextIndex];
+    const toggleOption = () => {
+        const currentIndex = order.indexOf(currentOption);
+        const nextIndex = (currentIndex + 1) % order.length;
+        const nextOption = order[nextIndex];
 
-            setPreferences((prev) => ({
-                ...prev,
-                darkStyle: nextOption,
-            }));
-        };
+        setPreferences((prev) => ({
+            ...prev,
+            darkStyle: nextOption,
+        }));
+    };
 
-        return (
-            <Button
-                ref={ref}
-                title={title || optionsMap[currentOption].title}
-                icon={icon || <Symbol icon={optionsMap[currentOption].icon} />}
-                onClick={(e) => {
-                    toggleOption();
-                    onClick?.(e);
-                }}
-                {...restProps}
-            >
-                {children || optionsMap[currentOption].name}
-            </Button>
-        );
-    }
-);
+    return (
+        <Button
+            title={title || optionsMap[currentOption].title}
+            icon={icon || <Symbol icon={optionsMap[currentOption].icon} />}
+            onClick={(e) => {
+                toggleOption();
+                onClick?.(e);
+            }}
+            {...restProps}
+        >
+            {children || optionsMap[currentOption].name}
+        </Button>
+    );
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import { AyahBreakersResponse, Surah } from "@ntq/sdk";
-import { AyahRange } from "./AyahRange";
+import { AyahRange } from "../ayah/AyahRange";
 import { Stack } from "@yakad/ui";
 import { FindBar } from "./FindBar";
 import { useEffect, useState } from "react";

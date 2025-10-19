@@ -1,5 +1,4 @@
 import { Button, ButtonProps, Dropdown, WithOverlay } from "@yakad/ui";
-import { forwardRef } from "react";
 import { IconCode, Symbol } from "@yakad/symbols";
 import { PlayBackRate, usePlayOptions } from "@/contexts/playOptionsContext";
 
@@ -14,10 +13,7 @@ const playBackButtonIcon: Record<PlayBackRate, IconCode> = {
 
 type PlayBackButtonProps = Omit<ButtonProps, "variant" | "icon" | "onClick">;
 
-export const PlayBackButton = forwardRef<
-    HTMLButtonElement,
-    PlayBackButtonProps
->(function PlayBackButton({ ...restProps }, ref) {
+export function PlayBackButton({ ...restProps }: PlayBackButtonProps) {
     const [playOptions, setPlayOptions] = usePlayOptions();
 
     const onClickHandler = () => {
@@ -84,7 +80,6 @@ export const PlayBackButton = forwardRef<
             }
         >
             <Button
-                ref={ref}
                 {...restProps}
                 variant={playOptions.playBackActive ? "filledtonal" : "text"}
                 icon={
@@ -100,4 +95,4 @@ export const PlayBackButton = forwardRef<
             />
         </WithOverlay>
     );
-});
+}

@@ -12,10 +12,10 @@ export * from "./popups/MorePopup";
 export * from "./popups/MushafOptionsPopup";
 export * from "./popups/PlayOptionsPopup";
 
-export * from "./quran/Ayah";
-export * from "./quran/AyahRange";
-export * from "./quran/FindBar";
-export * from "./quran/QuranPage";
+export * from "./quran/ayah/Ayah";
+export * from "./quran/ayah/AyahRange";
+export * from "./quran/page/FindBar";
+export * from "./quran/page/QuranPage";
 
 export * from "./cards/ReciterCard";
 export * from "./cards/SurahCard";

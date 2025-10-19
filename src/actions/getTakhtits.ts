@@ -2,8 +2,8 @@
 
 import { AyahBreakersResponse, Takhtit, takhtitsAyahsBreakersList, takhtitsList } from "@ntq/sdk";
 
-export async function getTakhtits(): Promise<Takhtit[]> {
-    const resp = await takhtitsList({params: {mushaf: "hafs"}});
+export async function getTakhtits(mushaf: "hafs" | string): Promise<Takhtit[]> {
+    const resp = await takhtitsList({params: {mushaf:mushaf}});
 
     return resp.data ?? [];
 }

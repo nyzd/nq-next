@@ -1,18 +1,34 @@
-import { getTakhtits, getTakhtitsAyahsBreakers } from "@/actions/getTakhtits";
-import { QuranPageWrapper } from "./QuranPageWrapper";
+import { Main, Screen } from "@yakad/ui";
+import Mushaf from "@/components/quran/mushaf/Mushaf";
+import AppBarWrapper from "./AppBarWrapper";
+import FooterWrapper from "./FooterWrapper";
 
-export default async function Page() {
-    try {
-        // Fetch takhtits data on the server
-        const firstTakhtit = await getTakhtits();
-        const firstTakhtitUuid = firstTakhtit[0].uuid;
-        const takhtitsAyahsBreakers = await getTakhtitsAyahsBreakers(firstTakhtitUuid);
+export default function Page() {
+    // const searchParams = useSearchParams();
+    // const [_, setSelected] = useSelected();
 
-        return (
-            <QuranPageWrapper takhtitsAyahsBreakers={takhtitsAyahsBreakers} />
-        );
-    } catch (error) {
-        console.error("Error fetching takhtits:", error);
-        return <QuranPageWrapper takhtitsAyahsBreakers={[]} />;
-    }
+    // // Handle URL parameter on component mount
+    // useEffect(() => {
+    //     const ayahUuid = searchParams.get("ayah_uuid");
+
+    //     if (ayahUuid) {
+    //         // Add a small delay to ensure localStorage has been loaded first
+    //         setTimeout(() => {
+    //             setSelected((prev) => ({
+    //                 ...prev,
+    //                 ayahUUID: ayahUuid,
+    //             }));
+    //         }, 50);
+    //     }
+    // }, [searchParams, setSelected]);
+
+    return (
+        <Screen>
+            <AppBarWrapper />
+            <Main>
+                <Mushaf name="hafs" />
+            </Main>
+            <FooterWrapper />
+        </Screen>
+    );
 }

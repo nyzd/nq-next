@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import classNames from "classnames";
 import { Card, CardProps, P } from "@yakad/ui";
 import styles from "./Ayah.module.css";
@@ -17,27 +17,24 @@ interface AyahProps extends CardProps {
     onRightClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-export const Ayah = forwardRef<HTMLDivElement, AyahProps>(function Ayah(
-    {
-        number,
-        sajdah,
-        text,
-        translationText,
-        selected = false,
-        mushafOptions,
-        onHold,
-        onMouseDown,
-        onMouseUp,
-        onMouseLeave,
-        onTouchStart,
-        onTouchEnd,
-        onRightClick,
-        onContextMenu,
-        className,
-        ...restProps
-    },
-    ref
-) {
+export function Ayah({
+    number,
+    sajdah,
+    text,
+    translationText,
+    selected = false,
+    mushafOptions,
+    onHold,
+    onMouseDown,
+    onMouseUp,
+    onMouseLeave,
+    onTouchStart,
+    onTouchEnd,
+    onRightClick,
+    onContextMenu,
+    className,
+    ...restProps
+}: AyahProps) {
     const [isHolding, setIsHolding] = useState<boolean>(false);
     const holdTimeout = useRef<number>(0);
     const handleHoldStart = () => {
@@ -69,7 +66,6 @@ export const Ayah = forwardRef<HTMLDivElement, AyahProps>(function Ayah(
 
     return (
         <Card
-            ref={ref}
             onMouseDown={(e) => {
                 handleHoldStart();
                 onMouseDown?.(e);
@@ -148,7 +144,7 @@ export const Ayah = forwardRef<HTMLDivElement, AyahProps>(function Ayah(
             )}
         </Card>
     );
-});
+}
 
 const SajdahIcon = ({ sajdah }: { sajdah?: string }) => {
     if (sajdah === "vajib")
