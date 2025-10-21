@@ -8,11 +8,15 @@ type LangType =
 export async function getTranslations(mushaf: "hafs" = "hafs", limit: number, offset: number = 0, language: LangType | null = null) {
     const resp = await translationsList({ query: { mushaf: mushaf, limit: limit, offset: offset, language: language || undefined} });
 
-    return resp.data ?? [];
+    if (!resp.data) throw new Error("Error when getting translations list");
+
+    return resp.data;
 }
 
 export async function getTranslationAyahs(uuid: string, limit: number, offset: number = 0) {
     const resp = await translationsAyahsList({ path: { uuid: uuid }, query: { limit: limit, offset: offset } });
 
-    return resp.data ?? [];
+    if (!resp.data) throw new Error("Error when getting translation ayahs list");
+
+    return resp.data;
 }

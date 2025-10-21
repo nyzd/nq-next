@@ -13,7 +13,9 @@ export async function getAyahs(mushaf: string, limit: number, offset: number = 0
         }
     });
 
-    return response.data ?? [];
+    if (!response.data) throw Error("Error when Ayahs list");
+
+    return response.data;
 }
 
 export async function getAyahsBySurah(mushaf: string, surahUuid: string, limit: number = 1, offset: number = 0): Promise<Ayah[]> {
@@ -28,5 +30,7 @@ export async function getAyahsBySurah(mushaf: string, surahUuid: string, limit: 
         }
     });
 
-    return response.data ?? [];
+    if (!response.data) throw Error("Error when Ayahs list by surah");
+
+    return response.data;
 }
