@@ -6,7 +6,7 @@ interface TranslationCardProps extends Omit<CardProps, "children"> {
     langCode: LangCodeType;
 }
 
-export function TranslateionCard({
+export function TranslationCard({
     translatorname,
     langCode,
     style,
