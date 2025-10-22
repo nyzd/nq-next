@@ -1,34 +1,33 @@
 "use client";
 
-import { forwardRef } from "react";
 import { useRouter } from "next/navigation";
 import { Button, ButtonProps } from "@yakad/ui";
 import { Symbol } from "@yakad/symbols";
 
-export const GoBackButton = forwardRef<HTMLButtonElement, ButtonProps>(
-    function GoBackButton(
-        { title, icon, onClick, children, ...restProps },
-        ref
-    ) {
-        const router = useRouter();
+export function GoBackButton({
+    title,
+    icon,
+    onClick,
+    children,
+    ...restProps
+}: ButtonProps) {
+    const router = useRouter();
 
-        const handleGoBack = () => {
-            router.back();
-        };
+    const handleGoBack = () => {
+        router.back();
+    };
 
-        return (
-            <Button
-                ref={ref}
-                title={title || "Go back"}
-                icon={icon || <Symbol icon="arrow_back" />}
-                onClick={(e) => {
-                    handleGoBack();
-                    onClick?.(e);
-                }}
-                {...restProps}
-            >
-                {children}
-            </Button>
-        );
-    }
-);
+    return (
+        <Button
+            title={title || "Go back"}
+            icon={icon || <Symbol icon="arrow_back" />}
+            onClick={(e) => {
+                handleGoBack();
+                onClick?.(e);
+            }}
+            {...restProps}
+        >
+            {children}
+        </Button>
+    );
+}

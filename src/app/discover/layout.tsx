@@ -3,15 +3,15 @@
 import { Container, Main, Screen } from "@yakad/ui";
 import { PlayBox } from "@/components";
 import FooterWrapper from "./FooterWrapper";
-import { useOptions } from "@/contexts/optionsContext";
+import { usePlayOptions } from "@/contexts/playOptionsContext";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-    const [ options ] = useOptions();
+    const [playOptions] = usePlayOptions();
 
     return (
         <Screen>
             <Main>{children}</Main>
-            {options.playBoxShow && (
+            {playOptions.playBoxShow && (
                 <Container
                     size="md"
                     style={{

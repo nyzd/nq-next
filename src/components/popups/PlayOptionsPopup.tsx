@@ -1,46 +1,72 @@
-import { forwardRef } from "react";
-import { CheckBox, Popup, PopupProps, Row, Select, Spacer, Text } from "@yakad/ui";
-import { useOptions } from "@/contexts/optionsContext";
-export const PlayOptionsPopup = forwardRef<HTMLDivElement, PopupProps>(
-    function PlayOptionsPopup({ ...restProps }, ref) {
-        const [options, setOptions] = useOptions();
-        const handleCheckBoxChange = (
-            e: React.ChangeEvent<HTMLInputElement>
-        ) => {
-            const { name, checked } = e.target;
-            setOptions((prev) => ({
-                ...prev,
-                [name]: checked,
-            }));
-        };
+"use client";
 
-        return (
-            <Popup ref={ref} {...restProps}>
-                <Row>
-                    <Text variant="heading5">Recite</Text>
-                    <Spacer />
-                    <CheckBox
-                        title="Recitation play status"
-                        name="recitationStatus"
-                        checked={options.recitationStatus}
-                        onChange={handleCheckBoxChange}
-                    />
-                </Row>
+import { useEffect, useState } from "react";
+import {
+    CheckBox,
+    LoadingIcon,
+    Popup,
+    PopupProps,
+    Row,
+    Select,
+    Spacer,
+    Text,
+} from "@yakad/ui";
+import { usePlayOptions } from "@/contexts/playOptionsContext";
+import { getRecitations } from "@/actions/getRecitations";
+import { PaginatedRecitationListList } from "@ntq/sdk";
+
+export function PlayOptionsPopup({ ...restProps }: PopupProps) {
+    const [playOptions, setPlayOptions] = usePlayOptions();
+    const [recitations, setRecitations] = useState<PaginatedRecitationListList>(
+        []
+    );
+    const [recitationsLoading, setRecitationsLoading] = useState(true);
+    useEffect(() => {
+        getRecitations("hafs", 100).then((res) => {
+            setRecitations(res);
+            setRecitationsLoading(false);
+        });
+    }, []);
+
+    const handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, checked } = e.target;
+        setPlayOptions((prev) => ({
+            ...prev,
+            [name]: checked,
+        }));
+    };
+
+    return (
+        <Popup {...restProps}>
+            <Row>
+                <Text variant="heading5">Recite</Text>
+                <Spacer />
+            </Row>
+            {recitations.length <= 0 && !recitationsLoading ? (
+                "No recitation Found!"
+            ) : !recitationsLoading ? (
                 <Select
                     title="Reciter - Reciting type"
                     placeholder="Reciter"
-                    disabled
+                    disabled={recitationsLoading}
                 >
-                    <option value="uuid">Abd-OlBasit</option>
+                    {recitations.map((recitation, index) => (
+                        <option key={index}>
+                            {recitation.reciter_account_uuid}
+                        </option>
+                    ))}
                 </Select>
-                <Text variant="heading5">Auto scroll</Text>
-                <CheckBox
-                    label="Auto scroll"
-                    name="autoScroll"
-                    checked={options.autoScroll}
-                    onChange={handleCheckBoxChange}
-                />
-            </Popup>
-        );
-    }
-);
+            ) : (
+                <LoadingIcon />
+            )}
+
+            <Text variant="heading5">Auto scroll</Text>
+            <CheckBox
+                label="Auto scroll"
+                name="autoScroll"
+                checked={playOptions.autoScroll}
+                onChange={handleCheckBoxChange}
+            />
+        </Popup>
+    );
+}

@@ -1,12 +1,13 @@
 "use client";
 
 import { AyahBreakersResponse, Surah } from "@ntq/sdk";
-import { AyahRange } from "./AyahRange";
+import { AyahRange } from "../ayah/AyahRange";
 import { Stack } from "@yakad/ui";
 import { FindBar } from "./FindBar";
 import { useEffect, useState } from "react";
 import { useSelected } from "@/contexts/selectedsContext";
 import { getTranslations } from "@/actions/getTranslations";
+import { useMushafOptions } from "@/contexts/mushafOptionsContext";
 
 interface AyahRange {
     offset: number;
@@ -37,6 +38,7 @@ export function QuranPage({
     onLoad,
 }: QuranPageProps) {
     // If no ayahs found for this page, show a message
+    const [mushafOptions] = useMushafOptions();
     const [selected, setSelected] = useSelected();
     const [visible, setVisible] = useState<string>(
         takhtitsAyahsBreakers[page.offset].uuid || ""
@@ -85,6 +87,7 @@ export function QuranPage({
                 mushaf={mushaf}
                 translationUuid={selected.translationUUID}
                 onLoad={onLoad}
+                mushafOptions={mushafOptions}
                 firstVisibleAyahChanged={(uuid) => {
                     setVisible((prev) => (prev !== uuid ? uuid : prev));
                 }}

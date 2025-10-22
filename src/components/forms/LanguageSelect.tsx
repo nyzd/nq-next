@@ -1,16 +1,16 @@
 "use client";
 
-import { forwardRef } from "react";
 import { LangCodeType, langName } from "@yakad/lib";
 import { Select, SelectProps } from "@yakad/ui";
 import { usePreferences } from "@/contexts/preferencesContext";
 
 const acceptedLangCodes: LangCodeType[] = ["en", "ar", "fa", "tr"];
 
-export const LanguageSelect = forwardRef<
-    HTMLSelectElement,
-    Omit<SelectProps, "name" | "value">
->(function LanguageSelect({ placeholder, onChange, ...restProps }, ref) {
+export function LanguageSelect({
+    placeholder,
+    onChange,
+    ...restProps
+}: Omit<SelectProps, "name" | "value">) {
     const [preferences, setPreferences] = usePreferences();
 
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -23,7 +23,6 @@ export const LanguageSelect = forwardRef<
 
     return (
         <Select
-            ref={ref}
             name="language"
             placeholder={placeholder || "Language"}
             value={preferences.language}
@@ -40,4 +39,4 @@ export const LanguageSelect = forwardRef<
             ))}
         </Select>
     );
-});
+}

@@ -1,36 +1,38 @@
-import { forwardRef } from "react";
 import { SvgIcon, SvgIconProps } from "@yakad/ui";
 import MadinehFilledIcon from "@/assets/svg/madinehFilledIcon";
 import MadinehOutlinedIcon from "@/assets/svg/madinehOutlinedIcon";
 import MakkahOutlinedIcon from "@/assets/svg/makkahOutlinedIcon";
 import MakkahFilledIcon from "@/assets/svg/makkahFilledIcon";
+import React from "react";
 
 interface SurahPeriodIconProps extends Omit<SvgIconProps, "children"> {
     variant?: "outlined" | "filled";
     period: "makki" | "madani";
+    ref?: React.Ref<HTMLDivElement>;
 }
 
-export const SurahPeriodIcon = forwardRef<HTMLDivElement, SurahPeriodIconProps>(
-    function SurahPeriodIcon(
-        { title, variant = "outlined", period, style },
-        ref
-    ) {
-        const isFilled = variant === "filled";
+export function SurahPeriodIcon({
+    title,
+    variant = "outlined",
+    period,
+    style,
+    ref,
+}: SurahPeriodIconProps) {
+    const isFilled = variant === "filled";
 
-        const MakkahIcon = isFilled ? MakkahFilledIcon : MakkahOutlinedIcon;
-        const MadinehIcon = isFilled ? MadinehFilledIcon : MadinehOutlinedIcon;
+    const MakkahIcon = isFilled ? MakkahFilledIcon : MakkahOutlinedIcon;
+    const MadinehIcon = isFilled ? MadinehFilledIcon : MadinehOutlinedIcon;
 
-        const Icon = period === "makki" ? MakkahIcon : MadinehIcon;
-        const dynamicTitle = period === "makki" ? "Makki" : "Madani";
+    const Icon = period === "makki" ? MakkahIcon : MadinehIcon;
+    const dynamicTitle = period === "makki" ? "Makki" : "Madani";
 
-        return (
-            <SvgIcon
-                ref={ref}
-                title={title || dynamicTitle}
-                style={{ cursor: "help", ...style }}
-            >
-                <Icon />
-            </SvgIcon>
-        );
-    }
-);
+    return (
+        <SvgIcon
+            ref={ref}
+            title={title || dynamicTitle}
+            style={{ cursor: "help", ...style }}
+        >
+            <Icon />
+        </SvgIcon>
+    );
+}

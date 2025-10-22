@@ -1,9 +1,10 @@
 "use client";
 
-import { forwardRef, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import classNames from "classnames";
 import { Card, CardProps, P } from "@yakad/ui";
 import styles from "./Ayah.module.css";
+import { MushafOptions } from "@/contexts/mushafOptionsContext";
 
 interface AyahProps extends CardProps {
     number: number;
@@ -11,30 +12,29 @@ interface AyahProps extends CardProps {
     sajdah?: string;
     selected?: boolean;
     translationText?: string;
+    mushafOptions?: MushafOptions;
     onHold?: () => void;
     onRightClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-export const Ayah = forwardRef<HTMLDivElement, AyahProps>(function Ayah(
-    {
-        number,
-        sajdah,
-        text,
-        translationText,
-        selected = false,
-        onHold,
-        onMouseDown,
-        onMouseUp,
-        onMouseLeave,
-        onTouchStart,
-        onTouchEnd,
-        onRightClick,
-        onContextMenu,
-        className,
-        ...restProps
-    },
-    ref
-) {
+export function Ayah({
+    number,
+    sajdah,
+    text,
+    translationText,
+    selected = false,
+    mushafOptions,
+    onHold,
+    onMouseDown,
+    onMouseUp,
+    onMouseLeave,
+    onTouchStart,
+    onTouchEnd,
+    onRightClick,
+    onContextMenu,
+    className,
+    ...restProps
+}: AyahProps) {
     const [isHolding, setIsHolding] = useState<boolean>(false);
     const holdTimeout = useRef<number>(0);
     const handleHoldStart = () => {
@@ -66,7 +66,6 @@ export const Ayah = forwardRef<HTMLDivElement, AyahProps>(function Ayah(
 
     return (
         <Card
-            ref={ref}
             onMouseDown={(e) => {
                 handleHoldStart();
                 onMouseDown?.(e);
@@ -97,7 +96,22 @@ export const Ayah = forwardRef<HTMLDivElement, AyahProps>(function Ayah(
             {...restProps}
         >
             <div style={{ direction: "rtl", textAlign: "right" }}>
-                <P variant="body2">
+                <P
+                    variant={
+                        mushafOptions?.arabicFontSize === "medium"
+                            ? "body2"
+                            : mushafOptions?.arabicFontSize === "large"
+                            ? "body1"
+                            : "body5"
+                    }
+                    style={{
+                        textAlign: "justify",
+                        textAlignLast:
+                            mushafOptions?.textAlign === "normal"
+                                ? "start"
+                                : "center",
+                    }}
+                >
                     {/* TODO:‌ This doens't seem ok */}
                     {text.split(" ").map((word, index) => (
                         <span key={index}>{`${word} `}</span>
@@ -108,16 +122,29 @@ export const Ayah = forwardRef<HTMLDivElement, AyahProps>(function Ayah(
             </div>
             {translationText && (
                 <P
-                    style={{ marginTop: "20px" }}
-                    variant="body4"
+                    variant={
+                        mushafOptions?.translationFontSize === "medium"
+                            ? "body3"
+                            : mushafOptions?.translationFontSize === "large"
+                            ? "body1"
+                            : "body5"
+                    }
                     palette="onSurfaceVariantColor"
+                    style={{
+                        marginTop: "20px",
+                        textAlign: "justify",
+                        textAlignLast:
+                            mushafOptions?.textAlign === "normal"
+                                ? "start"
+                                : "center",
+                    }}
                 >
                     {translationText}
                 </P>
             )}
         </Card>
     );
-});
+}
 
 const SajdahIcon = ({ sajdah }: { sajdah?: string }) => {
     if (sajdah === "vajib")

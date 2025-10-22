@@ -1,6 +1,5 @@
 "use client";
 
-import { forwardRef } from "react";
 import { Button, ButtonProps } from "@yakad/ui";
 import { IconCode, Symbol } from "@yakad/symbols";
 import { usePreferences } from "@/contexts/preferencesContext";
@@ -38,39 +37,39 @@ const optionsMap: Record<
     },
 };
 
-export const ZoomButton = forwardRef<HTMLButtonElement, ButtonProps>(
-    function ZoomButton(
-        { title, icon, onClick, children, ...restProps },
-        ref
-    ) {
-        const [preferences, setPreferences] = usePreferences();
+export function ZoomButton({
+    title,
+    icon,
+    onClick,
+    children,
+    ...restProps
+}: ButtonProps) {
+    const [preferences, setPreferences] = usePreferences();
 
-        const currentOption: number = preferences.zoom || 100;
+    const currentOption: number = preferences.zoom || 100;
 
-        const toggleOption = () => {
-            const currentIndex = order.indexOf(currentOption);
-            const nextIndex = (currentIndex + 1) % order.length;
-            const nextOption = order[nextIndex];
+    const toggleOption = () => {
+        const currentIndex = order.indexOf(currentOption);
+        const nextIndex = (currentIndex + 1) % order.length;
+        const nextOption = order[nextIndex];
 
-            setPreferences((prev) => ({
-                ...prev,
-                zoom: nextOption,
-            }));
-        };
+        setPreferences((prev) => ({
+            ...prev,
+            zoom: nextOption,
+        }));
+    };
 
-        return (
-            <Button
-                ref={ref}
-                title={title || optionsMap[currentOption].title}
-                icon={icon || <Symbol icon={optionsMap[currentOption].icon} />}
-                onClick={(e) => {
-                    toggleOption();
-                    onClick?.(e);
-                }}
-                {...restProps}
-            >
-                {children || optionsMap[currentOption].name}
-            </Button>
-        );
-    }
-);
+    return (
+        <Button
+            title={title || optionsMap[currentOption].title}
+            icon={icon || <Symbol icon={optionsMap[currentOption].icon} />}
+            onClick={(e) => {
+                toggleOption();
+                onClick?.(e);
+            }}
+            {...restProps}
+        >
+            {children || optionsMap[currentOption].name}
+        </Button>
+    );
+}

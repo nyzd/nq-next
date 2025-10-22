@@ -1,29 +1,24 @@
 "use client";
 
-import { forwardRef } from "react";
 import Link from "next/link";
 import { Button, ButtonProps } from "@yakad/ui";
 import { useSelected } from "@/contexts/selectedsContext";
 
+export function LastReadingButton({
+    disabled,
+    children,
+    ...restProps
+}: ButtonProps) {
+    const [selected] = useSelected();
 
-export const LastReadingButton = forwardRef<HTMLButtonElement, ButtonProps>(
-    function LastReadingButton({ disabled, children, ...restProps }, ref) {
-        const [selected] = useSelected();
-
-        return (
-            <Link
-                href="/quran"
+    return (
+        <Link href="/quran">
+            <Button
+                {...restProps}
+                disabled={disabled || selected.ayahUUID === undefined}
             >
-                <Button
-                    ref={ref}
-                    {...restProps}
-                    disabled={
-                        disabled || selected.ayahUUID === undefined
-                    }
-                >
-                    {children || "Last reading"}
-                </Button>
-            </Link>
-        );
-    }
-);
+                {children || "Last reading"}
+            </Button>
+        </Link>
+    );
+}

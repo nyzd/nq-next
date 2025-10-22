@@ -2,15 +2,18 @@
 
 import { ReactNode } from "react";
 import { PreferencesProvider } from "@/contexts/preferencesContext";
-import { OptionsProvider } from "@/contexts/optionsContext";
+import { PlayOptionsProvider } from "@/contexts/playOptionsContext";
 import { SelectedProvider } from "@/contexts/selectedsContext";
+import { MushafOptionsProvider } from "@/contexts/mushafOptionsContext";
 
 export default function Providers({ children }: { children: ReactNode }) {
     return (
-        <OptionsProvider>
-            <SelectedProvider>
-                <PreferencesProvider>{children}</PreferencesProvider>
-            </SelectedProvider>
-        </OptionsProvider>
+        <MushafOptionsProvider>
+            <PlayOptionsProvider>
+                <SelectedProvider>
+                    <PreferencesProvider>{children}</PreferencesProvider>
+                </SelectedProvider>
+            </PlayOptionsProvider>
+        </MushafOptionsProvider>
     );
 }

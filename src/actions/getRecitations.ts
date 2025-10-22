@@ -7,7 +7,9 @@ export async function getRecitations(
     limit: number,
     offset: number = 1,
 ): Promise<PaginatedRecitationListList> {
-    const resp = await recitationsList({query: { mushaf: mushaf, limit: limit, offset: offset}});
+    const response = await recitationsList({query: { mushaf: mushaf, limit: limit, offset: offset}});
 
-    return resp.data || [];
+    if (!response.data) throw Error("Error when Getting recitations list");
+
+    return response.data;
 }
