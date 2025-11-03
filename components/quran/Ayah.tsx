@@ -10,6 +10,7 @@ export interface AyahProps {
     selected?: boolean;
     translationText?: string;
     mushafOptions?: MushafOptions;
+    translationRtl?: boolean;
     onClick?: () => void;
     ref?: Ref<HTMLDivElement>;
 }
@@ -18,6 +19,7 @@ export function Ayah({
     words,
     id,
     translationText,
+    translationRtl,
     onClick,
     selected,
 }: AyahProps) {
@@ -35,7 +37,7 @@ export function Ayah({
                     <span key={i}>{w} </span>
                 ))}
             </div>
-            <div>{translationText}</div>
+            <div dir={translationRtl ? "rtl" : "ltr"}>{translationText}</div>
         </div>
     );
 }

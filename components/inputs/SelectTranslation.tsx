@@ -1,8 +1,7 @@
-import { getTranslations } from "@/app/actions/getTranslations";
+"use client";
+
 import { PaginatedTranslationListList } from "@ntq/sdk";
 import { useSelected } from "@/contexts/selectedsContext";
-import { Spinner } from "../ui/spinner";
-import { useEffect, useState } from "react";
 import {
     Select,
     SelectContent,
@@ -14,23 +13,23 @@ import {
 } from "../ui/select";
 import { Separator } from "../ui/separator";
 
-export function SelectTranslation() {
-    const [loading, setLoading] = useState(true);
-    const [translationsList, setTranslationsList] =
-        useState<PaginatedTranslationListList>([]);
-
+export function SelectTranslation({
+    translations,
+}: {
+    translations: PaginatedTranslationListList;
+}) {
     const [selected, setSelected] = useSelected();
 
-    useEffect(() => {
-        getTranslations("hafs", 300, 0).then((trs) => {
-            setTranslationsList(trs);
-            setLoading(false);
-        });
-    }, []);
-
     const handleSelectChange = (name: string, value: string) => {
-        setSelected((prev) => ({ ...prev, [name]: value }));
+        const [translation_uuid, language_is_rtl] = value.split(":");
+
+        setSelected((prev) => ({
+            ...prev,
+            translationUUID: translation_uuid,
+            translationRtl: language_is_rtl === "true" ? true : false,
+        }));
     };
+
     return (
         <Select
             defaultValue={selected.translationUUID}
@@ -38,19 +37,17 @@ export function SelectTranslation() {
                 handleSelectChange("translationUUID", value);
             }}
         >
-            <SelectTrigger
-                id="translation"
-                disabled={loading}
-                className="w-[180px]"
-            >
-                {loading && <Spinner />}
+            <SelectTrigger id="translation" className="w-[180px]">
                 <SelectValue placeholder="Select translation" />
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>
                     <SelectLabel>Languages</SelectLabel>
-                    {translationsList.map((translation, index) => (
-                        <SelectItem value={translation.uuid} key={index}>
+                    {translations.map((translation, index) => (
+                        <SelectItem
+                            value={`${translation.uuid}:${translation.language_is_rtl}`}
+                            key={index}
+                        >
                             {translation.language}
                             <Separator orientation="vertical" />
                             {translation.source}

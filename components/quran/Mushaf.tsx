@@ -5,6 +5,7 @@ import {
 } from "@/app/actions/getTakhtits";
 import { getSurahs } from "@/app/actions/getSurahs";
 import { AyahBreakersResponse } from "@ntq/sdk";
+import { getTranslations } from "@/app/actions/getTranslations";
 
 export interface CalculatedPage {
     pageNumber: number;
@@ -49,6 +50,8 @@ function calculatePages(
 }
 
 export default async function Mushaf({ name }: { name: string }) {
+    "use cache";
+
     const firstTakhtit = await getTakhtits(name);
     const firstTakhtitUuid = firstTakhtit[0].uuid;
     const takhtitsAyahsBreakers = await getTakhtitsAyahsBreakers(

@@ -19,7 +19,13 @@ import {
 import { Button } from "../ui/button";
 import { useMushafOptions } from "@/contexts/mushafOptionsContext";
 import { SelectTranslation } from "../inputs/SelectTranslation";
-export function MushafSettingsButton() {
+import { PaginatedTranslationListList } from "@ntq/sdk";
+
+export function MushafSettingsButton({
+    translations,
+}: {
+    translations: PaginatedTranslationListList;
+}) {
     const [mushafOptions, setMushafOptions] = useMushafOptions();
 
     const handleSelectChange = (name: string, value: string) => {
@@ -129,7 +135,7 @@ export function MushafSettingsButton() {
                             Translate
                         </Label>
 
-                        <SelectTranslation />
+                        <SelectTranslation translations={translations} />
 
                         <div className="space-y-2">
                             <Label htmlFor="translation" className="text-sm">
