@@ -25,7 +25,7 @@ export async function getTranslations(
 export async function getTranslationAyahs(
     uuid: string,
     limit: number,
-    offset: number = 0
+    offset: number = 1
 ) {
     const resp = await translationsAyahsList({
         path: { uuid: uuid },

@@ -1,10 +1,11 @@
-"use client";
-import { ArrowLeft, Settings } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import { MushafSettingsButton } from "./buttons/MushafSettingsButton";
+import { getTranslations } from "@/app/actions/getTranslations";
 
-export function Header() {
+export async function Header() {
+    "use cache";
+    const translations = await getTranslations("hafs", 200, 0);
     return (
         <header className="sticky top-0 flex items-center justify-between  px-4 py-4 border-b bg-background/65 backdrop-blur supports-backdrop-filter:bg-background/65">
             <Button variant="ghost" size="icon" aria-label="Go back">
@@ -13,7 +14,7 @@ export function Header() {
 
             <h1 className="text-xl font-semibold text-white">Natiq</h1>
 
-            <MushafSettingsButton />
+            <MushafSettingsButton translations={translations} />
         </header>
     );
 }

@@ -3,11 +3,10 @@
 import { AyahBreakersResponse, Surah } from "@ntq/sdk";
 import { AyahsRange } from "../AyahsRange";
 // import { FindBar } from "./FindBar";
-import { useEffect, useState } from "react";
 import { useSelected } from "@/contexts/selectedsContext";
-import { getTranslations } from "@/app/actions/getTranslations";
 import { useMushafOptions } from "@/contexts/mushafOptionsContext";
 import { Card, CardContent } from "@/components/ui/card";
+import { useState } from "react";
 
 interface AyahRange {
     offset: number;
@@ -39,21 +38,10 @@ export function QuranPage({
 }: QuranPageProps) {
     // If no ayahs found for this page, show a message
     const [mushafOptions] = useMushafOptions();
-    const [selected, setSelected] = useSelected();
+    const [selected] = useSelected();
     const [visible, setVisible] = useState<string>(
         takhtitsAyahsBreakers[page.offset].uuid || ""
     );
-
-    useEffect(() => {
-        if (!selected.translationUUID || selected.translationUUID === "UUID") {
-            getTranslations("hafs", 100, 0, "en").then((res) => {
-                setSelected((prev) => ({
-                    ...prev,
-                    translationUUID: res[0].uuid,
-                }));
-            });
-        }
-    }, [selected.translationUUID, setSelected]);
 
     if (!page) {
         return (
