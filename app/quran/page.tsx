@@ -2,6 +2,7 @@ import { Header } from "@/components/header";
 import { Player } from "@/components/player";
 import Main from "./main";
 import { Suspense } from "react";
+import { StickyJumpBar } from "@/components/sticky-jump-bar";
 
 export default async function QuranPage() {
     return (
@@ -9,6 +10,7 @@ export default async function QuranPage() {
             <Suspense fallback={<h1>Loading Header</h1>}>
                 <Header />
             </Suspense>
+            <StickyJumpBar />
             <Main />
             <Player />
         </>
