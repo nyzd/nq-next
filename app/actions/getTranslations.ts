@@ -8,7 +8,7 @@ export async function getTranslations(
     offset: number = 0,
     language: TranslationsListData["query"]["language"] | null =null
 ) {
-    const resp = await translationsList({
+    const response = await translationsList({
         query: {
             mushaf: mushaf,
             limit: limit,
@@ -17,9 +17,9 @@ export async function getTranslations(
         },
     });
 
-    if (!resp.data) throw new Error("Error when getting translations list");
+    if (!response.data) throw new Error(`Error when getting translations list, status: ${response.status}, msg: ${response.data}`);
 
-    return resp.data;
+    return response.data;
 }
 
 export async function getTranslationAyahs(
@@ -27,13 +27,13 @@ export async function getTranslationAyahs(
     limit: number,
     offset: number = 1
 ) {
-    const resp = await translationsAyahsList({
+    const response = await translationsAyahsList({
         path: { uuid: uuid },
         query: { limit: limit, offset: offset },
     });
 
-    if (!resp.data)
-        throw new Error("Error when getting translation ayahs list");
+    if (!response.data)
+        throw new Error(`Error when getting translation ayahs list, status: ${response.status}, msg: ${response.data}`);
 
-    return resp.data;
+    return response.data;
 }
