@@ -13,7 +13,7 @@ export async function getAyahs(mushaf: string, limit: number, offset: number = 0
         }
     });
 
-    if (!response.data) throw Error("Error when Ayahs list");
+    if (!response.data) throw Error(`Error when getting Ayahs list, status: ${response.status}, msg: ${response.data}`);
 
     return response.data;
 }
@@ -30,7 +30,7 @@ export async function getAyahsBySurah(mushaf: string, surahUuid: string, limit: 
         }
     });
 
-    if (!response.data) throw Error("Error when Ayahs list by surah");
+    if (!response.data) throw Error(`Error when Ayahs list by surah, status: ${response.status}, msg: ${response.data}`);
 
     return response.data;
 }
