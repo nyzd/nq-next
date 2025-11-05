@@ -6,7 +6,9 @@ import { AyahsRange } from "../AyahsRange";
 import { useSelected } from "@/contexts/selectedsContext";
 import { useMushafOptions } from "@/contexts/mushafOptionsContext";
 import { Card, CardContent } from "@/components/ui/card";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { FindBar } from "@/components/FindBar";
+import { getTranslations } from "@/app/actions/getTranslations";
 
 interface AyahRange {
     offset: number;
@@ -38,10 +40,21 @@ export function QuranPage({
 }: QuranPageProps) {
     // If no ayahs found for this page, show a message
     const [mushafOptions] = useMushafOptions();
-    const [selected] = useSelected();
+    const [selected, setSelected] = useSelected();
     const [visible, setVisible] = useState<string>(
         takhtitsAyahsBreakers[page.offset].uuid || ""
     );
+
+    useEffect(() => {
+        if (!selected.translationUUID || selected.translationUUID === "UUID") {
+            getTranslations("hafs", 100, 0, "en").then((res) => {
+                setSelected((prev) => ({
+                    ...prev,
+                    translationUUID: res[0].uuid,
+                }));
+            });
+        }
+    }, [selected.translationUUID]);
 
     if (!page) {
         return (
@@ -60,15 +73,15 @@ export function QuranPage({
     }
 
     return (
-        <Card>
-            {/* <FindBar
+        <Card className="py-0">
+            <FindBar
                 takhtitsAyahsBreakers={takhtitsAyahsBreakers}
                 surahs={surahs}
                 ayahUuid={visible}
                 onAyahSelect={(uuid) =>
                     setSelected((prev) => ({ ...prev, ayahUUID: uuid }))
                 }
-            /> */}
+            />
             <CardContent>
                 <AyahsRange
                     offset={page?.offset ?? 0}
