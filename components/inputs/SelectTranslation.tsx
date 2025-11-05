@@ -32,7 +32,7 @@ export function SelectTranslation({
 
     return (
         <Select
-            defaultValue={selected.translationUUID}
+            defaultValue={`${selected.translationUUID}:${selected.translationRtl}`}
             onValueChange={(value) => {
                 handleSelectChange("translationUUID", value);
             }}

@@ -5,7 +5,6 @@ import {
 } from "@/app/actions/getTakhtits";
 import { getSurahs } from "@/app/actions/getSurahs";
 import { AyahBreakersResponse } from "@ntq/sdk";
-import { getTranslations } from "@/app/actions/getTranslations";
 
 export interface CalculatedPage {
     pageNumber: number;

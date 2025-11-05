@@ -124,7 +124,7 @@ export function AyahsRange({
         return () => {
             isActive = false;
         };
-    }, [offset, limit, mushaf, translationUuid]);
+    }, [offset, limit, mushaf, translationUuid, onLoad]);
 
     if (loading) {
         return (
