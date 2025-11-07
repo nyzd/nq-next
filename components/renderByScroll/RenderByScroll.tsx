@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useEffectEvent, useRef, useState } from "react";
 import { useOnVisibilityChange } from "@yakad/use-interactions";
 import { ActiveOnVisible } from "@/components/activeOnVisible/ActiveOnVisible";
 
@@ -56,6 +56,14 @@ export function RenderByScroll({
     const [isVisibleLowSideLimitSensor, setIsVisibleLowSideLimitSensor] =
         useState<boolean>(false);
 
+    const changeRendered = useEffectEvent((val: typeof rendered) =>
+        setRendered(val)
+    );
+
+    const changeVisible = useEffectEvent((val: typeof visibled) =>
+        setVisibled(val)
+    );
+
     // Render new Childs if needed
     useEffect(() => {
         const isPriorityBYHighSide =
@@ -71,7 +79,7 @@ export function RenderByScroll({
                 overRenderedOnHighSide < extraRender
             ) {
                 const newHigh = rendered.highest + 1;
-                setRendered({ ...rendered, highest: newHigh });
+                changeRendered({ ...rendered, highest: newHigh });
                 newChildRendered?.(newHigh);
             } else {
                 if (
@@ -82,7 +90,7 @@ export function RenderByScroll({
                         scrollTo(rendered.lowest);
                     }
                     const newLow = rendered.lowest - 1;
-                    setRendered({ ...rendered, lowest: newLow });
+                    changeRendered({ ...rendered, lowest: newLow });
                     newChildRendered?.(newLow);
                 }
             }
@@ -95,8 +103,8 @@ export function RenderByScroll({
         const isJumpToIndexOutOfRenderedRange =
             jumpToIndex < rendered.lowest || jumpToIndex > rendered.highest;
         if (isJumpToIndexOutOfRenderedRange) {
-            setVisibled({ lowest: jumpToIndex, highest: jumpToIndex });
-            setRendered({ lowest: jumpToIndex, highest: jumpToIndex });
+            changeVisible({ lowest: jumpToIndex, highest: jumpToIndex });
+            changeRendered({ lowest: jumpToIndex, highest: jumpToIndex });
         }
         const timeout = setTimeout(() => {
             scrollTo(jumpToIndex, true);
@@ -132,12 +140,12 @@ export function RenderByScroll({
                                 scrollMarginTop: `${scrollMarginTop}rem`,
                             }}
                             onVisibilityChange={(visible) => {
-                                visible && handleOnVisible(i);
+                                void (visible && handleOnVisible(i));
                             }}
                         >
                             {child}
                         </ActiveOnVisible>
-                    ),
+                    )
             )}
         </div>
     );
