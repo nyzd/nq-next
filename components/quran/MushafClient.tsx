@@ -1,10 +1,9 @@
 "use client";
 
-// import { useSelected } from "@/contexts/selectedsContext";
+import { useSelected } from "@/contexts/selectedsContext";
 import { useMemo, useState } from "react";
 import { CalculatedPage } from "./Mushaf";
 import { RenderByScroll } from "@/components/renderByScroll/RenderByScroll";
-// import { QuranPage } from "../page/QuranPage";
 import { AyahBreakersResponse, Surah } from "@ntq/sdk";
 import { QuranPage } from "./page/QuranPage";
 
@@ -17,7 +16,7 @@ export function MushafClient({
     takhtitsAyahsBreakers: AyahBreakersResponse[];
     surahs: Surah[];
 }) {
-    const selected: { ayahUUID: string } = { ayahUUID: "" }; // TODO
+    const [selected] = useSelected();
     const [loadingInProgress, setLoadingInProgress] = useState(true);
     // Calculate the index for RenderByScroll based on selected ayah UUID
     const selectedAyahIndex = useMemo(() => {

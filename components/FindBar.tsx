@@ -79,6 +79,7 @@ export function FindBar({
 
         if (targetAyah?.uuid) {
             onAyahSelect?.(targetAyah.uuid);
+            setIsOpen(false); // Close the dialog when ayah is selected
         }
     };
 
@@ -145,6 +146,7 @@ export function FindBar({
                         surahs={surahs}
                         takhtitsAyahsBreakers={takhtitsAyahsBreakers}
                         onButtonClicked={handleAyahSelection}
+                        onClose={() => setIsOpen(false)}
                     />
                 </DialogContent>
             </Dialog>
