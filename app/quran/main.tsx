@@ -4,7 +4,7 @@ import { Suspense } from "react";
 export default function Main() {
     return (
         <main className="p-10 flex flex-col items-center justify-center gap-2">
-            <Suspense fallback={<h1>Loading Mushaf</h1>}>
+            <Suspense fallback="Loading mushaf">
                 <Mushaf name="hafs" />
             </Suspense>
         </main>

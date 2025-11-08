@@ -13,7 +13,7 @@ export async function getAyahs(mushaf: string, limit: number, offset: number = 0
         }
     });
 
-    if (!response.data) throw Error(`Error when getting Ayahs list, status: ${response.status}, msg: ${response.data}`);
+    if (!response.data) throw Error(`Error when getting Ayahs list, status: ${response.status}, msg: ${response.data}, res: ${response}`);
 
     return response.data;
 }

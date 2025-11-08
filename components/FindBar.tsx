@@ -9,9 +9,9 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Item, ItemContent, ItemTitle } from "./ui/item";
-import Link from "next/link";
 import { AyahBreakersResponse, Surah } from "@ntq/sdk";
-import { BookOpenCheck, ListIndentIncrease } from "lucide-react";
+import { ListIndentIncrease } from "lucide-react";
+import { FindPopup } from "./popups/FindPopup";
 
 interface FindBarProps {
     takhtitsAyahsBreakers: AyahBreakersResponse[];
@@ -136,12 +136,16 @@ export function FindBar({
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogContent className="max-w-md">
                     <DialogHeader>
-                        <DialogTitle>Jump Bar Navigation</DialogTitle>
+                        <DialogTitle>Jumpt to Ayah</DialogTitle>
                         <DialogDescription>
-                            Click anywhere on the sticky bar to open this popup.
-                            The bar shows 3 sections to help you navigate.
+                            Find your specific ayah using parameters below
                         </DialogDescription>
                     </DialogHeader>
+                    <FindPopup
+                        surahs={surahs}
+                        takhtitsAyahsBreakers={takhtitsAyahsBreakers}
+                        onButtonClicked={handleAyahSelection}
+                    />
                 </DialogContent>
             </Dialog>
         </>
