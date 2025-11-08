@@ -40,6 +40,12 @@ export function AyahsRange({
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [visibleAyahs, setVisibleAyahs] = useState<Set<number>>(new Set());
+    const onLoadRef = useRef(onLoad);
+
+    // Keep the ref updated with the latest callback
+    useEffect(() => {
+        onLoadRef.current = onLoad;
+    }, [onLoad]);
 
     useEffect(() => {
         const first = Math.min(...visibleAyahs.keys());
@@ -115,7 +121,7 @@ export function AyahsRange({
             } finally {
                 if (isActive) {
                     setLoading(false);
-                    onLoad?.();
+                    onLoadRef.current?.();
                 }
             }
         };
@@ -124,7 +130,7 @@ export function AyahsRange({
         return () => {
             isActive = false;
         };
-    }, [offset, limit, mushaf, translationUuid, onLoad]);
+    }, [offset, limit, mushaf, translationUuid]);
 
     if (loading) {
         return (

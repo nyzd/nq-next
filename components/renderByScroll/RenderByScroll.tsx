@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useEffect, useEffectEvent, useRef, useState } from "react";
+import React, {
+    useCallback,
+    useEffect,
+    useEffectEvent,
+    useRef,
+    useState,
+} from "react";
 import { useOnVisibilityChange } from "@yakad/use-interactions";
 import { ActiveOnVisible } from "@/components/activeOnVisible/ActiveOnVisible";
 
@@ -26,6 +32,11 @@ export function RenderByScroll({
     ...restProps
 }: RenderByScrollProps) {
     const childrenArray = React.Children.toArray(children);
+
+    const newChildrenRendered = useCallback(
+        (index: number) => newChildRendered?.(index),
+        [newChildRendered]
+    );
 
     // Scroll Zone
     const childRefs = useRef<Record<number, HTMLElement | null>>({});
@@ -80,7 +91,7 @@ export function RenderByScroll({
             ) {
                 const newHigh = rendered.highest + 1;
                 changeRendered({ ...rendered, highest: newHigh });
-                newChildRendered?.(newHigh);
+                newChildrenRendered(newHigh);
             } else {
                 if (
                     isLowSideNewRenderRemains &&
@@ -91,12 +102,21 @@ export function RenderByScroll({
                     }
                     const newLow = rendered.lowest - 1;
                     changeRendered({ ...rendered, lowest: newLow });
-                    newChildRendered?.(newLow);
+                    newChildrenRendered(newLow);
                 }
             }
         }
-        // eslint-disable-next-line
-    }, [visibled, rendered, extraRender, stopNewRenders]);
+    }, [
+        visibled,
+        rendered,
+        extraRender,
+        stopNewRenders,
+        newChildrenRendered,
+        childrenArray.length,
+        isVisibleLowSideLimitSensor,
+        overRenderedOnHighSide,
+        overRenderedOnLowSide,
+    ]);
 
     // Scroll to jumpToIndex
     useEffect(() => {
