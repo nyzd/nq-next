@@ -68,34 +68,43 @@ export function AyahsRange({
     useEffect(() => {
         const selected_ayah = selected.ayahUUID ?? undefined;
         if (!selected_ayah) return;
-        if (loadingAyahs) return; // Don't scroll while loading ayahs
+        if (loadingAyahs) return;
 
-        // Check if the selected ayah is in the current range
         const ayahInRange = ayahs.some((ayah) => ayah.uuid === selected_ayah);
-        if (!ayahInRange) return; // Ayah not in current range, page jump will handle it
+        if (!ayahInRange) return;
 
-        // Wait for page jump to complete (RenderByScroll uses 100ms timeout)
-        // Then wait a bit more for DOM to settle, then try scrolling
         let retries = 0;
-        const maxRetries = 20; // Increased retries
+        const maxRetries = 20;
         const tryScroll = () => {
             const el = ayahsRefs.current[selected_ayah];
             if (el) {
-                // Use requestAnimationFrame to ensure DOM is ready
                 requestAnimationFrame(() => {
-                    el.scrollIntoView({ behavior: "smooth", block: "start" });
+                    const findBar = document.querySelector(
+                        '[data-find-bar="true"]'
+                    );
+                    const findBarHeight = findBar
+                        ? findBar.getBoundingClientRect().height
+                        : 0;
+                    const offset = 80 + findBarHeight + 20;
+
+                    const elementTop =
+                        el.getBoundingClientRect().top + window.scrollY;
+                    const targetScroll = elementTop - offset;
+
+                    window.scrollTo({
+                        top: targetScroll,
+                        behavior: "smooth",
+                    });
                 });
             } else if (retries < maxRetries) {
                 retries++;
-                setTimeout(tryScroll, 100); // Increased delay between retries
+                setTimeout(tryScroll, 100);
             }
         };
-        // Start after page jump completes (100ms) + some buffer (200ms)
         const id = window.setTimeout(tryScroll, 300);
         return () => window.clearTimeout(id);
     }, [ayahs, selected.ayahUUID, loadingAyahs]);
 
-    // Load ayahs - show immediately when ready
     useEffect(() => {
         let isActive = true;
 
@@ -110,7 +119,7 @@ export function AyahsRange({
 
                 setAyahs(loadedAyahs);
                 setLoadingAyahs(false);
-                onLoadRef.current?.(); // Call onLoad when ayahs are ready
+                onLoadRef.current?.();
             } catch (err) {
                 console.error("Error loading ayahs:", err);
                 setError(`Failed to load ayahs ${err}`);
