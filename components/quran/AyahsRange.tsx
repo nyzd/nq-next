@@ -37,7 +37,7 @@ export function AyahsRange({
     const [ayahs, setAyahs] = useState<AyahType[]>([]);
     const [translations, setTranslations] =
         useState<PaginatedAyahTranslationList>();
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loadingAyahs, setLoadingAyahs] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [visibleAyahs, setVisibleAyahs] = useState<Set<number>>(new Set());
     const onLoadRef = useRef(onLoad);
@@ -68,7 +68,7 @@ export function AyahsRange({
     useEffect(() => {
         const selected_ayah = selected.ayahUUID ?? undefined;
         if (!selected_ayah) return;
-        if (loading) return; // Don't scroll while loading
+        if (loadingAyahs) return; // Don't scroll while loading ayahs
 
         // Check if the selected ayah is in the current range
         const ayahInRange = ayahs.some((ayah) => ayah.uuid === selected_ayah);
@@ -93,53 +93,70 @@ export function AyahsRange({
         // Start after page jump completes (100ms) + some buffer (200ms)
         const id = window.setTimeout(tryScroll, 300);
         return () => window.clearTimeout(id);
-    }, [ayahs, selected.ayahUUID, loading]);
+    }, [ayahs, selected.ayahUUID, loadingAyahs]);
 
+    // Load ayahs - show immediately when ready
     useEffect(() => {
         let isActive = true;
 
-        const loadData = async () => {
+        const loadAyahs = async () => {
             try {
-                setLoading(true);
+                setLoadingAyahs(true);
                 setError(null);
 
-                const ayahsPromise = getAyahs(mushaf, limit, offset);
-                const translationsPromise = translationUuid
-                    ? getTranslationAyahs(translationUuid, limit, offset)
-                    : Promise.resolve(undefined);
-
-                const [loadedAyahs, loadedTranslations] = await Promise.all([
-                    ayahsPromise,
-                    translationsPromise,
-                ]);
+                const loadedAyahs = await getAyahs(mushaf, limit, offset);
 
                 if (!isActive) return;
 
                 setAyahs(loadedAyahs);
-                // Only set translations if a translation is selected
-                if (loadedTranslations) {
-                    setTranslations(loadedTranslations);
-                } else {
-                    setTranslations([]);
-                }
+                setLoadingAyahs(false);
+                onLoadRef.current?.(); // Call onLoad when ayahs are ready
             } catch (err) {
-                console.error("Error loading ayahs/translations:", err);
-                setError(`Failed to load ayahs or translations ${err}`);
-            } finally {
-                if (isActive) {
-                    setLoading(false);
-                    onLoadRef.current?.();
-                }
+                console.error("Error loading ayahs:", err);
+                setError(`Failed to load ayahs ${err}`);
+                setLoadingAyahs(false);
             }
         };
-        loadData();
+        loadAyahs();
 
         return () => {
             isActive = false;
         };
-    }, [offset, limit, mushaf, translationUuid]);
+    }, [offset, limit, mushaf]);
 
-    if (loading) {
+    // Load translations separately - show when ready
+    useEffect(() => {
+        if (!translationUuid) {
+            setTranslations(undefined);
+            return;
+        }
+
+        let isActive = true;
+
+        const loadTranslations = async () => {
+            try {
+                const loadedTranslations = await getTranslationAyahs(
+                    translationUuid,
+                    limit,
+                    offset
+                );
+
+                if (!isActive) return;
+
+                setTranslations(loadedTranslations);
+            } catch (err) {
+                console.error("Error loading translations:", err);
+                // Don't set error for translations, just log it
+            }
+        };
+        loadTranslations();
+
+        return () => {
+            isActive = false;
+        };
+    }, [offset, limit, translationUuid]);
+
+    if (loadingAyahs) {
         return (
             <div className="flex flex-col gap-4">
                 <Skeleton className="h-[60px] w-[622px] rounded-md" />
@@ -212,6 +229,9 @@ export function AyahsRange({
                                                         ayah.uuid
                                                     ] = el;
                                                 }}
+                                                translationRtl={
+                                                    selected.translationRtl
+                                                }
                                                 mushafOptions={mushafOptions}
                                                 selected={
                                                     ayah.uuid ===
