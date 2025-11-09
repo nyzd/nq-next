@@ -16,12 +16,14 @@ interface FindPopupProps {
     surahs: Surah[];
     takhtitsAyahsBreakers: AyahBreakersResponse[];
     onButtonClicked: (surah_num: number, ayah_num: number) => void;
+    onClose?: () => void;
 }
 
 export function FindPopup({
     surahs,
     takhtitsAyahsBreakers,
     onButtonClicked,
+    onClose,
 }: FindPopupProps) {
     const breakers: AyahBreakersResponse[] = useMemo(
         () => [
@@ -397,9 +399,10 @@ export function FindPopup({
             </div>
             <div>
                 <Button
-                    onClick={() =>
-                        onButtonClicked(currentSurah || 1, currentAyah || 1)
-                    }
+                    onClick={() => {
+                        onButtonClicked(currentSurah || 1, currentAyah || 1);
+                        onClose?.();
+                    }}
                 >
                     Find
                 </Button>

@@ -73,7 +73,7 @@ export function QuranPage({
     }
 
     return (
-        <Card className="py-0">
+        <Card className="py-0 bg-none">
             <FindBar
                 takhtitsAyahsBreakers={takhtitsAyahsBreakers}
                 surahs={surahs}
