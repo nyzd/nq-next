@@ -34,8 +34,8 @@ export const Ayah = forwardRef<HTMLDivElement, AyahProps>(
                 id={id}
                 onClick={onClick}
                 className={cn(
-                    "flex flex-col gap-3 p-5 hover:bg-neutral-800 rounded-md transition-all",
-                    selected && "bg-neutral-800"
+                    "flex flex-col gap-3 p-5 hover:bg-neutral-800/50 rounded-md transition-all",
+                    selected && "bg-neutral-800/50"
                 )}
             >
                 <div dir="rtl" className="text-2xl">

@@ -109,7 +109,7 @@ export function FindBar({
                 onClick={() => setIsOpen(true)}
                 variant="default"
                 data-find-bar="true"
-                className="z-50 max-w-full sticky top-20 bg-neutral-800/50 backdrop-blur supports-backdrop-filter:bg-neutral-800/50 cursor-pointer rounded-full"
+                className="z-50 max-w-full sticky top-20 bg-neutral-800 backdrop-blur supports-backdrop-filter:bg-neutral-800 cursor-pointer rounded-full"
             >
                 <ItemContent>
                     <ItemTitle className="w-full flex flex-row items-center justify-between gap-0.5">
