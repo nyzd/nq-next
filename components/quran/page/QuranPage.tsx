@@ -6,7 +6,7 @@ import { AyahsRange } from "../AyahsRange";
 import { useSelected } from "@/contexts/selectedsContext";
 import { useMushafOptions } from "@/contexts/mushafOptionsContext";
 import { Card, CardContent } from "@/components/ui/card";
-import { useEffect, useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 import { FindBar } from "@/components/FindBar";
 import { getTranslations } from "@/app/actions/getTranslations";
 
@@ -44,9 +44,38 @@ export function QuranPage({
     const [visible, setVisible] = useState<string>(
         takhtitsAyahsBreakers[page.offset].uuid || ""
     );
+    const [mounted, setMounted] = useState(false);
+
+    const setMountedEffect = useEffectEvent(() => setMounted(true));
+
+    // Ensure we're on the client side before checking localStorage
+    useEffect(() => {
+        setMountedEffect();
+    }, []);
 
     useEffect(() => {
-        if (!selected.translationUUID || selected.translationUUID === "UUID") {
+        if (!mounted) return;
+        const stored =
+            typeof window !== "undefined"
+                ? localStorage.getItem("selected")
+                : null;
+
+        let hasStoredTranslation = false;
+        if (stored) {
+            try {
+                const parsed = JSON.parse(stored);
+                hasStoredTranslation =
+                    parsed?.translationUUID &&
+                    parsed.translationUUID !== "UUID" &&
+                    parsed.translationUUID !== "";
+            } catch (e) {
+                // If parsing fails, treat as no stored value
+            }
+        }
+        if (
+            !hasStoredTranslation &&
+            (!selected.translationUUID || selected.translationUUID === "UUID")
+        ) {
             getTranslations("hafs", 100, 0, "en").then((res) => {
                 setSelected((prev) => ({
                     ...prev,
@@ -54,7 +83,7 @@ export function QuranPage({
                 }));
             });
         }
-    }, [selected.translationUUID]);
+    }, [selected.translationUUID, mounted, setSelected]);
 
     if (!page) {
         return (
