@@ -37,7 +37,7 @@ export function MushafClient({
             jumpToIndex={selectedAyahIndex}
             stopNewRenders={loadingInProgress}
             newChildRendered={() => setLoadingInProgress(true)}
-            className="flex flex-col gap-5 max-w-2xl"
+            className="flex flex-col gap-5 max-w-3xl"
         >
             {calculated_pages.map((page, index) => (
                 <QuranPage

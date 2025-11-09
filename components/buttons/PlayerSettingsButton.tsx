@@ -38,7 +38,7 @@ export function PlayerSettingsButton() {
                     <Settings className="h-4 w-4" />
                 </Button>
             </SheetTrigger>
-            <SheetContent side="bottom" className="h-[400px]">
+            <SheetContent side="bottom" className="h-[400px] flex pl-52 pr-52">
                 <SheetHeader>
                     <SheetTitle>Settings</SheetTitle>
                 </SheetHeader>
