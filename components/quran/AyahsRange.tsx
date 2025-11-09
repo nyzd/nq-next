@@ -40,6 +40,12 @@ export function AyahsRange({
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [visibleAyahs, setVisibleAyahs] = useState<Set<number>>(new Set());
+    const onLoadRef = useRef(onLoad);
+
+    // Keep the ref updated with the latest callback
+    useEffect(() => {
+        onLoadRef.current = onLoad;
+    }, [onLoad]);
 
     useEffect(() => {
         const first = Math.min(...visibleAyahs.keys());
@@ -58,29 +64,36 @@ export function AyahsRange({
         }));
     };
 
-    useEffect(() => {
-        const selected_ayah = selected.ayahUUID ?? undefined;
-        if (selected_ayah && ayahsRefs.current[selected_ayah]) {
-            ayahsRefs.current[selected_ayah].scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-            });
-        }
-    }, [selected.ayahUUID]);
-
-    // After ayahs render/update, try scrolling to the selected ayah again
+    // Scroll to selected ayah when it changes
     useEffect(() => {
         const selected_ayah = selected.ayahUUID ?? undefined;
         if (!selected_ayah) return;
-        // Defer to next tick to ensure refs are attached
-        const id = window.setTimeout(() => {
+        if (loading) return; // Don't scroll while loading
+
+        // Check if the selected ayah is in the current range
+        const ayahInRange = ayahs.some((ayah) => ayah.uuid === selected_ayah);
+        if (!ayahInRange) return; // Ayah not in current range, page jump will handle it
+
+        // Wait for page jump to complete (RenderByScroll uses 100ms timeout)
+        // Then wait a bit more for DOM to settle, then try scrolling
+        let retries = 0;
+        const maxRetries = 20; // Increased retries
+        const tryScroll = () => {
             const el = ayahsRefs.current[selected_ayah];
             if (el) {
-                el.scrollIntoView({ behavior: "smooth", block: "start" });
+                // Use requestAnimationFrame to ensure DOM is ready
+                requestAnimationFrame(() => {
+                    el.scrollIntoView({ behavior: "smooth", block: "start" });
+                });
+            } else if (retries < maxRetries) {
+                retries++;
+                setTimeout(tryScroll, 100); // Increased delay between retries
             }
-        }, 0);
+        };
+        // Start after page jump completes (100ms) + some buffer (200ms)
+        const id = window.setTimeout(tryScroll, 300);
         return () => window.clearTimeout(id);
-    }, [ayahs, selected.ayahUUID]);
+    }, [ayahs, selected.ayahUUID, loading]);
 
     useEffect(() => {
         let isActive = true;
@@ -115,7 +128,7 @@ export function AyahsRange({
             } finally {
                 if (isActive) {
                     setLoading(false);
-                    onLoad?.();
+                    onLoadRef.current?.();
                 }
             }
         };
@@ -124,7 +137,7 @@ export function AyahsRange({
         return () => {
             isActive = false;
         };
-    }, [offset, limit, mushaf, translationUuid, onLoad]);
+    }, [offset, limit, mushaf, translationUuid]);
 
     if (loading) {
         return (

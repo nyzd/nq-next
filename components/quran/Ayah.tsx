@@ -1,4 +1,4 @@
-import { Ref } from "react";
+import { forwardRef } from "react";
 import { MushafOptions } from "@/contexts/mushafOptionsContext";
 import { cn } from "@/lib/utils";
 
@@ -12,19 +12,19 @@ export interface AyahProps {
     mushafOptions?: MushafOptions;
     translationRtl?: boolean;
     onClick?: () => void;
-    ref?: Ref<HTMLDivElement>;
 }
 
-export function Ayah({
+export const Ayah = forwardRef<HTMLDivElement, AyahProps>(({
     words,
     id,
     translationText,
     translationRtl,
     onClick,
     selected,
-}: AyahProps) {
+}, ref) => {
     return (
         <div
+            ref={ref}
             id={id}
             onClick={onClick}
             className={cn(
@@ -40,4 +40,6 @@ export function Ayah({
             <div dir={translationRtl ? "rtl" : "ltr"}>{translationText}</div>
         </div>
     );
-}
+});
+
+Ayah.displayName = "Ayah";
