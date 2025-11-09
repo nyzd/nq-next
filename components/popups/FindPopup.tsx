@@ -279,7 +279,7 @@ export function FindPopup({
     return (
         <>
             <h3>By Surah</h3>
-            <div>
+            <div className="flex flex-row gap-5">
                 <Select
                     onValueChange={(value) => {
                         handleSurahSelect(+value);
@@ -333,7 +333,7 @@ export function FindPopup({
                 </Select>
             </div>
             <h3>By Juz/Hizb/Ruku</h3>
-            <div>
+            <div className="flex flex-row gap-5">
                 <Select
                     value={currentJuz?.toString() || ""}
                     disabled={juzData.length === 0}

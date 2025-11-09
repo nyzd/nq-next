@@ -2,13 +2,12 @@
 
 import { AyahBreakersResponse, Surah } from "@ntq/sdk";
 import { AyahsRange } from "../AyahsRange";
-// import { FindBar } from "./FindBar";
 import { useSelected } from "@/contexts/selectedsContext";
 import { useMushafOptions } from "@/contexts/mushafOptionsContext";
-import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useEffectEvent, useState } from "react";
 import { FindBar } from "@/components/FindBar";
 import { getTranslations } from "@/app/actions/getTranslations";
+import { Separator } from "@/components/ui/separator";
 
 interface AyahRange {
     offset: number;
@@ -102,7 +101,7 @@ export function QuranPage({
     }
 
     return (
-        <Card className="py-0 bg-none">
+        <div className="py-0">
             <FindBar
                 takhtitsAyahsBreakers={takhtitsAyahsBreakers}
                 surahs={surahs}
@@ -111,7 +110,8 @@ export function QuranPage({
                     setSelected((prev) => ({ ...prev, ayahUUID: uuid }))
                 }
             />
-            <CardContent>
+            <Separator className="my-6" />
+            <div>
                 <AyahsRange
                     offset={page?.offset ?? 0}
                     limit={page?.limit ?? 0}
@@ -123,7 +123,7 @@ export function QuranPage({
                         setVisible((prev) => (prev !== uuid ? uuid : prev));
                     }}
                 />
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     );
 }

@@ -17,7 +17,15 @@ export interface AyahProps {
 
 export const Ayah = forwardRef<HTMLDivElement, AyahProps>(
     (
-        { words, id, translationText, translationRtl, onClick, selected },
+        {
+            words,
+            id,
+            translationText,
+            translationRtl,
+            onClick,
+            selected,
+            number,
+        },
         ref
     ) => {
         return (
@@ -30,12 +38,16 @@ export const Ayah = forwardRef<HTMLDivElement, AyahProps>(
                     selected && "bg-neutral-800"
                 )}
             >
-                <div dir="rtl">
+                <div dir="rtl" className="text-2xl">
                     {words.map((w, i) => (
                         <span key={i}>{w} </span>
                     ))}
+                    ({number})
                 </div>
-                <div dir={translationRtl ? "rtl" : "ltr"}>
+                <div
+                    dir={translationRtl ? "rtl" : "ltr"}
+                    className="opacity-85"
+                >
                     {translationText ?? (
                         <Skeleton className="h-[30px] w-[300px] rounded-md" />
                     )}
