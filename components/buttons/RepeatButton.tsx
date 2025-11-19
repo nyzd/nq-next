@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "../ui/button";
 import { Repeat2 } from "lucide-react";
+import { Symbol } from "@yakad/symbols";
 
 type SkipType = "intro" | "verse" | "chorus" | "bridge" | "outro";
 export function RepeatButton() {
@@ -25,14 +26,12 @@ export function RepeatButton() {
             <PopoverTrigger asChild>
                 <Button
                     variant={skipModeOn ? "default" : "ghost"}
-                    size="icon"
-                    className="h-8 w-8"
-                    onClick={() => setSkipModeOn((prev) => !prev)}
+                    size="icon-lg"
                     onContextMenu={(e) => {
                         e.preventDefault();
                     }}
                 >
-                    <Repeat2 className="h-4 w-4" />
+                    <Symbol icon="repeat" />
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-44" align="center" side="top">

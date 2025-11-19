@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Symbol } from "@yakad/symbols";
 
 export function PlayerSettingsButton() {
     const [selectedReciter, setSelectedReciter] = useState("");
@@ -34,8 +35,8 @@ export function PlayerSettingsButton() {
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <Settings className="h-4 w-4" />
+                <Button variant="ghost" size="icon-lg">
+                    <Symbol icon="tune" />
                 </Button>
             </SheetTrigger>
             <SheetContent side="bottom" className="h-[400px] flex pl-52 pr-52">

@@ -7,28 +7,32 @@ import { Play, Pause } from "lucide-react";
 import { PlayBackButton } from "./buttons/PlayBackButton";
 import { RepeatButton } from "./buttons/RepeatButton";
 import { PlayerSettingsButton } from "./buttons/PlayerSettingsButton";
+import { Symbol } from "@yakad/symbols";
 
 export function Player() {
     const [isPlaying, setIsPlaying] = useState(false);
     return (
-        <footer className="sticky bottom-0 left-0 right-0 border-t bg-background/65 backdrop-blur supports-[backdrop-filter]:bg-background/65">
-            <div className="flex items-center gap-2 h-20 justify-center">
+        <footer className="sticky bottom-0 left-0 right-0 border-t bg-background/65 backdrop-blur supports-[backdrop-filter]:bg-background/65 z-50">
+            <div className="flex items-center gap-12 p-3.5 justify-center">
                 <PlayerSettingsButton />
                 <PlayBackButton />
                 <Button
                     variant="default"
-                    size="icon"
-                    className="h-9 w-9"
+                    size="icon-lg"
                     onClick={() => setIsPlaying(!isPlaying)}
                 >
                     {isPlaying ? (
-                        <Pause className="h-5 w-5" />
+                        <Symbol icon="pause" filled />
                     ) : (
-                        <Play className="h-5 w-5" />
+                        <Symbol icon="play_arrow" filled />
                     )}
                 </Button>
 
                 <RepeatButton />
+
+                <Button size="icon-lg" variant="ghost">
+                    <Symbol icon="fullscreen" />
+                </Button>
             </div>
         </footer>
     );
