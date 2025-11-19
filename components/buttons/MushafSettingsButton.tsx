@@ -20,6 +20,7 @@ import { Button } from "../ui/button";
 import { useMushafOptions } from "@/contexts/mushafOptionsContext";
 import { SelectTranslation } from "../inputs/SelectTranslation";
 import { PaginatedTranslationListList } from "@ntq/sdk";
+import { Symbol } from "@yakad/symbols";
 
 export function MushafSettingsButton({
     translations,
@@ -35,7 +36,7 @@ export function MushafSettingsButton({
         <Sheet>
             <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" aria-label="Settings">
-                    <Settings className="h-6 w-6" />
+                    <Symbol icon="settings" />
                 </Button>
             </SheetTrigger>
             <SheetContent className="overflow-y-auto">

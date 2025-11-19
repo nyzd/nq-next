@@ -1,44 +1,55 @@
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
-import { Gauge } from "lucide-react";
+import { IconCode, Symbol } from "@yakad/symbols";
+
+type SpeedOption = {
+    value: number;
+    label: string;
+    icon: string;
+};
+
+const speedOptions: SpeedOption[] = [
+    { value: 0.5, label: "Slow", icon: "speed_0_5x" },
+    { value: 1, label: "Normal", icon: "1x_mobiledata" },
+    { value: 1.25, label: "Medium", icon: "speed_1_25" },
+    { value: 1.5, label: "Fast", icon: "speed_1_5x" },
+    { value: 1.75, label: "Very fast", icon: "speed_1_75" },
+    { value: 2, label: "Super fast", icon: "speed_2x" },
+];
 
 export function PlayBackButton() {
     const [playbackSpeed, setPlaybackSpeed] = useState(1);
-    const speedOptions = [
-        [0.5, "Slow"],
-        [1, "Normal"],
-        [1.25, "Medium"],
-        [1.5, "Fast"],
-        [1.75, "Very fast"],
-        [2, "Super fast"],
-    ];
+    const currentIcon: IconCode =
+        (speedOptions.find((option) => option.value === playbackSpeed)
+            ?.icon as IconCode) ?? "speed";
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <Gauge className="h-10 w-10" />
+                <Button
+                    variant={playbackSpeed === 1 ? "ghost" : "default"}
+                    size="icon-lg"
+                >
+                    <Symbol icon={currentIcon} />
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-40" align="center" side="top">
                 <div className="space-y-2">
                     <h4 className="font-medium text-sm">Playback Speed</h4>
                     <div className="grid gap-1">
-                        {speedOptions.map(([speed, desc]) => (
+                        {speedOptions.map(({ value, label }) => (
                             <Button
-                                key={speed}
+                                key={value}
                                 variant={
-                                    playbackSpeed === speed
+                                    playbackSpeed === value
                                         ? "default"
                                         : "ghost"
                                 }
                                 size="sm"
                                 className="justify-start"
-                                onClick={() =>
-                                    setPlaybackSpeed(speed as number)
-                                }
+                                onClick={() => setPlaybackSpeed(value)}
                             >
-                                {speed}x<p>{desc}</p>
+                                {value}x<p>{label}</p>
                             </Button>
                         ))}
                     </div>
