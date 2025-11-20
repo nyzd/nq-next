@@ -3,7 +3,7 @@
 import { createLocalStorageContext } from "@yakad/lib";
 
 export type PlayBackRate = 0.5 | 1 | 1.25 | 1.5 | 1.75 | 2;
-export type RepeatRange = "surah" | "juz" | "hizb" | "ruku" | "page";
+export type RepeatRange = "ayah" | "surah" | "juz" | "hizb" | "ruku" | "page";
 
 interface Options {
     playing: boolean;
