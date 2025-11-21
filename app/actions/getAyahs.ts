@@ -2,14 +2,15 @@
 
 import { Ayah, ayahsList } from "@ntq/sdk";
 
-export async function getAyahs(mushaf: string, limit: number, offset: number = 0): Promise<Ayah[]> {
+export async function getAyahs(mushaf: string, limit: number, offset: number = 0, text_format:string="text"): Promise<Ayah[]> {
     const response = await ayahsList({
         params: {
             mushaf: mushaf,
         },
         query: {
             limit: limit,
-            offset: offset
+            offset: offset,
+            text_format: text_format
         }
     });
 

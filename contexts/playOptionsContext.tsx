@@ -14,6 +14,7 @@ interface Options {
     repeatMode: "off" | "range" | "ayah";
     repeatRange: RepeatRange;
     autoScroll: boolean;
+    loading: boolean;
 }
 
 const defaultOptions: Options = {
@@ -25,6 +26,7 @@ const defaultOptions: Options = {
     repeatMode: "off",
     repeatRange: "surah",
     autoScroll: true,
+    loading: false,
 };
 
 const [PlayOptionsProvider, usePlayOptions] =

@@ -113,7 +113,12 @@ export function AyahsRange({
                 setLoadingAyahs(true);
                 setError(null);
 
-                const loadedAyahs = await getAyahs(mushaf, limit, offset);
+                const loadedAyahs = await getAyahs(
+                    mushaf,
+                    limit,
+                    offset,
+                    "word"
+                );
 
                 if (!isActive) return;
 
@@ -231,7 +236,12 @@ export function AyahsRange({
                                         >
                                             <Ayah
                                                 number={1}
-                                                words={ayah.text.split(" ")}
+                                                words={
+                                                    ayah.text as unknown as {
+                                                        uuid: string;
+                                                        text: string;
+                                                    }[]
+                                                }
                                                 id={`ayah-${ayah.uuid}`}
                                                 ref={(el) => {
                                                     ayahsRefs.current[
@@ -273,8 +283,13 @@ export function AyahsRange({
                                 }}
                                 id={`ayah-${ayah.uuid}`}
                                 number={ayah.number}
-                                words={ayah.text.split(" ")}
-                                translationText={translations?.[index]?.text}
+                                words={
+                                    ayah.text as unknown as {
+                                        uuid: string;
+                                        text: string;
+                                    }[]
+                                }
+                                translationText={translations?.[index].text}
                                 translationRtl={selected.translationRtl}
                                 mushafOptions={mushafOptions}
                                 sajdah={ayah.sajdah || "none"}

@@ -45,8 +45,10 @@ export default function RootLayout({
                 >
                     <PlayOptionsProvider>
                         <MushafOptionsProvider>
-                            <SelectedProvider>{children}</SelectedProvider>
-                            <Audio />
+                            <SelectedProvider>
+                                {children}
+                                <Audio />
+                            </SelectedProvider>
                         </MushafOptionsProvider>
                     </PlayOptionsProvider>
                 </ThemeProvider>

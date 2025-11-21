@@ -1,6 +1,6 @@
 "use server";
 
-import { PaginatedRecitationListList, recitationsList } from "@ntq/sdk";
+import { PaginatedRecitationListList, recitationsList, recitationsRetrieve, RecitationsRetrieveResponse } from "@ntq/sdk";
 
 export async function getRecitations(
     mushaf: "hafs",
@@ -12,4 +12,12 @@ export async function getRecitations(
     if (!response.data) throw Error("Error when Getting recitations list");
 
     return response.data;
+}
+
+export async function getRecitation(uuid: string): Promise<RecitationsRetrieveResponse>{
+    const response = await recitationsRetrieve({path:{uuid: uuid}});
+
+    if (!response.data) throw Error(`Error when Getting recitation ${uuid}, ${response.data}, ${response.status}`);
+
+    return response.data; 
 }
