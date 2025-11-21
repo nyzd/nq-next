@@ -1,8 +1,13 @@
-'use server';
+"use server";
 
 import { Ayah, ayahsList } from "@ntq/sdk";
 
-export async function getAyahs(mushaf: string, limit: number, offset: number = 0, text_format:string="text"): Promise<Ayah[]> {
+export async function getAyahs(
+    mushaf: string,
+    limit: number,
+    offset: number = 0,
+    text_format: string = "text"
+): Promise<Ayah[]> {
     const response = await ayahsList({
         params: {
             mushaf: mushaf,
@@ -10,16 +15,24 @@ export async function getAyahs(mushaf: string, limit: number, offset: number = 0
         query: {
             limit: limit,
             offset: offset,
-            text_format: text_format
-        }
+            text_format: text_format,
+        } as any,
     });
 
-    if (!response.data) throw Error(`Error when getting Ayahs list, status: ${response.status}, msg: ${response.data}, res: ${response}`);
+    if (!response.data)
+        throw Error(
+            `Error when getting Ayahs list, status: ${response.status}, msg: ${response.data}, res: ${response}`
+        );
 
     return response.data;
 }
 
-export async function getAyahsBySurah(mushaf: string, surahUuid: string, limit: number = 1, offset: number = 0): Promise<Ayah[]> {
+export async function getAyahsBySurah(
+    mushaf: string,
+    surahUuid: string,
+    limit: number = 1,
+    offset: number = 0
+): Promise<Ayah[]> {
     const response = await ayahsList({
         params: {
             mushaf: mushaf,
@@ -27,11 +40,14 @@ export async function getAyahsBySurah(mushaf: string, surahUuid: string, limit: 
         query: {
             surah_uuid: surahUuid,
             limit: limit,
-            offset: offset
-        }
+            offset: offset,
+        },
     });
 
-    if (!response.data) throw Error(`Error when Ayahs list by surah, status: ${response.status}, msg: ${response.data}`);
+    if (!response.data)
+        throw Error(
+            `Error when Ayahs list by surah, status: ${response.status}, msg: ${response.data}`
+        );
 
     return response.data;
 }
