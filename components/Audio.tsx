@@ -26,6 +26,8 @@ export function Audio(
     const [currentSurah, setCurrentSurah] = useState<SurahDetail>();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [surahAyahs, setSurahAyahs] = useState<any[]>([]);
+    // Track the last ayah UUID set by the timeupdate handler to avoid loops
+    const lastAyahFromTimeUpdate = useRef<string | undefined>(undefined);
 
     const timestampToSeconds = (timestamp: string): number => {
         const [hours, minutes, seconds] = timestamp.split(":").map(Number);
@@ -57,6 +59,8 @@ export function Audio(
                     );
                     setWordsTimestamps(recitationData.words_timestamps);
                     setAyahsTimestamps(recitationData.ayahs_timestamps || []);
+                    // Reset the ref when recitation changes
+                    lastAyahFromTimeUpdate.current = undefined;
 
                     const surahUuid =
                         recitationData.recitation_surahs[0].surah_uuid;
@@ -161,6 +165,11 @@ export function Audio(
         const handleTimeUpdate = () => {
             const currentTime = audio.currentTime;
 
+            setPlayOptions((prev) => ({
+                ...prev,
+                progress: (audio.currentTime / audio.duration) * 100,
+            }));
+
             let ayahIndex = 0;
 
             for (let i = 0; i < ayahsTimestamps.length; i++) {
@@ -173,9 +182,11 @@ export function Audio(
             }
 
             if (ayahIndex < surahAyahs.length && surahAyahs[ayahIndex]) {
+                const newAyahUUID = surahAyahs[ayahIndex].uuid;
+                lastAyahFromTimeUpdate.current = newAyahUUID;
                 setSelected((prev) => ({
                     ...prev,
-                    ayahUUID: surahAyahs[ayahIndex].uuid,
+                    ayahUUID: newAyahUUID,
                 }));
             }
         };
@@ -187,7 +198,51 @@ export function Audio(
         };
     }, [ayahsTimestamps, surahAyahs, setSelected]);
 
-    // Update playback rate when playBackRate changes
+    // Jump to ayah timestamp when selected ayah changes
+    useEffect(() => {
+        if (
+            !audioRef.current ||
+            !selected.ayahUUID ||
+            ayahsTimestamps.length === 0 ||
+            surahAyahs.length === 0 ||
+            !recitationFileUrl
+        ) {
+            return;
+        }
+
+        if (lastAyahFromTimeUpdate.current === selected.ayahUUID) {
+            return;
+        }
+
+        const ayahIndex = surahAyahs.findIndex(
+            (ayah) => ayah.uuid === selected.ayahUUID
+        );
+
+        if (ayahIndex === -1) {
+            return;
+        }
+
+        if (ayahIndex > 0 && ayahIndex - 1 >= ayahsTimestamps.length) {
+            return;
+        }
+
+        const targetTimestamp =
+            ayahIndex === 0
+                ? 0
+                : timestampToSeconds(ayahsTimestamps[ayahIndex - 1]);
+
+        const audio = audioRef.current;
+
+        if (audio.readyState >= 2) {
+            const timeDifference = Math.abs(
+                audio.currentTime - targetTimestamp
+            );
+            if (timeDifference > 0.5) {
+                audio.currentTime = targetTimestamp;
+            }
+        }
+    }, [selected.ayahUUID, ayahsTimestamps, surahAyahs, recitationFileUrl]);
+
     useEffect(() => {
         if (!audioRef.current) return;
         audioRef.current.playbackRate = playBackActive ? playBackRate : 1;
