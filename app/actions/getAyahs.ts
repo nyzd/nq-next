@@ -6,7 +6,6 @@ export async function getAyahs(
     mushaf: string,
     limit: number,
     offset: number = 0,
-    text_format: string = "text"
 ): Promise<Ayah[]> {
     const response = await ayahsList({
         params: {
@@ -15,8 +14,7 @@ export async function getAyahs(
         query: {
             limit: limit,
             offset: offset,
-            text_format: text_format,
-        } as any,
+        },
     });
 
     if (!response.data)
