@@ -113,12 +113,7 @@ export function AyahsRange({
                 setLoadingAyahs(true);
                 setError(null);
 
-                const loadedAyahs = await getAyahs(
-                    mushaf,
-                    limit,
-                    offset,
-                    "word"
-                );
+                const loadedAyahs = await getAyahs(mushaf, limit, offset);
 
                 if (!isActive) return;
 
