@@ -6,7 +6,7 @@ import { Skeleton } from "../ui/skeleton";
 import { useSelected } from "@/contexts/selectedsContext";
 
 export interface AyahProps {
-    words: { uuid: string; text: string }[];
+    words: string[];
     id: string;
     number: number;
     sajdah?: string;
@@ -113,14 +113,7 @@ export const Ayah = forwardRef<HTMLDivElement, AyahProps>(
                     className={cn(arabicFontSizeClass, textAlignClass)}
                 >
                     {words.map((w, i) => (
-                        <span
-                            key={i}
-                            ref={(el) => {
-                                wordsRefs.current[w.uuid] = el;
-                            }}
-                        >
-                            {w.text}{" "}
-                        </span>
+                        <span key={i}>{w} </span>
                     ))}
                     ({number})
                 </div>
