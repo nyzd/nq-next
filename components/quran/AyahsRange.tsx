@@ -231,12 +231,7 @@ export function AyahsRange({
                                         >
                                             <Ayah
                                                 number={1}
-                                                words={
-                                                    ayah.text as unknown as {
-                                                        uuid: string;
-                                                        text: string;
-                                                    }[]
-                                                }
+                                                words={ayah.text.split(" ")}
                                                 id={`ayah-${ayah.uuid}`}
                                                 ref={(el) => {
                                                     ayahsRefs.current[
@@ -278,12 +273,7 @@ export function AyahsRange({
                                 }}
                                 id={`ayah-${ayah.uuid}`}
                                 number={ayah.number}
-                                words={
-                                    ayah.text as unknown as {
-                                        uuid: string;
-                                        text: string;
-                                    }[]
-                                }
+                                words={ayah.text.split(" ")}
                                 translationText={translations?.[index].text}
                                 translationRtl={selected.translationRtl}
                                 mushafOptions={mushafOptions}

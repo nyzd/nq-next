@@ -1,12 +1,11 @@
 "use client";
-import { forwardRef, useEffect, useRef } from "react";
+import { forwardRef } from "react";
 import { MushafOptions } from "@/contexts/mushafOptionsContext";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "../ui/skeleton";
-import { useSelected } from "@/contexts/selectedsContext";
 
 export interface AyahProps {
-    words: { uuid: string; text: string }[];
+    words: string[];
     id: string;
     number: number;
     sajdah?: string;
@@ -31,7 +30,6 @@ export const Ayah = forwardRef<HTMLDivElement, AyahProps>(
         },
         ref
     ) => {
-        const [select] = useSelected();
         const arabicFontSizeClass = {
             small: "text-xl",
             medium: "text-2xl",
@@ -55,49 +53,6 @@ export const Ayah = forwardRef<HTMLDivElement, AyahProps>(
                 : translationRtl
                 ? "text-right"
                 : "text-left";
-        const wordsRefs = useRef<Record<string, HTMLSpanElement | null>>({});
-
-        useEffect(() => {
-            const selected_ayah = select.wordUUID ?? undefined;
-            if (!selected_ayah) return;
-
-            const ayahInRange = words.some(
-                (word) => word.uuid === selected_ayah
-            );
-            if (!ayahInRange) return;
-
-            let retries = 0;
-            const maxRetries = 20;
-            const tryScroll = () => {
-                const el = wordsRefs.current[selected_ayah];
-                if (el) {
-                    requestAnimationFrame(() => {
-                        const findBar = document.querySelector(
-                            '[data-find-bar="true"]'
-                        );
-                        const findBarHeight = findBar
-                            ? findBar.getBoundingClientRect().height
-                            : 0;
-                        const offset = 80 + findBarHeight + 20;
-
-                        const elementTop =
-                            el.getBoundingClientRect().top + window.scrollY;
-                        const targetScroll = elementTop - offset;
-
-                        window.scrollTo({
-                            top: targetScroll,
-                            behavior: "smooth",
-                        });
-                    });
-                } else if (retries < maxRetries) {
-                    retries++;
-                    setTimeout(tryScroll, 100);
-                }
-            };
-            const id = window.setTimeout(tryScroll, 300);
-            return () => window.clearTimeout(id);
-        }, [words, select.wordUUID]);
-
         return (
             <div
                 ref={ref}
@@ -113,14 +68,7 @@ export const Ayah = forwardRef<HTMLDivElement, AyahProps>(
                     className={cn(arabicFontSizeClass, textAlignClass)}
                 >
                     {words.map((w, i) => (
-                        <span
-                            key={i}
-                            ref={(el) => {
-                                wordsRefs.current[w.uuid] = el;
-                            }}
-                        >
-                            {w.text}{" "}
-                        </span>
+                        <span key={i}>{w} </span>
                     ))}
                     ({number})
                 </div>
