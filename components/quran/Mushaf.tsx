@@ -65,6 +65,7 @@ export default async function Mushaf({ name }: { name: string }) {
                 calculated_pages={calculated_pages}
                 takhtitsAyahsBreakers={takhtitsAyahsBreakers}
                 surahs={surahs}
+                mushaf={name}
             />
         </div>
     );

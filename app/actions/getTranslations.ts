@@ -7,14 +7,14 @@ import {
 } from "@ntq/sdk";
 
 export async function getTranslations(
-    mushaf: "hafs" = "hafs",
+    mushaf: string = "hafs",
     limit: number,
     offset: number = 0,
     language: TranslationsListData["query"]["language"] | null = null
 ) {
     const response = await translationsList({
         query: {
-            mushaf: mushaf,
+            mushaf: mushaf as "hafs", // TODO: fix
             limit: limit,
             offset: offset,
             language: language || undefined,

@@ -13,6 +13,8 @@ import {
 import { Item, ItemContent, ItemTitle } from "./ui/item";
 import { AyahBreakersResponse, Surah } from "@ntq/sdk";
 import { FindPopup } from "./popups/FindPopup";
+import MakkahOutlinedIcon from "./quran/MakkahOutlinedIcon";
+import MadinehOutlinedIcon from "./quran/MadinehOutlinedIcon";
 
 interface FindBarProps {
     takhtitsAyahsBreakers: AyahBreakersResponse[];
@@ -114,24 +116,31 @@ export function FindBar({
             >
                 <ItemContent>
                     <ItemTitle className="w-full flex flex-row items-center justify-between gap-0.5">
-                        <h3>
-                            {"SurahName" + ": " + currentAyahInfo.ayahnumber}
-                        </h3>
-                        <h3 color="onSurfaceVariantColor">
-                            {"Juz" +
-                                currentAyahInfo.juz +
-                                " - " +
-                                "Page" +
-                                currentAyahInfo.pagenumber}
-                        </h3>
-                        <Symbol
-                            icon="menu_book"
-                            style={
-                                currentAyahInfo.pagenumber % 2 !== 0
-                                    ? undefined
-                                    : { transform: "scaleX(-1)" }
-                            }
-                        />
+                        <div className="flex flex-row items-center gap-3">
+                            <MadinehOutlinedIcon />
+                            <h3>
+                                {currentAyahInfo.surahName +
+                                    ": " +
+                                    currentAyahInfo.ayahnumber}
+                            </h3>
+                        </div>
+                        <div className="flex flex-row items-center gap-3">
+                            <h3 color="onSurfaceVariantColor">
+                                {"Juz" +
+                                    currentAyahInfo.juz +
+                                    " - " +
+                                    "Page" +
+                                    currentAyahInfo.pagenumber}
+                            </h3>
+                            <Symbol
+                                icon="menu_book"
+                                style={
+                                    currentAyahInfo.pagenumber % 2 !== 0
+                                        ? undefined
+                                        : { transform: "scaleX(-1)" }
+                                }
+                            />
+                        </div>
                     </ItemTitle>
                 </ItemContent>
             </Item>
