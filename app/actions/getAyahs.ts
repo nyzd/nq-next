@@ -1,6 +1,7 @@
 "use server";
 
 import { Ayah, ayahsList } from "@ntq/sdk";
+import { notFound } from "next/navigation";
 
 export async function getAyahs(
     mushaf: string,

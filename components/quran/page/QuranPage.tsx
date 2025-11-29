@@ -75,14 +75,14 @@ export function QuranPage({
             !hasStoredTranslation &&
             (!selected.translationUUID || selected.translationUUID === "UUID")
         ) {
-            getTranslations("hafs", 100, 0, "en").then((res) => {
+            getTranslations(mushaf, 100, 0, "en").then((res) => {
                 setSelected((prev) => ({
                     ...prev,
                     translationUUID: res[0].uuid,
                 }));
             });
         }
-    }, [selected.translationUUID, mounted, setSelected]);
+    }, [selected.translationUUID, mounted, setSelected, mushaf]);
 
     if (!page) {
         return (
@@ -110,7 +110,6 @@ export function QuranPage({
                     setSelected((prev) => ({ ...prev, ayahUUID: uuid }))
                 }
             />
-            <Separator className="my-6" />
             <div>
                 <AyahsRange
                     offset={page?.offset ?? 0}

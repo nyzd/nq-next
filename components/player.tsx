@@ -7,9 +7,9 @@ import { Symbol } from "@yakad/symbols";
 import { getRecitations } from "@/app/actions/getRecitation";
 import PlayerProgress from "./PlayerProgress";
 
-export async function Player() {
+export async function Player({ mushaf }: { mushaf: string }) {
     "use cache";
-    const recitationsResponse = await getRecitations("hafs", 200, 0);
+    const recitationsResponse = await getRecitations(mushaf as "hafs", 200, 0);
     const recitations = recitationsResponse ?? [];
 
     return (

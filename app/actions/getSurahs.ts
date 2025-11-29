@@ -1,6 +1,7 @@
 "use server";
 
 import { surahsList, surahsRetrieve } from "@ntq/sdk";
+import { notFound } from "next/navigation";
 
 export async function getSurahs(mushaf: "hafs" | string) {
     // TODO: remove as

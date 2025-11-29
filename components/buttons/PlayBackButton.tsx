@@ -1,7 +1,9 @@
 "use client";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { useState } from "react";
+import { Popover, PopoverContent, PopoverAnchor } from "../ui/popover";
 import { Button } from "../ui/button";
 import { IconCode, Symbol } from "@yakad/symbols";
+import { useOnRightClick } from "@yakad/use-interactions";
 import {
     usePlayOptions,
     type PlayBackRate,
@@ -24,30 +26,56 @@ const speedOptions: SpeedOption[] = [
 
 export function PlayBackButton() {
     const [options, setOptions] = usePlayOptions();
+    const [popoverOpen, setPopoverOpen] = useState(false);
     const playbackSpeed = options.playBackRate ?? 1;
+    const playBackActive = options.playBackActive ?? false;
 
     const currentIcon: IconCode =
         (speedOptions.find((option) => option.value === playbackSpeed)
             ?.icon as IconCode) ?? "speed";
 
     const handleSpeedChange = (value: PlayBackRate) => {
+        if (value === 1) {
+            setOptions((prev) => ({
+                ...prev,
+                playBackActive: false,
+            }));
+        } else {
+            setOptions((prev) => ({
+                ...prev,
+                playBackActive: true,
+                playBackRate: value,
+            }));
+        }
+    };
+
+    // Toggle activation/deactivation on left-click
+    const handleLeftClick = () => {
         setOptions((prev) => ({
             ...prev,
-            playBackActive: value === 1 ? false : true,
-            playBackRate: value,
+            playBackActive: !prev.playBackActive,
         }));
     };
 
+    // Handle right-click to open dropdown
+    const buttonRef = useOnRightClick<HTMLButtonElement>((e) => {
+        e.preventDefault();
+        setPopoverOpen(true);
+    });
+
     return (
-        <Popover>
-            <PopoverTrigger asChild>
+        <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+            <PopoverAnchor asChild>
                 <Button
-                    variant={playbackSpeed === 1 ? "ghost" : "secondary"}
+                    ref={buttonRef}
+                    variant={playBackActive ? "secondary" : "ghost"}
                     size="icon-lg"
+                    onClick={handleLeftClick}
+                    onContextMenu={(e) => e.preventDefault()}
                 >
                     <Symbol icon={currentIcon} />
                 </Button>
-            </PopoverTrigger>
+            </PopoverAnchor>
             <PopoverContent className="w-40" align="center" side="top">
                 <div className="space-y-2">
                     <h4 className="font-medium text-sm">Playback Speed</h4>
@@ -62,7 +90,10 @@ export function PlayBackButton() {
                                 }
                                 size="sm"
                                 className="justify-start"
-                                onClick={() => handleSpeedChange(value)}
+                                onClick={() => {
+                                    handleSpeedChange(value);
+                                    setPopoverOpen(false);
+                                }}
                             >
                                 <Symbol icon={icon} />
                                 {label}
