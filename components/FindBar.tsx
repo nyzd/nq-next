@@ -1,5 +1,7 @@
 "use client";
 
+import { Symbol } from "@yakad/symbols";
+
 import { useEffect, useMemo, useState } from "react";
 import {
     Dialog,
@@ -10,8 +12,9 @@ import {
 } from "@/components/ui/dialog";
 import { Item, ItemContent, ItemTitle } from "./ui/item";
 import { AyahBreakersResponse, Surah } from "@ntq/sdk";
-import { ListIndentIncrease } from "lucide-react";
 import { FindPopup } from "./popups/FindPopup";
+import MakkahOutlinedIcon from "./quran/MakkahOutlinedIcon";
+import MadinehOutlinedIcon from "./quran/MadinehOutlinedIcon";
 
 interface FindBarProps {
     takhtitsAyahsBreakers: AyahBreakersResponse[];
@@ -109,28 +112,35 @@ export function FindBar({
                 onClick={() => setIsOpen(true)}
                 variant="default"
                 data-find-bar="true"
-                className="z-50 max-w-full sticky top-20 bg-neutral-800/50 backdrop-blur supports-backdrop-filter:bg-neutral-800/50 cursor-pointer rounded-full"
+                className="p-2 pl-6 pr-6 z-10 max-w-full sticky top-20 bg-neutral-800/80 backdrop-blur supports-backdrop-filter:bg-neutral-800/80 cursor-pointer rounded-full"
             >
                 <ItemContent>
                     <ItemTitle className="w-full flex flex-row items-center justify-between gap-0.5">
-                        <h3>
-                            {"SurahName" + ": " + currentAyahInfo.ayahnumber}
-                        </h3>
-                        <h3 color="onSurfaceVariantColor">
-                            {"Juz" +
-                                currentAyahInfo.juz +
-                                " - " +
-                                "Page" +
-                                currentAyahInfo.pagenumber}
-                        </h3>
-                        <ListIndentIncrease
-                            strokeWidth={2}
-                            style={
-                                currentAyahInfo.pagenumber % 2 === 0
-                                    ? undefined
-                                    : { transform: "scaleX(-1)" }
-                            }
-                        />
+                        <div className="flex flex-row items-center gap-3">
+                            <MadinehOutlinedIcon />
+                            <h3>
+                                {currentAyahInfo.surahName +
+                                    ": " +
+                                    currentAyahInfo.ayahnumber}
+                            </h3>
+                        </div>
+                        <div className="flex flex-row items-center gap-3">
+                            <h3 color="onSurfaceVariantColor">
+                                {"Juz" +
+                                    currentAyahInfo.juz +
+                                    " - " +
+                                    "Page" +
+                                    currentAyahInfo.pagenumber}
+                            </h3>
+                            <Symbol
+                                icon="menu_book"
+                                style={
+                                    currentAyahInfo.pagenumber % 2 !== 0
+                                        ? undefined
+                                        : { transform: "scaleX(-1)" }
+                                }
+                            />
+                        </div>
                     </ItemTitle>
                 </ItemContent>
             </Item>

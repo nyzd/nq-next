@@ -7,7 +7,6 @@ import { useMushafOptions } from "@/contexts/mushafOptionsContext";
 import { useEffect, useEffectEvent, useState } from "react";
 import { FindBar } from "@/components/FindBar";
 import { getTranslations } from "@/app/actions/getTranslations";
-import { Separator } from "@/components/ui/separator";
 
 interface AyahRange {
     offset: number;
@@ -75,14 +74,14 @@ export function QuranPage({
             !hasStoredTranslation &&
             (!selected.translationUUID || selected.translationUUID === "UUID")
         ) {
-            getTranslations("hafs", 100, 0, "en").then((res) => {
+            getTranslations(mushaf, 100, 0, "en").then((res) => {
                 setSelected((prev) => ({
                     ...prev,
                     translationUUID: res[0].uuid,
                 }));
             });
         }
-    }, [selected.translationUUID, mounted, setSelected]);
+    }, [selected.translationUUID, mounted, setSelected, mushaf]);
 
     if (!page) {
         return (
@@ -101,7 +100,7 @@ export function QuranPage({
     }
 
     return (
-        <div className="py-0">
+        <div className="py-0 flex flex-col gap-6">
             <FindBar
                 takhtitsAyahsBreakers={takhtitsAyahsBreakers}
                 surahs={surahs}
@@ -110,7 +109,6 @@ export function QuranPage({
                     setSelected((prev) => ({ ...prev, ayahUUID: uuid }))
                 }
             />
-            <Separator className="my-6" />
             <div>
                 <AyahsRange
                     offset={page?.offset ?? 0}

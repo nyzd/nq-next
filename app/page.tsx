@@ -5,7 +5,7 @@ export default function Home() {
     return (
         <div className="flex items-center justify-center p-10">
             <Button asChild>
-                <Link href="/quran">Go to Quran page!</Link>
+                <Link href="/mushaf/hafs">Go to Mushaf page! (hafs)</Link>
             </Button>
         </div>
     );

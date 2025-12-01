@@ -274,7 +274,7 @@ export function AyahsRange({
                                 id={`ayah-${ayah.uuid}`}
                                 number={ayah.number}
                                 words={ayah.text.split(" ")}
-                                translationText={translations?.[index]?.text}
+                                translationText={translations?.[index].text}
                                 translationRtl={selected.translationRtl}
                                 mushafOptions={mushafOptions}
                                 sajdah={ayah.sajdah || "none"}

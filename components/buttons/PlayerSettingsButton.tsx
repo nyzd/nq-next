@@ -1,8 +1,6 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Settings } from "lucide-react";
 import {
     Sheet,
     SheetContent,
@@ -10,32 +8,70 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import { Symbol } from "@yakad/symbols";
+import { SelectRecitation } from "@/components/inputs/SelectRecitation";
+import { useSelected } from "@/contexts/selectedsContext";
+import { RecitationList } from "@ntq/sdk";
+import { useEffect, useEffectEvent, useState } from "react";
 
-export function PlayerSettingsButton() {
-    const [selectedReciter, setSelectedReciter] = useState("");
-    const [autoScroll, setAutoScroll] = useState(false);
-    const [recitationsLoading, setRecitationsLoading] = useState(false);
+type PlayerSettingsButtonProps = {
+    recitations: RecitationList[];
+    loading?: boolean;
+};
 
-    const recitations = [
-        { reciter_account_uuid: "Reciter 1 - Murattal" },
-        { reciter_account_uuid: "Reciter 2 - Mujawwad" },
-        { reciter_account_uuid: "Reciter 3 - Murattal" },
-    ];
+export function PlayerSettingsButton({
+    recitations,
+}: PlayerSettingsButtonProps) {
+    const [selected, setSelected] = useSelected();
+    const [mounted, setMounted] = useState(false);
+
+    const setMountedEffect = useEffectEvent(() => setMounted(true));
+
+    // Ensure we're on the client side before checking localStorage
+    useEffect(() => {
+        setMountedEffect();
+    }, []);
+
+    useEffect(() => {
+        if (!mounted) return;
+        if (recitations.length === 0) return;
+
+        const stored =
+            typeof window !== "undefined"
+                ? localStorage.getItem("selected")
+                : null;
+
+        let hasStoredRecitation = false;
+        if (stored) {
+            try {
+                const parsed = JSON.parse(stored);
+                hasStoredRecitation =
+                    parsed?.recitationUUID &&
+                    parsed.recitationUUID !== "UUID" &&
+                    parsed.recitationUUID !== "";
+            } catch (e) {
+                // If parsing fails, treat as no stored value
+            }
+        }
+        if (
+            !hasStoredRecitation &&
+            (!selected.recitationUUID || selected.recitationUUID === "UUID")
+        ) {
+            setSelected((prev) => ({
+                ...prev,
+                recitationUUID: recitations[0].uuid,
+            }));
+        }
+    }, [selected.recitationUUID, recitations, setSelected, mounted]);
+
+    const onRecitationChanged = (val: string) =>
+        setSelected((prev) => ({ ...prev, recitationUUID: val }));
 
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <Settings className="h-4 w-4" />
+                <Button variant="ghost" size="icon-lg">
+                    <Symbol icon="tune" />
                 </Button>
             </SheetTrigger>
             <SheetContent side="bottom" className="h-[400px] flex pl-52 pr-52">
@@ -43,58 +79,11 @@ export function PlayerSettingsButton() {
                     <SheetTitle>Settings</SheetTitle>
                 </SheetHeader>
                 <div className="p-4 space-y-6">
-                    <div className="space-y-3">
-                        <h3 className="text-lg font-semibold">Recite</h3>
-                        {recitations.length <= 0 && !recitationsLoading ? (
-                            <p className="text-sm text-muted-foreground">
-                                No recitation Found!
-                            </p>
-                        ) : !recitationsLoading ? (
-                            <Select
-                                value={selectedReciter}
-                                onValueChange={setSelectedReciter}
-                            >
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Reciter - Reciting type" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {recitations.map((recitation, index) => (
-                                        <SelectItem
-                                            key={index}
-                                            value={
-                                                recitation.reciter_account_uuid
-                                            }
-                                        >
-                                            {recitation.reciter_account_uuid}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        ) : (
-                            <div className="flex items-center justify-center py-4">
-                                <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="space-y-3">
-                        <h3 className="text-lg font-semibold">Auto scroll</h3>
-                        <div className="flex items-center space-x-2">
-                            <Checkbox
-                                id="autoScroll"
-                                checked={autoScroll}
-                                onCheckedChange={(checked) =>
-                                    setAutoScroll(checked as boolean)
-                                }
-                            />
-                            <Label
-                                htmlFor="autoScroll"
-                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            >
-                                Auto scroll
-                            </Label>
-                        </div>
-                    </div>
+                    <SelectRecitation
+                        recitations={recitations}
+                        selectedReciter={selected.recitationUUID}
+                        onValueChange={onRecitationChanged}
+                    />
                 </div>
             </SheetContent>
         </Sheet>

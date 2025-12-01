@@ -1,34 +1,29 @@
-"use client";
-
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Play, Pause } from "lucide-react";
-
 import { PlayBackButton } from "./buttons/PlayBackButton";
 import { RepeatButton } from "./buttons/RepeatButton";
 import { PlayerSettingsButton } from "./buttons/PlayerSettingsButton";
+import { PlayButton } from "./buttons/PlayButton";
+import { Button } from "@/components/ui/button";
+import { Symbol } from "@yakad/symbols";
+import { getRecitations } from "@/app/actions/getRecitation";
+import PlayerProgress from "./PlayerProgress";
 
-export function Player() {
-    const [isPlaying, setIsPlaying] = useState(false);
+export async function Player({ mushaf }: { mushaf: string }) {
+    "use cache";
+    const recitationsResponse = await getRecitations(mushaf as "hafs", 200, 0);
+    const recitations = recitationsResponse ?? [];
+
     return (
-        <footer className="sticky bottom-0 left-0 right-0 border-t bg-background/65 backdrop-blur supports-[backdrop-filter]:bg-background/65">
-            <div className="flex items-center gap-2 h-20 justify-center">
-                <PlayerSettingsButton />
+        <footer className="sticky bottom-0 left-0 right-0 border-t bg-background/65 backdrop-blur supports-[backdrop-filter]:bg-background/65 z-50">
+            <PlayerProgress />
+            <div className="flex items-center gap-12 p-3.5 justify-center">
+                <PlayerSettingsButton recitations={recitations} />
                 <PlayBackButton />
-                <Button
-                    variant="default"
-                    size="icon"
-                    className="h-9 w-9"
-                    onClick={() => setIsPlaying(!isPlaying)}
-                >
-                    {isPlaying ? (
-                        <Pause className="h-5 w-5" />
-                    ) : (
-                        <Play className="h-5 w-5" />
-                    )}
-                </Button>
-
+                <PlayButton />
                 <RepeatButton />
+
+                <Button size="icon-lg" variant="ghost">
+                    <Symbol icon="fullscreen" />
+                </Button>
             </div>
         </footer>
     );

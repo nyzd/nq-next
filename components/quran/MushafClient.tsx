@@ -11,10 +11,12 @@ export function MushafClient({
     calculated_pages,
     takhtitsAyahsBreakers,
     surahs,
+    mushaf,
 }: {
     calculated_pages: CalculatedPage[];
     takhtitsAyahsBreakers: AyahBreakersResponse[];
     surahs: Surah[];
+    mushaf: string;
 }) {
     const [selected] = useSelected();
     const [loadingInProgress, setLoadingInProgress] = useState(true);
@@ -37,7 +39,7 @@ export function MushafClient({
             jumpToIndex={selectedAyahIndex}
             stopNewRenders={loadingInProgress}
             newChildRendered={() => setLoadingInProgress(true)}
-            className="flex flex-col gap-5 max-w-3xl"
+            className="flex flex-col gap-5 max-w-4xl"
         >
             {calculated_pages.map((page, index) => (
                 <QuranPage
@@ -45,7 +47,7 @@ export function MushafClient({
                     onLoad={() => setLoadingInProgress(false)}
                     index={0}
                     page={page}
-                    mushaf="hafs"
+                    mushaf={mushaf}
                     takhtitsAyahsBreakers={takhtitsAyahsBreakers}
                     surahs={surahs}
                 />
