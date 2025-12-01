@@ -56,7 +56,7 @@ export function MushafSettingsButton({
                                     Font
                                 </Label>
                                 <Select
-                                    value={"Bruh"}
+                                    value={"tahoma"}
                                     onValueChange={(value) =>
                                         handleSelectChange("arabicFont", value)
                                     }

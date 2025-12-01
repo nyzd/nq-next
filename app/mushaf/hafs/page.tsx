@@ -8,21 +8,15 @@ function FallbackSkeleton() {
     return <Skeleton className="w-full h-16 rounded-none" />;
 }
 
-export default async function QuranPage({
-    params,
-}: {
-    params: Promise<{ name: string }>;
-}) {
-    const { name } = await params;
-
+export default async function QuranPage() {
     return (
         <>
             <Suspense fallback={<FallbackSkeleton />}>
                 <Header />
             </Suspense>
-            <Main mushaf={name} />
+            <Main mushaf={"hafs"} />
             <Suspense fallback={<FallbackSkeleton />}>
-                <Player mushaf={name} />
+                <Player mushaf={"hafs"} />
             </Suspense>
         </>
     );

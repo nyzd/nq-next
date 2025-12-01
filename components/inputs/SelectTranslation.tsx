@@ -15,6 +15,7 @@ import {
 } from "../ui/command";
 import { cn } from "@/lib/utils";
 import { useMemo, useState } from "react";
+import { LangCodeType, langNameInEnglish } from "@yakad/lib";
 
 export function SelectTranslation({
     translations,
@@ -63,6 +64,11 @@ export function SelectTranslation({
         return map;
     }, [translations]);
 
+    const languages = useMemo(
+        () => Array.from(new Set(translations.map((t) => t.language))),
+        [translations]
+    );
+
     const selectedTranslation = translations.find(
         (translation) =>
             `${translation.language}:${translation.uuid}:${translation.language_is_rtl}` ===
@@ -84,12 +90,10 @@ export function SelectTranslation({
                         aria-expanded={languageOpen}
                         className="justify-between"
                     >
-                        {value
-                            ? translations.find(
-                                  (translation) =>
-                                      `${translation.language}:${translation.uuid}:${translation.language_is_rtl}` ===
-                                      value
-                              )?.language
+                        {selectedLanguage
+                            ? langNameInEnglish(
+                                  selectedLanguage as LangCodeType
+                              )
                             : "Select Translation..."}
                         <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
@@ -100,32 +104,48 @@ export function SelectTranslation({
                         <CommandList>
                             <CommandEmpty>No languages found!</CommandEmpty>
                             <CommandGroup heading="Languages">
-                                {translations.map((translation, index) => (
-                                    <CommandItem
-                                        key={index}
-                                        value={`${translation.language}:${translation.uuid}:${translation.language_is_rtl}`}
-                                        onSelect={(currentValue) => {
-                                            handleSelectChange(currentValue);
-                                            setValue(
-                                                currentValue === value
-                                                    ? ""
-                                                    : currentValue
-                                            );
-                                            setLanguageOpen(false);
-                                        }}
-                                    >
-                                        <CheckIcon
-                                            className={cn(
-                                                "mr-2 h-4 w-4",
-                                                value ===
-                                                    `${translation.language}:${translation.uuid}:${translation.language_is_rtl}`
-                                                    ? "opacity-100"
-                                                    : "opacity-0"
+                                {languages.map((language) => {
+                                    const translationsForLanguage =
+                                        translatorsByLanguage.get(language) ??
+                                        [];
+                                    const firstTranslation =
+                                        translationsForLanguage[0];
+
+                                    if (!firstTranslation) return null;
+
+                                    const itemValue = `${firstTranslation.language}:${firstTranslation.uuid}:${firstTranslation.language_is_rtl}`;
+
+                                    return (
+                                        <CommandItem
+                                            key={language}
+                                            value={itemValue}
+                                            onSelect={(currentValue) => {
+                                                handleSelectChange(
+                                                    currentValue
+                                                );
+                                                setValue(
+                                                    currentValue === value
+                                                        ? ""
+                                                        : currentValue
+                                                );
+                                                setLanguageOpen(false);
+                                            }}
+                                        >
+                                            <CheckIcon
+                                                className={cn(
+                                                    "mr-2 h-4 w-4",
+                                                    selectedLanguage ===
+                                                        language
+                                                        ? "opacity-100"
+                                                        : "opacity-0"
+                                                )}
+                                            />
+                                            {langNameInEnglish(
+                                                language as LangCodeType
                                             )}
-                                        />
-                                        {translation.language}
-                                    </CommandItem>
-                                ))}
+                                        </CommandItem>
+                                    );
+                                })}
                             </CommandGroup>
                         </CommandList>
                     </Command>
