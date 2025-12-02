@@ -8,7 +8,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { RecitationList } from "@ntq/sdk";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useEffectEvent, useMemo, useState } from "react";
 
 type SelectRecitationProps = {
     recitations: RecitationList[];
@@ -54,9 +54,13 @@ export function SelectRecitation({
         return "";
     });
 
+    const updateSelectedReciterName = useEffectEvent((name: string) =>
+        setSelectedReciterName(name)
+    );
+
     useEffect(() => {
         if (selectedRecitation) {
-            setSelectedReciterName(
+            updateSelectedReciterName(
                 selectedRecitation.reciter?.name || "Reciter name not found"
             );
         }
