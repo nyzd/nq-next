@@ -112,7 +112,7 @@ export function FindBar({
                 onClick={() => setIsOpen(true)}
                 variant="default"
                 data-find-bar="true"
-                className="p-2 pl-6 pr-6 z-10 max-w-full sticky top-20 bg-neutral-800/80 backdrop-blur supports-backdrop-filter:bg-neutral-800/80 cursor-pointer rounded-full"
+                className="p-2 pl-6 pr-6 z-10 max-w-full sticky top-20 bg-muted/80 backdrop-blur supports-backdrop-filter:bg-muted/80 cursor-pointer rounded-full"
             >
                 <ItemContent>
                     <ItemTitle className="w-full flex flex-row items-center justify-between gap-0.5">

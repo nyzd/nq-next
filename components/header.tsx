@@ -12,7 +12,7 @@ export async function Header() {
                 <Symbol icon="arrow_back" />
             </Button>
 
-            <h1 className="text-xl font-semibold text-white">Natiq</h1>
+            <h1 className="text-xl font-semibold">Natiq</h1>
 
             <MushafSettingsButton translations={translations} />
         </header>

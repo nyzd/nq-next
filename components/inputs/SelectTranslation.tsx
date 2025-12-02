@@ -16,6 +16,8 @@ import {
 import { cn } from "@/lib/utils";
 import { useMemo, useState } from "react";
 import { LangCodeType, langNameInEnglish } from "@yakad/lib";
+import { ButtonGroup } from "../ui/button-group";
+import { Symbol } from "@yakad/symbols";
 
 export function SelectTranslation({
     translations,
@@ -82,132 +84,139 @@ export function SelectTranslation({
 
     return (
         <div className="flex flex-row gap-3">
-            <Popover open={languageOpen} onOpenChange={setLanguageOpen}>
-                <PopoverTrigger asChild>
-                    <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={languageOpen}
-                        className="justify-between"
-                    >
-                        {selectedLanguage
-                            ? langNameInEnglish(
-                                  selectedLanguage as LangCodeType
-                              )
-                            : "Select Translation..."}
-                        <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="p-0">
-                    <Command>
-                        <CommandInput placeholder="Search language..." />
-                        <CommandList>
-                            <CommandEmpty>No languages found!</CommandEmpty>
-                            <CommandGroup heading="Languages">
-                                {languages.map((language) => {
-                                    const translationsForLanguage =
-                                        translatorsByLanguage.get(language) ??
-                                        [];
-                                    const firstTranslation =
-                                        translationsForLanguage[0];
+            <ButtonGroup>
+                <Popover open={languageOpen} onOpenChange={setLanguageOpen}>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={languageOpen}
+                            className="justify-between"
+                        >
+                            <Symbol icon="language" />
+                            {selectedLanguage
+                                ? langNameInEnglish(
+                                      selectedLanguage as LangCodeType
+                                  )
+                                : "Select Translation..."}
+                            <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="p-0">
+                        <Command>
+                            <CommandInput placeholder="Search language..." />
+                            <CommandList>
+                                <CommandEmpty>No languages found!</CommandEmpty>
+                                <CommandGroup heading="Languages">
+                                    {languages.map((language) => {
+                                        const translationsForLanguage =
+                                            translatorsByLanguage.get(
+                                                language
+                                            ) ?? [];
+                                        const firstTranslation =
+                                            translationsForLanguage[0];
 
-                                    if (!firstTranslation) return null;
+                                        if (!firstTranslation) return null;
 
-                                    const itemValue = `${firstTranslation.language}:${firstTranslation.uuid}:${firstTranslation.language_is_rtl}`;
+                                        const itemValue = `${firstTranslation.language}:${firstTranslation.uuid}:${firstTranslation.language_is_rtl}`;
 
-                                    return (
-                                        <CommandItem
-                                            key={language}
-                                            value={itemValue}
-                                            onSelect={(currentValue) => {
-                                                handleSelectChange(
-                                                    currentValue
-                                                );
-                                                setValue(
-                                                    currentValue === value
-                                                        ? ""
-                                                        : currentValue
-                                                );
-                                                setLanguageOpen(false);
-                                            }}
-                                        >
-                                            <CheckIcon
-                                                className={cn(
-                                                    "mr-2 h-4 w-4",
-                                                    selectedLanguage ===
-                                                        language
-                                                        ? "opacity-100"
-                                                        : "opacity-0"
+                                        return (
+                                            <CommandItem
+                                                key={language}
+                                                value={itemValue}
+                                                onSelect={(currentValue) => {
+                                                    handleSelectChange(
+                                                        currentValue
+                                                    );
+                                                    setValue(
+                                                        currentValue === value
+                                                            ? ""
+                                                            : currentValue
+                                                    );
+                                                    setLanguageOpen(false);
+                                                }}
+                                            >
+                                                <CheckIcon
+                                                    className={cn(
+                                                        "mr-2 h-4 w-4",
+                                                        selectedLanguage ===
+                                                            language
+                                                            ? "opacity-100"
+                                                            : "opacity-0"
+                                                    )}
+                                                />
+                                                {langNameInEnglish(
+                                                    language as LangCodeType
                                                 )}
-                                            />
-                                            {langNameInEnglish(
-                                                language as LangCodeType
-                                            )}
-                                        </CommandItem>
-                                    );
-                                })}
-                            </CommandGroup>
-                        </CommandList>
-                    </Command>
-                </PopoverContent>
-            </Popover>
+                                            </CommandItem>
+                                        );
+                                    })}
+                                </CommandGroup>
+                            </CommandList>
+                        </Command>
+                    </PopoverContent>
+                </Popover>
 
-            {/* Translator selector */}
-            <Popover open={translatorOpen} onOpenChange={setTranslatorOpen}>
-                <PopoverTrigger asChild>
-                    <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={translatorOpen}
-                        className="justify-between"
-                    >
-                        {selectedTranslation
-                            ? getTranslatorName(selectedTranslation)
-                            : "Select Translator..."}
-                        <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[200px] p-0">
-                    <Command>
-                        <CommandInput placeholder="Search translator..." />
-                        <CommandList>
-                            <CommandEmpty>No translators found!</CommandEmpty>
-                            <CommandGroup heading="Translators">
-                                {translatorsForSelectedLanguage.map(
-                                    (translation, index) => (
-                                        <CommandItem
-                                            key={index}
-                                            value={`${translation.language}:${translation.uuid}:${translation.language_is_rtl}`}
-                                            onSelect={(currentValue) => {
-                                                handleSelectChange(
-                                                    currentValue
-                                                );
-                                                setValue(
-                                                    currentValue === value
-                                                        ? ""
-                                                        : currentValue
-                                                );
-                                                setTranslatorOpen(false);
-                                            }}
-                                        >
-                                            <CheckIcon
-                                                className={cn(
-                                                    "mr-2 h-4 w-4",
-                                                    value ===
-                                                        `${translation.language}:${translation.uuid}:${translation.language_is_rtl}`
-                                                        ? "opacity-100"
-                                                        : "opacity-0"
-                                                )}
-                                            />
-                                            {getTranslatorName(translation)}
-                                        </CommandItem>
-                                    )
-                                )}
-                            </CommandGroup>
-                        </CommandList>
-                    </Command>
-                </PopoverContent>
-            </Popover>
+                {/* Translator selector */}
+                <Popover open={translatorOpen} onOpenChange={setTranslatorOpen}>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={translatorOpen}
+                            className="justify-between"
+                        >
+                            <Symbol icon="person" />
+                            {selectedTranslation
+                                ? getTranslatorName(selectedTranslation)
+                                : "Select Translator..."}
+                            <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[200px] p-0">
+                        <Command>
+                            <CommandInput placeholder="Search translator..." />
+                            <CommandList>
+                                <CommandEmpty>
+                                    No translators found!
+                                </CommandEmpty>
+                                <CommandGroup heading="Translators">
+                                    {translatorsForSelectedLanguage.map(
+                                        (translation, index) => (
+                                            <CommandItem
+                                                key={index}
+                                                value={`${translation.language}:${translation.uuid}:${translation.language_is_rtl}`}
+                                                onSelect={(currentValue) => {
+                                                    handleSelectChange(
+                                                        currentValue
+                                                    );
+                                                    setValue(
+                                                        currentValue === value
+                                                            ? ""
+                                                            : currentValue
+                                                    );
+                                                    setTranslatorOpen(false);
+                                                }}
+                                            >
+                                                <CheckIcon
+                                                    className={cn(
+                                                        "mr-2 h-4 w-4",
+                                                        value ===
+                                                            `${translation.language}:${translation.uuid}:${translation.language_is_rtl}`
+                                                            ? "opacity-100"
+                                                            : "opacity-0"
+                                                    )}
+                                                />
+                                                {getTranslatorName(translation)}
+                                            </CommandItem>
+                                        )
+                                    )}
+                                </CommandGroup>
+                            </CommandList>
+                        </Command>
+                    </PopoverContent>
+                </Popover>
+            </ButtonGroup>
         </div>
     );
 }

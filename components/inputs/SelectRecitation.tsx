@@ -111,7 +111,7 @@ export function SelectRecitation({
                     No recitation Found!
                 </p>
             ) : (
-                <div className="flex flex-row gap-3">
+                <div className="flex flex-col gap-3">
                     <Select
                         value={effectiveSelectedRecitationUUID}
                         onValueChange={onValueChange}

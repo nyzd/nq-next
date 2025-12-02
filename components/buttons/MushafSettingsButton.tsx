@@ -7,7 +7,6 @@ import {
     SheetTrigger,
 } from "../ui/sheet";
 
-import { Moon, Palette, ZoomIn } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import {
     Select,
@@ -21,6 +20,9 @@ import { useMushafOptions } from "@/contexts/mushafOptionsContext";
 import { SelectTranslation } from "../inputs/SelectTranslation";
 import { PaginatedTranslationListList } from "@ntq/sdk";
 import { Symbol } from "@yakad/symbols";
+import { ChangeThemeButton } from "./ChangeThemeButton";
+import { useWindowSize } from "../useWindowSize";
+import { Separator } from "../ui/separator";
 
 export function MushafSettingsButton({
     translations,
@@ -28,6 +30,7 @@ export function MushafSettingsButton({
     translations: PaginatedTranslationListList;
 }) {
     const [mushafOptions, setMushafOptions] = useMushafOptions();
+    const [windowWidth] = useWindowSize();
 
     const handleSelectChange = (name: string, value: string) => {
         setMushafOptions((prev) => ({ ...prev, [name]: value }));
@@ -39,20 +42,26 @@ export function MushafSettingsButton({
                     <Symbol icon="settings" />
                 </Button>
             </SheetTrigger>
-            <SheetContent className="overflow-y-auto">
-                <SheetHeader>
+            <SheetContent
+                className="overflow-y-auto"
+                side={windowWidth <= 800 ? "bottom" : "right"}
+            >
+                <SheetHeader className="flex flex-row">
+                    <Symbol icon="settings" />
                     <SheetTitle>Settings</SheetTitle>
                 </SheetHeader>
 
                 <div className="space-y-6 p-7">
                     <div className="space-y-4">
                         <Label className="text-base font-semibold">
+                            <Symbol icon="match_case" />
                             Arabic Text
                         </Label>
 
                         <div className="grid grid-cols-3 gap-3">
                             <div className="space-y-2">
                                 <Label htmlFor="arabicFont" className="text-sm">
+                                    <Symbol icon="brand_family" />
                                     Font
                                 </Label>
                                 <Select
@@ -77,6 +86,7 @@ export function MushafSettingsButton({
                                     htmlFor="arabicFontSize"
                                     className="text-sm"
                                 >
+                                    <Symbol icon="format_size" />
                                     Font size
                                 </Label>
                                 <Select
@@ -107,6 +117,7 @@ export function MushafSettingsButton({
 
                             <div className="space-y-2">
                                 <Label htmlFor="textAlign" className="text-sm">
+                                    <Symbol icon="article" />
                                     Text align
                                 </Label>
                                 <Select
@@ -120,9 +131,11 @@ export function MushafSettingsButton({
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="normal">
+                                            <Symbol icon="format_align_right" />
                                             Normal
                                         </SelectItem>
                                         <SelectItem value="center">
+                                            <Symbol icon="format_align_center" />
                                             Center
                                         </SelectItem>
                                     </SelectContent>
@@ -131,18 +144,15 @@ export function MushafSettingsButton({
                         </div>
                     </div>
 
+                    <Separator />
+
                     <div className="space-y-4">
                         <Label className="text-base font-semibold">
+                            <Symbol icon="translate" />
                             Translate
                         </Label>
 
                         <SelectTranslation translations={translations} />
-
-                        <div className="space-y-2">
-                            <Label htmlFor="translation" className="text-sm">
-                                Translation
-                            </Label>
-                        </div>
 
                         <div className="space-y-2">
                             <Label
@@ -174,32 +184,13 @@ export function MushafSettingsButton({
                         </div>
                     </div>
 
+                    <Separator />
                     <div className="space-y-4">
-                        <Label className="text-base font-semibold">Theme</Label>
-
-                        <div className="grid grid-cols-3 gap-3">
-                            <Button
-                                variant="outline"
-                                className="flex flex-col items-center gap-2 h-auto py-4 bg-transparent"
-                            >
-                                <Moon className="h-5 w-5" />
-                                <span className="text-xs">Dark</span>
-                            </Button>
-                            <Button
-                                variant="outline"
-                                className="flex flex-col items-center gap-2 h-auto py-4 bg-transparent"
-                            >
-                                <Palette className="h-5 w-5" />
-                                <span className="text-xs">Color</span>
-                            </Button>
-                            <Button
-                                variant="outline"
-                                className="flex flex-col items-center gap-2 h-auto py-4 bg-transparent"
-                            >
-                                <ZoomIn className="h-5 w-5" />
-                                <span className="text-xs">Zoom</span>
-                            </Button>
-                        </div>
+                        <Label className="text-base font-semibold">
+                            <Symbol icon="colors" />
+                            Theme
+                        </Label>
+                        <ChangeThemeButton />
                     </div>
                 </div>
             </SheetContent>
