@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
     Sheet,
@@ -9,12 +8,11 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import { Symbol } from "@yakad/symbols";
 import { SelectRecitation } from "@/components/inputs/SelectRecitation";
 import { useSelected } from "@/contexts/selectedsContext";
 import { RecitationList } from "@ntq/sdk";
+import { useEffect, useEffectEvent, useState } from "react";
 
 type PlayerSettingsButtonProps = {
     recitations: RecitationList[];
@@ -24,8 +22,47 @@ type PlayerSettingsButtonProps = {
 export function PlayerSettingsButton({
     recitations,
 }: PlayerSettingsButtonProps) {
-    const [autoScroll, setAutoScroll] = useState(false);
     const [selected, setSelected] = useSelected();
+    const [mounted, setMounted] = useState(false);
+
+    const setMountedEffect = useEffectEvent(() => setMounted(true));
+
+    // Ensure we're on the client side before checking localStorage
+    useEffect(() => {
+        setMountedEffect();
+    }, []);
+
+    useEffect(() => {
+        if (!mounted) return;
+        if (recitations.length === 0) return;
+
+        const stored =
+            typeof window !== "undefined"
+                ? localStorage.getItem("selected")
+                : null;
+
+        let hasStoredRecitation = false;
+        if (stored) {
+            try {
+                const parsed = JSON.parse(stored);
+                hasStoredRecitation =
+                    parsed?.recitationUUID &&
+                    parsed.recitationUUID !== "UUID" &&
+                    parsed.recitationUUID !== "";
+            } catch (e) {
+                // If parsing fails, treat as no stored value
+            }
+        }
+        if (
+            !hasStoredRecitation &&
+            (!selected.recitationUUID || selected.recitationUUID === "UUID")
+        ) {
+            setSelected((prev) => ({
+                ...prev,
+                recitationUUID: recitations[0].uuid,
+            }));
+        }
+    }, [selected.recitationUUID, recitations, setSelected, mounted]);
 
     const onRecitationChanged = (val: string) =>
         setSelected((prev) => ({ ...prev, recitationUUID: val }));
@@ -47,25 +84,6 @@ export function PlayerSettingsButton({
                         selectedReciter={selected.recitationUUID}
                         onValueChange={onRecitationChanged}
                     />
-
-                    <div className="space-y-3">
-                        <h3 className="text-lg font-semibold">Auto scroll</h3>
-                        <div className="flex items-center space-x-2">
-                            <Checkbox
-                                id="autoScroll"
-                                checked={autoScroll}
-                                onCheckedChange={(checked) =>
-                                    setAutoScroll(checked as boolean)
-                                }
-                            />
-                            <Label
-                                htmlFor="autoScroll"
-                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            >
-                                Auto scroll
-                            </Label>
-                        </div>
-                    </div>
                 </div>
             </SheetContent>
         </Sheet>

@@ -7,7 +7,6 @@ import { useMushafOptions } from "@/contexts/mushafOptionsContext";
 import { useEffect, useEffectEvent, useState } from "react";
 import { FindBar } from "@/components/FindBar";
 import { getTranslations } from "@/app/actions/getTranslations";
-import { Separator } from "@/components/ui/separator";
 
 interface AyahRange {
     offset: number;
@@ -101,7 +100,7 @@ export function QuranPage({
     }
 
     return (
-        <div className="py-0">
+        <div className="py-0 flex flex-col gap-6">
             <FindBar
                 takhtitsAyahsBreakers={takhtitsAyahsBreakers}
                 surahs={surahs}
