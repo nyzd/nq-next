@@ -84,9 +84,9 @@ export function SelectTranslation({
 
     return (
         <div className="flex flex-row gap-3">
-            <ButtonGroup>
+            <ButtonGroup className="w-full justify-center">
                 <Popover open={languageOpen} onOpenChange={setLanguageOpen}>
-                    <PopoverTrigger asChild>
+                    <PopoverTrigger asChild className="w-auto">
                         <Button
                             variant="outline"
                             role="combobox"
