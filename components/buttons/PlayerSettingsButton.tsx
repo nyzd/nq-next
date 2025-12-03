@@ -13,6 +13,7 @@ import { SelectRecitation } from "@/components/inputs/SelectRecitation";
 import { useSelected } from "@/contexts/selectedsContext";
 import { RecitationList } from "@ntq/sdk";
 import { useEffect, useEffectEvent, useState } from "react";
+import { useWindowSize } from "../useWindowSize";
 
 type PlayerSettingsButtonProps = {
     recitations: RecitationList[];
@@ -24,6 +25,7 @@ export function PlayerSettingsButton({
 }: PlayerSettingsButtonProps) {
     const [selected, setSelected] = useSelected();
     const [mounted, setMounted] = useState(false);
+    const [windowWidth] = useWindowSize();
 
     const setMountedEffect = useEffectEvent(() => setMounted(true));
 
@@ -74,7 +76,10 @@ export function PlayerSettingsButton({
                     <Symbol icon="tune" />
                 </Button>
             </SheetTrigger>
-            <SheetContent side="bottom" className="h-[400px] flex pl-52 pr-52">
+            <SheetContent
+                className="flex"
+                side={windowWidth <= 800 ? "bottom" : "right"}
+            >
                 <SheetHeader>
                     <SheetTitle>Settings</SheetTitle>
                 </SheetHeader>

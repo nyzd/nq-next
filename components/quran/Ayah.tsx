@@ -56,8 +56,8 @@ export function Ayah({
             id={id}
             onClick={onClick}
             className={cn(
-                "flex flex-col gap-3 p-5 hover:bg-neutral-800/80 rounded-md transition-all cursor-pointer",
-                selected && "bg-neutral-800/50"
+                "flex flex-col gap-3 p-5 hover:bg-accent/80 rounded-md transition-all cursor-pointer",
+                selected && "bg-accent"
             )}
         >
             <div dir="rtl" className={cn(arabicFontSizeClass, textAlignClass)}>
