@@ -399,6 +399,7 @@ export function FindPopup({
             </div>
             <div>
                 <Button
+                    className="w-full"
                     onClick={() => {
                         onButtonClicked(currentSurah || 1, currentAyah || 1);
                         onClose?.();

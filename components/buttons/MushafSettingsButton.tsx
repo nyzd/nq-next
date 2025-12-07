@@ -58,7 +58,7 @@ export function MushafSettingsButton({
                             Arabic Text
                         </Label>
 
-                        <div className="grid grid-cols-3 gap-3">
+                        <div className="flex gap-2 justify-around">
                             <div className="space-y-2">
                                 <Label htmlFor="arabicFont" className="text-sm">
                                     <Symbol icon="brand_family" />
@@ -170,7 +170,10 @@ export function MushafSettingsButton({
                                     )
                                 }
                             >
-                                <SelectTrigger id="translationFontSize">
+                                <SelectTrigger
+                                    id="translationFontSize"
+                                    className="w-full"
+                                >
                                     <SelectValue placeholder="Translation Font size" />
                                 </SelectTrigger>
                                 <SelectContent>
