@@ -30,9 +30,9 @@ export function Ayah({
     ref,
 }: AyahProps) {
     const arabicFontSizeClass = {
-        small: "text-xl",
-        medium: "text-2xl",
-        large: "text-4xl",
+        small: "text-xl/9",
+        medium: "text-2xl/10",
+        large: "text-4xl/15",
     }[mushafOptions?.arabicFontSize ?? "medium"];
 
     const translationFontSizeClass = {
@@ -42,14 +42,14 @@ export function Ayah({
     }[mushafOptions?.translationFontSize ?? "medium"];
 
     const textAlignClass =
-        mushafOptions?.textAlign === "center" ? "text-center" : "text-right";
+        mushafOptions?.textAlign === "center" ? "text-justify [text-align-last:center]" : "text-right";
 
     const translationAlignClass =
         mushafOptions?.textAlign === "center"
-            ? "text-center"
+            ? "text-justify [text-align-last:center]"
             : translationRtl
-            ? "text-right"
-            : "text-left";
+                ? "text-right"
+                : "text-left";
     return (
         <div
             ref={ref}

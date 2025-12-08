@@ -1,6 +1,7 @@
 "use client";
-import { useRef } from "react";
+import { useRef, useCallback } from "react";
 import { getAyahs } from "@/app/actions/getAyahs";
+import { Button } from "../ui/button";
 import { Ayah as AyahType } from "@ntq/sdk";
 import { useEffect, useState } from "react";
 import { Ayah } from "./Ayah";
@@ -11,6 +12,13 @@ import { useSelected } from "@/contexts/selectedsContext";
 import { ActiveOnVisible } from "../activeOnVisible/ActiveOnVisible";
 import SurahHeader from "./SurahHeader";
 import { Skeleton } from "../ui/skeleton";
+import { AlertCircleIcon, CheckCircle2Icon, PopcornIcon, RefreshCcwIcon } from "lucide-react"
+import {
+    Alert,
+    AlertDescription,
+    AlertTitle,
+} from "@/components/ui/alert"
+
 
 interface AyahRangeProps {
     offset: number;
@@ -105,33 +113,36 @@ export function AyahsRange({
         return () => window.clearTimeout(id);
     }, [ayahs, selected.ayahUUID, loadingAyahs]);
 
+
+
+    const loadAyahs = useCallback(async (isActive: boolean) => {
+        try {
+            setLoadingAyahs(true);
+            setError(null);
+
+            const loadedAyahs = await getAyahs(mushaf, limit, offset);
+
+            if (!isActive) return;
+
+            setAyahs(loadedAyahs.data);
+            setLoadingAyahs(false);
+            onLoadRef.current?.();
+        } catch (err) {
+            console.error("Error loading ayahs:", err);
+            setError(`Failed to load ayahs ${err}`);
+            setLoadingAyahs(false);
+        }
+    }, [limit, mushaf, offset]);
+
     useEffect(() => {
         let isActive = true;
 
-        const loadAyahs = async () => {
-            try {
-                setLoadingAyahs(true);
-                setError(null);
-
-                const loadedAyahs = await getAyahs(mushaf, limit, offset);
-
-                if (!isActive) return;
-
-                setAyahs(loadedAyahs);
-                setLoadingAyahs(false);
-                onLoadRef.current?.();
-            } catch (err) {
-                console.error("Error loading ayahs:", err);
-                setError(`Failed to load ayahs ${err}`);
-                setLoadingAyahs(false);
-            }
-        };
-        loadAyahs();
+        loadAyahs(isActive);
 
         return () => {
             isActive = false;
         };
-    }, [offset, limit, mushaf]);
+    }, [offset, limit, mushaf, loadAyahs]);
 
     // Load translations separately - show when ready
     useEffect(() => {
@@ -180,7 +191,17 @@ export function AyahsRange({
     if (error) {
         return (
             <div className={className}>
-                <p style={{ color: "red" }}>{error}</p>
+                <Alert variant="destructive">
+                    <AlertCircleIcon />
+                    <AlertTitle>Unable to load Ayahs!</AlertTitle>
+                    <AlertDescription className="flex flex-col gap-3">
+                        <p style={{ color: "red" }}>{error}</p>
+                        <Button onClick={() => loadAyahs(true)} className="w-full">
+                            <RefreshCcwIcon />
+                            Reload
+                        </Button>
+                    </AlertDescription>
+                </Alert>
             </div>
         );
     }
@@ -216,7 +237,7 @@ export function AyahsRange({
                     {ayah.surah &&
                         (index === 0 ||
                             ayahs[index - 1]?.surah?.uuid !==
-                                ayah.surah.uuid) && (
+                            ayah.surah.uuid) && (
                             <SurahHeader
                                 surah={ayah.surah}
                                 bismillah={(surah) =>

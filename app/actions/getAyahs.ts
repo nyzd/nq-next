@@ -1,13 +1,12 @@
 "use server";
 
 import { Ayah, ayahsList } from "@ntq/sdk";
-import { notFound } from "next/navigation";
 
 export async function getAyahs(
     mushaf: string,
     limit: number,
     offset: number = 0,
-): Promise<Ayah[]> {
+): Promise<{ data: Ayah[], error: Error | undefined }> {
     const response = await ayahsList({
         params: {
             mushaf: mushaf,
@@ -19,11 +18,14 @@ export async function getAyahs(
     });
 
     if (!response.data)
-        throw Error(
-            `Error when getting Ayahs list, status: ${response.status}, msg: ${response.data}, res: ${response}`
-        );
+        return {
+            data: [],
+            error: new Error(
+                `Error when getting Ayahs list, status: ${response.status}, msg: ${response.data}, res: ${response}`
+            )
+        };
 
-    return response.data;
+    return { data: response.data, error: undefined };
 }
 
 export async function getAyahsBySurah(
