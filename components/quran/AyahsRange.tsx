@@ -113,8 +113,6 @@ export function AyahsRange({
         return () => window.clearTimeout(id);
     }, [ayahs, selected.ayahUUID, loadingAyahs]);
 
-
-
     const loadAyahs = useCallback(async (isActive: boolean) => {
         try {
             setLoadingAyahs(true);
