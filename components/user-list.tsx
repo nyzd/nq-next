@@ -16,7 +16,7 @@ export function UserList({ users, onSelect }: { users: User[], onSelect: (id: nu
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 className="text-2xl font-semibold tracking-tight">Recitations</h1>
-                    <p className="text-sm text-muted-foreground">Selecte your prefered reciter</p>
+                    <p className="text-sm text-muted-foreground">Select your prefered reciter</p>
                 </div>
             </div>
 
@@ -40,7 +40,7 @@ export function UserList({ users, onSelect }: { users: User[], onSelect: (id: nu
                                 <div className="relative">
                                     <Avatar className="h-10 w-10 border">
                                         <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.name} />
-                                        <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                                        <AvatarFallback>{user.name.charAt(0).toUpperCase()}</AvatarFallback>
                                     </Avatar>
                                 </div>
                                 <div className="flex flex-col">

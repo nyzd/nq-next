@@ -13,6 +13,9 @@ interface Options {
     playBackActive: boolean;
     repeatMode: "off" | "range" | "ayah";
     repeatRange: RepeatRange;
+    // Optional list of ayah UUIDs representing the current page's range.
+    // This is populated by the mushaf page component and used for page-repeat.
+    pageAyahUUIDs?: string[];
     autoScroll: boolean;
     loading: boolean;
     progress: number;
@@ -26,6 +29,7 @@ const defaultOptions: Options = {
     playBackRate: 1.5,
     repeatMode: "off",
     repeatRange: "surah",
+    pageAyahUUIDs: [],
     autoScroll: true,
     loading: false,
     progress: 0,

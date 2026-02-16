@@ -3,12 +3,14 @@ import { RepeatButton } from "./buttons/RepeatButton";
 import { PlayerSettingsButton } from "./buttons/PlayerSettingsButton";
 import { PlayButton } from "./buttons/PlayButton";
 import { Button } from "@/components/ui/button";
-import { Symbol } from "@yakad/symbols";
+import { Material } from "@yakad/symbols";
 import { getRecitations } from "@/app/actions/getRecitation";
 import PlayerProgress from "./PlayerProgress";
+import { PaginatedRecitationListList } from "@ntq/sdk";
 
 export async function Player({ mushaf }: { mushaf: string }) {
     "use cache";
+
     const recitationsResponse = await getRecitations(mushaf as "hafs", 200, 0);
     const recitations = recitationsResponse ?? [];
 
@@ -22,7 +24,7 @@ export async function Player({ mushaf }: { mushaf: string }) {
                 <RepeatButton />
 
                 <Button size="icon-lg" variant="ghost">
-                    <Symbol icon="fullscreen" />
+                    <Material icon="fullscreen" />
                 </Button>
             </div>
         </footer>

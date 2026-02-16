@@ -11,6 +11,7 @@ import {
     SelectValue,
 } from "../ui/select";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 interface FindPopupProps {
     surahs: Surah[];
@@ -281,22 +282,23 @@ export function FindPopup({
             <h3>By Surah</h3>
             <div className="flex flex-row gap-5">
                 <Select
+                    value={currentSurah?.toString() || ""}
                     onValueChange={(value) => {
                         handleSurahSelect(+value);
                     }}
                 >
-                    <SelectTrigger id="surah" className="w-[180px]">
+                    <SelectTrigger id="surah" className="w-45">
                         <SelectValue placeholder="Select Surah" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
                             <SelectLabel>Surahs</SelectLabel>
-                            {surahs.map((surah) => (
+                            {surahs.map((surah, index) => (
                                 <SelectItem
                                     key={surah.number}
                                     value={`${surah.number}`}
                                 >
-                                    {surah.names[0]?.name}
+                                    {index + 1}. {surah.names[0]?.name}
                                 </SelectItem>
                             ))}
                         </SelectGroup>

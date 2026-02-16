@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { MushafSettingsButton } from "./buttons/MushafSettingsButton";
 import { getTranslations } from "@/app/actions/getTranslations";
-import { Symbol } from "@yakad/symbols";
+import { Material } from "@yakad/symbols";
 
 export async function Header() {
     "use cache";
@@ -9,7 +9,7 @@ export async function Header() {
     return (
         <header className="z-50 sticky top-0 flex items-center justify-between  px-4 py-4 border-b bg-background/65 backdrop-blur supports-backdrop-filter:bg-background/65">
             <Button variant="ghost" size="icon" aria-label="Go back">
-                <Symbol icon="arrow_back" />
+                <Material icon="arrow_back" />
             </Button>
 
             <h1 className="text-xl font-semibold">Natiq</h1>

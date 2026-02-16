@@ -7,12 +7,18 @@ import {
     SheetHeader,
     SheetTitle,
     SheetTrigger,
+    SheetClose
 } from "@/components/ui/sheet";
-import { Symbol } from "@yakad/symbols";
+import {
+    Avatar,
+    AvatarImage,
+    AvatarFallback
+} from "@/components/ui/avatar";
+import { Material } from "@yakad/symbols";
 import { SelectRecitation } from "@/components/inputs/SelectRecitation";
 import { useSelected } from "@/contexts/selectedsContext";
 import { RecitationList } from "@ntq/sdk";
-import { useEffect, useEffectEvent, useState } from "react";
+import { useEffect, useEffectEvent, useState, useMemo } from "react";
 import { useWindowSize } from "../useWindowSize";
 import { UserList } from "@/components/user-list";
 
@@ -27,6 +33,7 @@ export function PlayerSettingsButton({
     const [selected, setSelected] = useSelected();
     const [mounted, setMounted] = useState(false);
     const [windowWidth] = useWindowSize();
+    //const [sheetOpen, setSheetOpen] = useState(false);
 
     const setMountedEffect = useEffectEvent(() => setMounted(true));
 
@@ -70,11 +77,20 @@ export function PlayerSettingsButton({
     const onRecitationChanged = (val: string) =>
         setSelected((prev) => ({ ...prev, recitationUUID: val }));
 
+    const currentRecitation = useMemo(() => {
+        return recitations.filter((val, index) => val.uuid === selected.recitationUUID)[0];
+    }, [selected.recitationUUID, recitations]);
+
     return (
         <Sheet>
             <SheetTrigger asChild>
                 <Button variant="ghost" size="icon-lg">
-                    <Symbol icon="account_circle" />
+                    <Avatar>
+                        <AvatarImage alt={currentRecitation?.reciter?.name} src={""} />
+                        <AvatarFallback>
+                            <Material icon="person" />
+                        </AvatarFallback>
+                    </Avatar>
                 </Button>
             </SheetTrigger>
             <SheetContent
@@ -85,7 +101,11 @@ export function PlayerSettingsButton({
                     <SheetTitle>Recitations Settings</SheetTitle>
                 </SheetHeader>
 
-                <UserList users={recitations.map((recitation) => ({ id: recitation.uuid, avatar: "", description: recitation.recitation_date, name: recitation.reciter?.name || "Name" }))} onSelect={(uuid) => setSelected(prev => ({ ...prev, recitationUUID: uuid as string }))} />
+                <SheetClose asChild>
+                    <div>
+                        <UserList users={recitations.map((recitation) => ({ id: recitation.uuid, avatar: "", description: recitation.recitation_date, name: recitation.reciter?.name || "Name" }))} onSelect={(uuid) => setSelected(prev => ({ ...prev, recitationUUID: uuid as string }))} />
+                    </div>
+                </SheetClose>
             </SheetContent>
         </Sheet>
     );

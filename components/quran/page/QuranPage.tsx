@@ -4,6 +4,7 @@ import { AyahBreakersResponse, Surah } from "@ntq/sdk";
 import { AyahsRange } from "../AyahsRange";
 import { useSelected } from "@/contexts/selectedsContext";
 import { useMushafOptions } from "@/contexts/mushafOptionsContext";
+import { usePlayOptions } from "@/contexts/playOptionsContext";
 import { useEffect, useEffectEvent, useState } from "react";
 import { FindBar } from "@/components/FindBar";
 import { getTranslations } from "@/app/actions/getTranslations";
@@ -38,6 +39,7 @@ export function QuranPage({
         takhtitsAyahsBreakers[page.offset].uuid || ""
     );
     const [mounted, setMounted] = useState(false);
+    const [, setPlayOptions] = usePlayOptions();
 
     const setMountedEffect = useEffectEvent(() => setMounted(true));
 
@@ -45,6 +47,21 @@ export function QuranPage({
     useEffect(() => {
         setMountedEffect();
     }, []);
+
+    // Expose the current page's ayah UUIDs to the global play options context
+    // so the audio component can implement page-repeat without extra data fetching.
+    useEffect(() => {
+        const start = page.offset;
+        const end = page.offset + page.limit;
+        const pageAyahUUIDs = takhtitsAyahsBreakers
+            .slice(start, end)
+            .map((ayah) => ayah.uuid);
+
+        setPlayOptions((prev) => ({
+            ...prev,
+            pageAyahUUIDs,
+        }));
+    }, [page.offset, page.limit, takhtitsAyahsBreakers, setPlayOptions]);
 
     useEffect(() => {
         if (!mounted) return;
@@ -95,7 +112,7 @@ export function QuranPage({
     }
 
     return (
-        <div className="flex flex-col gap-6 bg-muted/50 rounded-2xl pb-6 lg:w-[60vw]">
+        <div className="flex flex-col gap-3 bg-muted/50 rounded-2xl">
             <FindBar
                 takhtitsAyahsBreakers={takhtitsAyahsBreakers}
                 surahs={surahs}
@@ -104,19 +121,17 @@ export function QuranPage({
                     setSelected((prev) => ({ ...prev, ayahUUID: uuid }))
                 }
             />
-            <div>
-                <AyahsRange
-                    offset={page?.offset ?? 0}
-                    limit={page?.limit ?? 0}
-                    mushaf={mushaf}
-                    translationUuid={selected.translationUUID}
-                    onLoad={onLoad}
-                    mushafOptions={mushafOptions}
-                    firstVisibleAyahChanged={(uuid) => {
-                        setVisible((prev) => (prev !== uuid ? uuid : prev));
-                    }}
-                />
-            </div>
+            <AyahsRange
+                offset={page?.offset ?? 0}
+                limit={page?.limit ?? 0}
+                mushaf={mushaf}
+                translationUuid={selected.translationUUID}
+                onLoad={onLoad}
+                mushafOptions={mushafOptions}
+                firstVisibleAyahChanged={(uuid) => {
+                    setVisible((prev) => (prev !== uuid ? uuid : prev));
+                }}
+            />
         </div>
     );
 }
