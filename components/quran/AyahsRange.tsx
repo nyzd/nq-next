@@ -281,7 +281,7 @@ export function AyahsRange({
                                 words={ayah.surah?.bismillah?.text.split(" ") || []}
                                 translationRtl={selected.translationRtl}
                                 mushafOptions={mushafOptions}
-                                translationText={translations?.[index]?.text} />
+                                translationText={translations?.[index]?.bismillah ?? undefined} />
                         ) : ""}
 
                     {!ayah.surah?.bismillah.is_ayah && (

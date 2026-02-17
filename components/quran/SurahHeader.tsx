@@ -18,7 +18,7 @@ export default function SurahHeader({ surah, makkiMadani }: SurahHeaderProps) {
     if (!surah) return null;
 
     return (
-        <div className="pt-3 pb-3 pr-5 pl-5 mb-1.5 text-center bg-primary/20 rounded-2xl flex flex-row justify-between items-center border border-primary/30">
+        <div className="pt-3 pb-3 pr-5 pl-5 mb-4 text-center bg-primary/20 rounded-2xl flex flex-row justify-between items-center border border-primary/30">
             <h3>{surah.number}</h3>
             <div>
                 <h2 className="text-2xl">

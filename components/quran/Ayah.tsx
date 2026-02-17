@@ -93,8 +93,8 @@ export function Ayah({
                         id={id}
                         onClick={onClick}
                         className={cn(
-                            "flex flex-col gap-3 p-5 hover:bg-accent/80 rounded-2xl transition-all cursor-pointer",
-                            selected && "bg-accent",
+                            "flex flex-col gap-3 p-5 hover:bg-accent/80 rounded-3xl transition-all cursor-pointer",
+                            selected && "bg-muted",
                             bookmarked ? "border-r-4 border-r-primary" : ""
                         )}
                     >

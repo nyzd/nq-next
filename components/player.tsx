@@ -15,9 +15,9 @@ export async function Player({ mushaf }: { mushaf: string }) {
     const recitations = recitationsResponse ?? [];
 
     return (
-        <footer className="sticky bottom-0 left-0 right-0 border-t bg-background/65 backdrop-blur supports-[backdrop-filter]:bg-background/65 z-50">
+        <footer className="flex sticky bottom-0 left-0 right-0 border-t bg-background/65 backdrop-blur supports-[backdrop-filter]:bg-background/65 z-50 flex-col items-center">
             <PlayerProgress />
-            <div className="flex items-center gap-5 lg:gap-15 p-3.5 justify-center">
+            <div className="w-4xl max-w-full flex items-center gap-5 p-3.5 justify-evenly">
                 <PlayerSettingsButton recitations={recitations} />
                 <PlayBackButton />
                 <PlayButton />

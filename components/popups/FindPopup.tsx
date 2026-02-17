@@ -348,7 +348,7 @@ export function FindPopup({
                         <SelectGroup>
                             <SelectLabel>Juzs</SelectLabel>
                             {availableJuz.map((juz) => (
-                                <SelectItem key={juz} value={juz}>
+                                <SelectItem key={juz} value={juz.toString()}>
                                     {juz}
                                 </SelectItem>
                             ))}
@@ -367,7 +367,7 @@ export function FindPopup({
                         <SelectGroup>
                             <SelectLabel>Hizbs</SelectLabel>
                             {availableHizb.map((hizb) => (
-                                <SelectItem key={hizb} value={hizb}>
+                                <SelectItem key={hizb} value={hizb.toString()}>
                                     {hizb}
                                 </SelectItem>
                             ))}

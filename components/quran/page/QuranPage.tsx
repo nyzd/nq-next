@@ -5,7 +5,7 @@ import { AyahsRange } from "../AyahsRange";
 import { useSelected } from "@/contexts/selectedsContext";
 import { useMushafOptions } from "@/contexts/mushafOptionsContext";
 import { usePlayOptions } from "@/contexts/playOptionsContext";
-import { useEffect, useEffectEvent, useState } from "react";
+import { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 import { FindBar } from "@/components/FindBar";
 import { getTranslations } from "@/app/actions/getTranslations";
 
@@ -40,6 +40,8 @@ export function QuranPage({
     );
     const [mounted, setMounted] = useState(false);
     const [, setPlayOptions] = usePlayOptions();
+    const lastJuzRef = useRef<number | undefined>(undefined);
+    const lastHizbRef = useRef<number | undefined>(undefined);
 
     const setMountedEffect = useEffectEvent(() => setMounted(true));
 
@@ -62,6 +64,69 @@ export function QuranPage({
             pageAyahUUIDs,
         }));
     }, [page.offset, page.limit, takhtitsAyahsBreakers, setPlayOptions]);
+
+    const juzToAyahUUIDs = useMemo(() => {
+        const map = new Map<number, string[]>();
+        for (const a of takhtitsAyahsBreakers) {
+            if (typeof a.juz !== "number") continue;
+            const list = map.get(a.juz);
+            if (list) list.push(a.uuid);
+            else map.set(a.juz, [a.uuid]);
+        }
+        return map;
+    }, [takhtitsAyahsBreakers]);
+
+    const hizbToAyahUUIDs = useMemo(() => {
+        const map = new Map<number, string[]>();
+        for (const a of takhtitsAyahsBreakers) {
+            if (typeof a.hizb !== "number") continue;
+            const list = map.get(a.hizb);
+            if (list) list.push(a.uuid);
+            else map.set(a.hizb, [a.uuid]);
+        }
+        return map;
+    }, [takhtitsAyahsBreakers]);
+
+    // Keep current juz/hizb UUID ranges updated for repeat-range playback.
+    // Important: avoid spamming localStorage updates by only updating when the juz/hizb number changes.
+    useEffect(() => {
+        const anchorUUID = selected.ayahUUID ?? visible;
+        if (!anchorUUID) return;
+
+        const currentAyah = takhtitsAyahsBreakers.find(
+            (a) => a.uuid === anchorUUID
+        );
+        if (!currentAyah) return;
+
+        if (
+            typeof currentAyah.juz === "number" &&
+            currentAyah.juz !== lastJuzRef.current
+        ) {
+            lastJuzRef.current = currentAyah.juz;
+            setPlayOptions((prev) => ({
+                ...prev,
+                juzAyahUUIDs: juzToAyahUUIDs.get(currentAyah.juz) ?? [],
+            }));
+        }
+
+        if (
+            typeof currentAyah.hizb === "number" &&
+            currentAyah.hizb !== lastHizbRef.current
+        ) {
+            lastHizbRef.current = currentAyah.hizb;
+            setPlayOptions((prev) => ({
+                ...prev,
+                hizbAyahUUIDs: hizbToAyahUUIDs.get(currentAyah.hizb) ?? [],
+            }));
+        }
+    }, [
+        visible,
+        selected.ayahUUID,
+        takhtitsAyahsBreakers,
+        juzToAyahUUIDs,
+        hizbToAyahUUIDs,
+        setPlayOptions,
+    ]);
 
     useEffect(() => {
         if (!mounted) return;
@@ -112,7 +177,7 @@ export function QuranPage({
     }
 
     return (
-        <div className="flex flex-col gap-3 bg-muted/50 rounded-2xl">
+        <div className="flex flex-col gap-3 bg-muted/50 rounded-3xl">
             <FindBar
                 takhtitsAyahsBreakers={takhtitsAyahsBreakers}
                 surahs={surahs}
