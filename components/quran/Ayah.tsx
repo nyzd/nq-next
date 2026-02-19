@@ -118,7 +118,7 @@ export function Ayah({
                         </div>
                     </div>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
+                <DropdownMenuContent className="border-2 border-accent">
                     <DropdownMenuLabel>Ayah Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={onBookmark}>

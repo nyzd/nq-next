@@ -6,6 +6,7 @@ import { usePlayOptions } from "@/contexts/playOptionsContext";
 import { useSelected } from "@/contexts/selectedsContext";
 import { SurahDetail } from "@ntq/sdk";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 export function Audio(
     restProps: Omit<React.HTMLAttributes<HTMLAudioElement>, "style">
@@ -243,6 +244,10 @@ export function Audio(
 
     useEffect(() => {
         if (!audioRef.current) return;
+        if (ayahsTimestamps.length <= 0) {
+            toast.error("Current recitation is not complete please switch to another one!");
+            return;
+        };
 
         // Don't play if still loading
         if (playOptions.loading) {
@@ -267,6 +272,7 @@ export function Audio(
             audioRef.current.pause();
         }
     }, [
+        ayahsTimestamps.length,
         isPlaying,
         setSelected,
         wordsTimestamps,
@@ -338,8 +344,8 @@ export function Audio(
                     const effectiveEnd = Number.isFinite(segment.end)
                         ? segment.end
                         : Number.isFinite(audio.duration)
-                          ? audio.duration
-                          : undefined;
+                            ? audio.duration
+                            : undefined;
 
                     if (
                         effectiveEnd !== undefined &&
@@ -347,7 +353,7 @@ export function Audio(
                     ) {
                         audio.currentTime = segment.start;
                         if (playingRef.current) {
-                            audio.play().catch(() => {});
+                            audio.play().catch(() => { });
                         }
                     }
                 }
@@ -365,16 +371,16 @@ export function Audio(
                     range === "page"
                         ? pageAyahUUIDsRef.current
                         : range === "juz"
-                          ? juzAyahUUIDsRef.current
-                          : hizbAyahUUIDsRef.current;
+                            ? juzAyahUUIDsRef.current
+                            : hizbAyahUUIDsRef.current;
 
                 const segment = getAyahsSegmentSeconds(ayahUUIDs);
                 if (segment) {
                     const effectiveEnd = Number.isFinite(segment.end)
                         ? segment.end
                         : Number.isFinite(audio.duration)
-                          ? audio.duration
-                          : undefined;
+                            ? audio.duration
+                            : undefined;
 
                     if (effectiveEnd !== undefined && currentTime >= effectiveEnd) {
                         audio.currentTime = segment.start;
@@ -389,7 +395,7 @@ export function Audio(
                             }));
                         }
                         if (playingRef.current) {
-                            audio.play().catch(() => {});
+                            audio.play().catch(() => { });
                         }
                     }
                 }
@@ -470,7 +476,7 @@ export function Audio(
             const segment = getAyahSegmentSeconds(selectedAyahUUIDRef.current);
             if (segment) {
                 audio.currentTime = segment.start;
-                audio.play().catch(() => {});
+                audio.play().catch(() => { });
                 setPlayOptions((prev) => ({ ...prev, playing: true }));
                 return;
             }
@@ -483,7 +489,7 @@ export function Audio(
             if (surahAyahs[0]?.uuid) {
                 setSelected((prev) => ({ ...prev, ayahUUID: surahAyahs[0].uuid }));
             }
-            audio.play().catch(() => {});
+            audio.play().catch(() => { });
             setPlayOptions((prev) => ({ ...prev, playing: true }));
             return;
         }
@@ -500,8 +506,8 @@ export function Audio(
                 repeatRange === "page"
                     ? pageAyahUUIDsRef.current
                     : repeatRange === "juz"
-                      ? juzAyahUUIDsRef.current
-                      : hizbAyahUUIDsRef.current;
+                        ? juzAyahUUIDsRef.current
+                        : hizbAyahUUIDsRef.current;
             const segment = getAyahsSegmentSeconds(ayahUUIDs);
             if (segment) {
                 audio.currentTime = segment.start;
@@ -510,7 +516,7 @@ export function Audio(
                     lastAyahFromTimeUpdate.current = segment.firstUUID;
                     setSelected((prev) => ({ ...prev, ayahUUID: segment.firstUUID }));
                 }
-                audio.play().catch(() => {});
+                audio.play().catch(() => { });
                 setPlayOptions((prev) => ({ ...prev, playing: true }));
                 return;
             }
